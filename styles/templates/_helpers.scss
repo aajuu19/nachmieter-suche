@@ -1,0 +1,89 @@
+.light {
+    color: $light;
+}
+
+.btn {
+    color: $light;
+    padding: .6rem 1.3rem;
+    @include breakpoint(m) {
+        padding: .8rem 2.3rem;
+    }
+    border-radius: 25px;
+    text-decoration: none;
+    background: $medium;
+    transition: .3s;
+    display: inline-block;
+    &:hover {
+        background: darken($medium, 5%);
+    }
+    &.secondary {
+        background: $secondary;
+        &:hover {
+            background: darken($secondary, 5%);
+        }
+    }
+}
+
+.fluid {
+    width: 100%;
+    height: auto;
+}
+
+.space-both {
+    padding-top: rem(60px);
+    padding-bottom: rem(60px);
+    @include breakpoint(m) {
+        padding-top: rem(100px);
+        padding-bottom: rem(100px);
+    } 
+}
+
+.space-top {
+    padding-top: rem(60px);
+    @include breakpoint(m) {
+        padding-top: rem(100px);
+    } 
+}
+
+.space-bottom {
+    padding-bottom: rem(60px);
+    @include breakpoint(m) {
+        padding-bottom: rem(100px);
+    } 
+}
+
+.align-left {
+    text-align: left;
+}
+
+.error, .success {
+    padding: 1.5rem; 
+    background: $lightalert;
+    border-radius: 15px;
+    color: $light;
+    display: block;
+    &:before {
+        content: 'Fehler: ';
+        font-weight: 700;
+        color: $alert;
+    }
+}
+
+.success {
+    background: $success;
+    &:before {
+        content: 'Erfolgreich: ';
+        color: darken($success, 30%);
+    }
+}
+
+.heading {
+    font-weight: 700;
+    font-size: rem(22px);
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.primary {
+    color: $primary;
+}

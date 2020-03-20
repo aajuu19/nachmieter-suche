@@ -1,0 +1,40 @@
+$primary: #1c9ce5;
+$lightprimary: lighten($primary, 35%);
+$secondary: #f79e02;
+$light: #fff;
+$dark: #312f2c;
+$medium: #0074e1;
+$success: #6de481;
+$alert: #ff4d4d;
+$lightalert: #ff9797;
+
+$lightborder: 1px solid $lightprimary;
+
+$base-gap: 16px;
+$row-max-width: 1400px;
+$main-font: "Barlow", sans-serif;
+$icon-font: "Font Awesome 5 Free", sans-serif;
+
+$h1-fs: 42px;
+$h2-fs: 36px;
+$h3-fs: 26px;
+$h4-fs: 24px;
+$h5-fs: 22px;
+$h6-fs: 20px;
+
+// Breakpoint Settings
+
+// min or max
+$media-direction: min;  // min / max — default is min (mobile first)
+
+// Breakpoints
+$breakpoints: (
+  'default': 0px,
+  'xs':  480px,
+  's':   680px,
+  'sm':   850px,
+  'm':   1025px,
+  'l':   1200px,
+  'xl':  1400px,
+  'xxl':  1600px,
+);

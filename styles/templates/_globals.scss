@@ -1,0 +1,136 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: $main-font;
+    color: #333;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    @include breakpoint(m) {
+        margin-bottom: 2rem;
+    }
+    text-align: center;
+    color: $primary;
+    span {
+        display: block;
+    }
+}
+
+h1, .h1 {
+    font-size: rem($h1-fs * 0.6);
+    line-height: rem($h1-fs * 0.6 + 10px);
+    span {
+        color: $secondary;
+        font-size: rem(24px);
+    }
+    @include breakpoint(s) {
+        font-size: rem($h1-fs * 0.8);
+        line-height: rem($h1-fs * 0.8 + 10px);
+    }
+    @include breakpoint(m) {
+        font-size: rem($h1-fs);
+        line-height: rem($h1-fs + 10px);
+        span {
+            font-size: rem(30px);
+        }
+    }
+}
+
+h2, .h2 {
+    font-size: rem($h2-fs * 0.6);
+    line-height: rem($h2-fs * 0.6 + 10px);
+    color: $secondary;
+    @include breakpoint(s) {
+        font-size: rem($h2-fs * 0.8);
+        line-height: rem($h2-fs * 0.8 + 10px);
+    }
+    @include breakpoint(m) {
+        font-size: rem($h2-fs);
+        line-height: rem($h2-fs + 10px);
+    }
+}
+
+h3, .h3 {
+    font-size: rem($h2-fs * 0.8);
+    line-height: rem($h2-fs * 0.8 + 10px);
+    @include breakpoint(m) {
+        font-size: rem($h2-fs);
+        line-height: rem($h2-fs + 10px);
+    }
+}
+
+main {
+    p {
+        margin-bottom: 1.25rem;
+    }
+}
+
+form {
+    &.default {
+        input {
+            border: none;
+            border-radius: 25px;
+            padding: .7rem;
+            color: $dark;
+            font-size: rem(14px);
+            @include breakpoint(m) {
+                font-size: rem(16px);
+            }
+            outline: none;
+            display: block;
+            border: 1px solid transparent;
+
+            &.error {
+                border: 1px solid $lightalert;
+            }
+    
+            &::placeholder {
+                color: lighten($primary, 30%);
+            }
+
+            &[type=text], &[type=password], &[type=mail] {
+                background: darken($light, 2%);
+                width: 100%;
+            }
+    
+            &[type=submit] {
+                cursor: pointer;
+                color: $light;
+            }
+        }
+        label {
+            display: block;
+        }
+        fieldset {
+            border: none;
+        }
+    }
+}
+
+button {
+    outline: none;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    font-family: $main-font;
+}
+
+ul {
+    &.styled-list {
+        li {
+            list-style: none;
+            &:before {
+                content: '\f105';
+                padding-right: 10px;
+                font-family: $icon-font;
+            }
+        }
+    }
+}

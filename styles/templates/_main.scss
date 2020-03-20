@@ -1,0 +1,569 @@
+header {
+    height: 100vh;
+    min-height: rem(500px);
+    body:not(.index) & {
+        height: 35vh;
+        min-height: rem(300px);
+        .header-ctn {
+            margin-top: rem(50px);
+            .claim {
+                font-size: rem(30px);
+                line-height: rem(40px);
+                @include breakpoint(m) {
+                    font-size: rem(38px);
+                    line-height: rem(48px);
+                }
+                margin-bottom: 0;
+            }
+        }
+    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: {
+        image: url('../images/layout/l-header-bg.jpg');
+        repeat: no-repeat;
+        size: cover;
+        position: center center;
+        attachment: fixed;
+    }
+
+    @include breakpoint(m) {
+        min-height: rem(700px);
+        height: auto;
+    }
+    .header-ctn {
+        text-align: center;
+        width: 90%;
+        @include breakpoint(s) {
+            width: 50%;
+        }
+        .claim {
+            color: $light;
+            font-weight: 900;
+            font-size: rem(26px);
+            margin-bottom: 1rem;
+            display: block;
+            @include breakpoint(s) {
+                font-size: rem(32px);
+                line-height: rem(42px);
+            }
+            @include breakpoint(m) {
+                font-size: rem(45px);
+                line-height: rem(55px);
+                margin-bottom: 1.5rem;
+            }
+            @include breakpoint(xl) {
+                font-size: rem(52px);
+                line-height: rem(62px);
+                margin-bottom: 2.5rem;
+            }
+        }
+        .search-form {
+            position: relative;
+            input {
+                padding: 1rem;
+                @include breakpoint(m) {
+                    font-size: rem(18px);
+                }
+                
+                @include breakpoint(m) {
+                    padding: 1.2rem 1rem;
+                    border-radius: 35px;
+                    padding-left: 2rem;
+                }
+                &[type=text] {
+                    width: 100%;
+                    padding-right: rem(135px);
+                    @include breakpoint(m) {
+                        padding-right: rem(230px);
+                    }
+                }
+                &[type=submit] {
+                    color: $light;
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    @include breakpoint(m) {
+                        padding: 1.2rem 3rem;
+                    } 
+                }
+            }
+        }
+    }
+}
+
+main {
+    @extend .space-top;
+
+    .object-teaser {
+        background: {
+            image: url('../images/layout/top-objects-bg.jpg');
+            repeat: no-repeat;
+            size: cover;
+            position: center center;
+            attachment: fixed;
+        }
+        body:not(.index) & {
+            background: none;
+            .teaser-box {
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+        }
+        .teaser {
+            margin-bottom: 2rem;
+        }
+        .teaser-box {
+            background: $light;
+            border-radius: 15px;
+            overflow: hidden;
+            height: 100%;
+            @include breakpoint(l) {
+                display: flex;
+            }
+            .teaser-img {
+                @include breakpoint(l) {
+                    flex-basis: 30%;
+                    width: 30%;
+                }
+                @include breakpoint(xl) {
+                    flex-basis: 35%;
+                    width: 35%;
+                }
+                img {
+                    height: 100%;
+                    width: 100%;
+                    object-fit: cover;
+                }
+            }
+            .teaser-content {
+                padding: 1rem;
+                @include breakpoint(l) {
+                    flex-basis: 70%;
+                    width: 70%;
+                }
+                @include breakpoint(xl) {
+                    padding: 3rem;
+                    flex-basis: 65%;
+                    width: 65%;
+                }
+                span {
+                    display: block;
+                    &.heading {
+                        color: $medium;
+                        font-size: rem(28px);
+                        font-weight: 700;
+                    }
+                    &.time {
+                        font-size: rem(15px);
+                        color: lighten($dark, 50%);
+                    }
+                    &.desc {
+                        margin: 1.5rem 0;
+                        @include breakpoint(l) {
+                            margin: 2.3rem 0;
+                        }
+                    }
+                }
+                .object-infos {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 1.5rem;
+                    > span {
+                        width: 25%;
+                        flex-basis: 25%;
+                        small {
+                            display: block;
+                            color: $primary;
+                            border-bottom: $lightborder;
+                            padding-bottom: 10px;
+                            margin-bottom: 10px;
+                        }
+                        span {
+                            font-weight: 700;
+                            font-size: rem(22px);
+                        }
+                    }
+                }
+                .btn {
+                    &:before {
+                        font-family: $icon-font;
+                        position: relative;
+                        top: 1px;
+                        padding-right: 5px;
+                        content: '\f05a';
+                    }
+                }
+            }
+        }
+    }
+
+    .procedure {
+        .procedure-ctn {
+            @include breakpoint(s) {
+                display: flex;
+                flex-wrap: wrap;
+            }
+            .tab {
+                @include breakpoint(s) {
+                    width: 50%;
+                    flex-basis: 50%;
+                }   
+                @include breakpoint(m) {
+                    width: 33.333333%;
+                    flex-basis: 33.333333%;
+                }
+                width: 100%;
+                height: rem(170px);
+                padding: 0 3rem;
+                @include breakpoint(l) {
+                    padding: 0 4rem;
+                }
+                background: $primary;
+                color: $light;
+                display: flex;
+                align-items: center;
+                text-align: center;
+                span {
+                    width: auto;
+                    display: inline-block;
+                }
+                position: relative;
+                &:before {
+                    content: '1';
+                    color: $light;
+                    position: absolute;
+                    left: 30px;
+                    top: -10px;
+                    font-size: rem(150px);
+                    font-weight: 900;
+                    opacity: .2;
+                }
+                &:after {
+                    content: '';
+                    position: absolute;
+                    bottom: -19px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 0; 
+                    height: 0; 
+                    border-left: 20px solid transparent;
+                    border-right: 20px solid transparent;
+                    z-index: 1;
+                }
+                &.first {
+                    background: #0074e1;
+                    order: 1;
+                    &:before {
+                        content: '1';
+                    }
+                    &:after {
+                        border-top: 20px solid #0074e1;
+                        @include breakpoint(s) {
+                            bottom: 50%;
+                            left: calc(100% - 1px);
+                            transform: translateY(50%);
+                            @include tri-right(#0074e1);
+                        } 
+                    }
+                }
+                &.second {
+                    background: #008ae1;
+                    order: 2;
+                    &:before {
+                        content: '2';
+                    }
+                    &:after {
+                        border-top: 20px solid #008ae1;
+                        @include breakpoint(m) {
+                            bottom: 50%;
+                            left: calc(100% - 1px);
+                            transform: translateY(50%);
+                            @include tri-right(#008ae1);
+                        }
+                    }
+                }
+                &.third {
+                    background: #00a4e1;
+                    order: 3;
+                    &:before {
+                        content: '3';
+                    }
+                    @include breakpoint(s) {
+                        order: 4;
+                    }
+                    @include breakpoint(m) {
+                        order: 3;
+                    }
+                    &:after {
+                        border-top: 20px solid #00a4e1;
+                        @include breakpoint(s) {
+                            @include tri-left(#00a4e1);
+                            bottom: 50%;
+                            left: -19px;
+                            transform: translateY(50%);
+                        }
+                        @include breakpoint(m) {
+                            @include tri-bottom(#00a4e1);
+                            bottom: -19px;
+                            left: 50%;
+                            transform: translateX(-50%);
+                        }
+                    }
+                }
+                &.fourth {
+                    background: #00b9e1;
+                    order: 4;
+                    &:before {
+                        content: '4';
+                    }
+                    @include breakpoint(s) {
+                        order: 3;
+                    }
+                    @include breakpoint(m) {
+                        order: 6;
+                    }
+                    &:after {
+                        border-top: 20px solid #00b9e1;
+                        @include breakpoint(m) {
+                            @include tri-left(#00b9e1);
+                            bottom: 50%;
+                            left: -19px;
+                            transform: translateY(50%);
+                        }
+                    }
+                }
+                &.fifth {
+                    background: #00c9e1;
+                    order: 5;
+                    &:before {
+                        content: '5';
+                    }
+                    &:after {
+                        border-top: 20px solid #00c9e1; 
+                        @include breakpoint(s) {
+                            @include tri-right(#00c9e1);
+                            bottom: 50%;
+                            left: calc(100% - 1px);
+                            transform: translateY(50%);
+                        }
+                        @include breakpoint(m) {
+                            @include tri-left(#00c9e1);
+                            bottom: 50%;
+                            left: -19px;
+                            transform: translateY(50%);
+                        }
+                    }
+                }
+                &.sixth {
+                    background: #f79e02;
+                    order: 6;
+                    &:before {
+                        content: '6';
+                    }
+                    @include breakpoint(m) {
+                        order: 4;
+                    }
+                    &:after {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+
+    // wohhnung-finden page
+    .all-objects {
+        .object-teaser {
+            aside.filter-ctn {
+                padding-left: rem(30px);
+                .main-heading {
+                    display: block;
+                    font-weight: 700;
+                    font-size: rem(22px);
+                    margin-bottom: 2rem;
+                    color: $primary;
+                    i {
+                        font-size: rem(19px);
+                    }
+                    &:after {
+                        height: 1px;
+                        content: '';
+                        display: block;
+                        background: lighten($primary, 35%);
+                        width: 40%;
+                        margin-top: 20px;
+                    }
+                }
+                .filter {
+                    margin-bottom: rem(25px);
+                    display: flex;
+                    align-items: center;
+                    position: relative;
+                    span {
+                        &.heading {
+                            font-weight: 700;
+                            flex-basis: 40%;
+                            width: 40%;
+                            font-size: rem(16px);
+                            margin-bottom: 0;
+                        }
+                    }
+                    input {
+                        flex-basis: 60%;
+                        width: 60%;
+                        padding: .7rem;
+                        outline: none;
+                        border: $lightborder;
+                        border-radius: 15px;
+                        font-size: 14px;
+                    }
+                    .min-max {
+                        position: absolute;
+                        right: 0;
+                        top: 0;
+                        bottom: 0;
+                        display: flex;
+                        span {
+                            color: lighten($primary, 27%);
+                            padding: 0 .4rem;
+                            display: flex;
+                            align-items: center;
+                            background: lighten($primary, 40%);
+                            height: 100%;
+                            transition: .3s;
+                            cursor: pointer;
+                            &:hover, &.active {
+                                color: $light;
+                                background: lighten($primary, 20%);
+                            }
+                            &.min {
+                                border-top-left-radius: 15px;
+                                border-bottom-left-radius: 15px;
+                            }
+                            &.max {
+                                border-top-right-radius: 15px;
+                                border-bottom-right-radius: 15px;
+                            }
+                        }                        
+                    }
+                }
+            }
+        }
+    }
+
+    // login-register page
+    .big-tab {
+        border-radius: 25px;
+        &.secondary-tab {
+            margin-top: 1rem;
+            @include breakpoint(s) {
+                margin-top: 0;
+            }
+            background: $secondary;
+            border: 2px solid $secondary;
+            &:hover {
+                span {
+                    color: $secondary;
+                }
+            }
+        }
+        cursor: pointer;
+        background: $primary;
+        transition: .3s;
+        border: 2px solid $primary;
+        padding: 1.5rem;
+        @include breakpoint(m) {
+            padding: 2rem;
+        }
+        span {
+            color: $light;
+            &.heading {
+                i {
+                    font-size: 22px;
+                }
+                font-size: rem(28px);
+                @include breakpoint(m) {
+                    i {
+                        font-size: rem(34px);
+                    }
+                    font-size: rem(38px);
+                }
+                display: block;
+                margin-bottom: 1rem;
+                font-weight: 700;
+            }
+        }
+        &:hover {
+            background: $light;
+            span {
+                color: $primary;
+            }
+        }
+    }
+    .form-area {
+        margin-top: rem(30px);
+        form {
+            &.default {
+                margin-top: 2rem;
+                fieldset {
+                    position: relative;
+                    margin-bottom: 1rem;
+                    label {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        bottom: 0;
+                        width: 40px;
+                        background: $secondary;
+                        color: $light;
+                        border-radius: 50%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        i {
+                            font-size: 18px;
+                        }
+                    }
+                    input {
+                        &[type=text], &[type=password], &[type=mail] {
+                            padding-left: 50px;
+                        } 
+                    }
+                }
+                input[type=submit] {
+                    margin-top: 1rem;
+                    width: 100%;
+                }
+            }
+        }
+        .side-info {
+            border-top: $lightborder;
+            margin-top: 2rem;
+            height: 100%;
+            padding: 2rem 0;
+            @include breakpoint(sm) {
+                padding: 2rem;
+                margin-top: 0;
+                border-left: $lightborder;
+                border-top: 0;
+            }
+        }
+    }
+}
+
+.footer-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    padding-top: rem(60px);
+    @include breakpoint(m) {
+        padding-top: rem(100px);
+    }
+}
+
+footer {
+    background: $medium;
+    padding: 5rem 0;
+    position: relative;
+}

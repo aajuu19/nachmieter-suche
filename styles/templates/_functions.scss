@@ -1,0 +1,161 @@
+// Breakpoint
+@mixin breakpoint($breakpoint,$direction: $media-direction) {
+
+	@if map-has-key($breakpoints, $breakpoint) {
+
+		@media (#{$direction}-width: #{map-get($breakpoints, $breakpoint)}) {
+		@content;
+		}
+	}
+
+	@else if unitless($breakpoint) {
+		$breakpoint: $breakpoint + 0px;
+
+		@media (#{$direction}-width: $breakpoint) {
+		@content;
+		}
+	}
+}
+  
+// Rem function
+
+$rem-baseline: 16px !default;
+$rem-fallback: false !default;
+$rem-px-only: false !default;
+  
+@function rem-separator($list, $separator: false) {
+@if $separator == "comma" or $separator == "space" {
+	@return append($list, null, $separator);
+} 
+
+@if function-exists("list-separator") == true {
+	@return list-separator($list);
+}
+
+// list-separator polyfill by Hugo Giraudel (https://sass-compatibility.github.io/#list_separator_function)
+$test-list: ();
+@each $item in $list {
+	$test-list: append($test-list, $item, space);
+}
+
+@return if($test-list == $list, space, comma);
+}
+  
+@mixin rem-baseline($zoom: 100%) {
+font-size: $zoom / 16px * $rem-baseline;
+}
+  
+@function rem-convert($to, $values...) {
+$result: ();
+$separator: rem-separator($values);
+
+@each $value in $values {
+	@if type-of($value) == "number" and unit($value) == "rem" and $to == "px" {
+	$result: append($result, $value / 1rem * $rem-baseline, $separator);
+	} @else if type-of($value) == "number" and unit($value) == "px" and $to == "rem" {
+	$result: append($result, $value / $rem-baseline * 1rem, $separator);
+	} @else if type-of($value) == "list" {
+	$value-separator: rem-separator($value);
+	$value: rem-convert($to, $value...);
+	$value: rem-separator($value, $value-separator);
+	$result: append($result, $value, $separator);
+	} @else {
+	$result: append($result, $value, $separator);
+	}
+}
+
+@return if(length($result) == 1, nth($result, 1), $result);
+}
+  
+@function rem($values...) {
+@if $rem-px-only {
+	@return rem-convert(px, $values...);
+} @else {
+	@return rem-convert(rem, $values...);
+}
+}
+  
+@mixin rem($properties, $values...) {
+@if type-of($properties) == "map" {
+	@each $property in map-keys($properties) {
+	@include rem($property, map-get($properties, $property));
+	}
+} @else {
+	@each $property in $properties {
+	@if $rem-fallback or $rem-px-only {
+		#{$property}: rem-convert(px, $values...);
+	}
+	@if not $rem-px-only {
+		#{$property}: rem-convert(rem, $values...);
+	}
+	}
+}
+}
+
+.row {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+	justify-content: flex-start;
+	width: 100%;
+	max-width: $row-max-width;
+	margin: 0 auto;
+	&.middle {
+		align-items: center;
+	}
+	.col {
+		padding: 0 rem($base-gap);
+		width: 100%;
+		flex-basis: 100%;
+		@each $break, $value in $breakpoints {
+			@for $i from 1 through 12 {
+				@include breakpoint($break) {
+					&.#{$break}-#{$i} {
+						width: #{$i * 8.333333%};
+						flex-basis: #{$i * 8.333333%};
+					} 
+				}
+			}
+		}
+	}
+}
+
+// Triangle Right
+@mixin tri-right($color: $primary, $size: 20px) {
+	width: 0; 
+	height: 0; 
+	border-top: $size solid transparent;
+	border-bottom: $size solid transparent;
+	border-left: $size solid $color;
+	border-right: none;
+}
+
+// Triangle Top
+@mixin tri-top($color: $primary, $size: 20px) {
+	width: 0; 
+	height: 0; 
+	border-left: $size solid transparent;
+  	border-right: $size solid transparent;
+	border-bottom: $size solid $color;
+	border-top: none;
+}
+
+// Triangle Bottom
+@mixin tri-bottom($color: $primary, $size: 20px) {
+	width: 0; 
+	height: 0; 
+	border-left: $size solid transparent;
+	border-right: $size solid transparent;
+	border-top: $size solid $color;
+	border-bottom: none;
+}
+
+// Triangle Left
+@mixin tri-left($color: $primary, $size: 20px) {
+	width: 0; 
+	height: 0; 
+	border-top: $size solid transparent;
+  	border-bottom: $size solid transparent; 
+	border-right: $size solid $color; 
+	border-left: none;
+}
