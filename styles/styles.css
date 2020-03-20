@@ -7473,6 +7473,8 @@ main .all-objects .object-teaser aside.filter-ctn .filter .min-max span.max {
 }
 main .big-tab {
   border-radius: 25px;
+  display: block;
+  text-decoration: none;
   cursor: pointer;
   background: #1c9ce5;
   transition: 0.3s;

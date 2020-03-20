@@ -455,6 +455,8 @@ main {
     // login-register page
     .big-tab {
         border-radius: 25px;
+        display: block;
+        text-decoration: none;
         &.secondary-tab {
             margin-top: 1rem;
             @include breakpoint(s) {
