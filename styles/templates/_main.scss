@@ -511,22 +511,6 @@ main {
                 fieldset {
                     position: relative;
                     margin-bottom: 1rem;
-                    label {
-                        position: absolute;
-                        left: 0;
-                        top: 0;
-                        bottom: 0;
-                        width: 40px;
-                        background: $secondary;
-                        color: $light;
-                        border-radius: 50%;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        i {
-                            font-size: 18px;
-                        }
-                    }
                     input {
                         &[type=text], &[type=password], &[type=mail] {
                             padding-left: 50px;

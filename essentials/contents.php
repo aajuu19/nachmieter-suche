@@ -45,6 +45,14 @@
             'include_nav'=> false,
             'login_required' => true
         ],
+        'neues-objekt.php' => [
+            'name' => 'Neues Objekt',
+            'title' => 'Dies ist die Maske für das Einfügen eines neuen Objektes',
+            'desc' => 'Dies ist die Beschreibung für die Maske für das Einfügen eines neuen Objektes',
+            'claim' => 'Neue Wohnung einfügen',
+            'include_nav'=> false,
+            'login_required' => true
+        ],
         'settings.php' => [
             'name' => 'Einstellungen',
             'title' => 'Dies sind die Einstellungen',
