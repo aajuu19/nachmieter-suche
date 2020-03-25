@@ -6780,13 +6780,24 @@ h2, .h2 {
 }
 
 h3, .h3 {
-  font-size: 1.8rem;
-  line-height: 2.425rem;
+  font-size: 1.3rem;
+  line-height: 1.925rem;
 }
 @media (min-width: 1025px) {
   h3, .h3 {
-    font-size: 2.25rem;
-    line-height: 2.875rem;
+    font-size: 1.625rem;
+    line-height: 2.25rem;
+  }
+}
+
+h4, .h4 {
+  font-size: 1.2rem;
+  line-height: 1.825rem;
+}
+@media (min-width: 1025px) {
+  h4, .h4 {
+    font-size: 1.5rem;
+    line-height: 2.125rem;
   }
 }
 
@@ -6816,11 +6827,12 @@ form.default input.error {
 form.default input::placeholder {
   color: #a5d8f5;
 }
-form.default input[type=text], form.default input[type=password], form.default input[type=mail] {
+form.default input[type=text], form.default input[type=password], form.default input[type=mail], form.default input[type=number], form.default input[type=date] {
   background: #f7f7f7;
   width: 100%;
+  padding-left: 50px;
 }
-form.default input[type=text]:focus, form.default input[type=password]:focus, form.default input[type=mail]:focus {
+form.default input[type=text]:focus, form.default input[type=password]:focus, form.default input[type=mail]:focus, form.default input[type=number]:focus, form.default input[type=date]:focus {
   background: #f2f2f2;
 }
 form.default input[type=submit] {
@@ -6845,6 +6857,9 @@ form.default fieldset label {
   justify-content: center;
   align-items: center;
 }
+form.default fieldset label.opt-sec {
+  background: #febc48;
+}
 form.default fieldset label i {
   font-size: 18px;
   position: relative;
@@ -6866,6 +6881,7 @@ form.default textarea {
   font-size: 0.875rem;
   font-weight: lighter;
   outline: none;
+  display: block;
 }
 form.default textarea:focus {
   background: #f2f2f2;
@@ -7583,9 +7599,6 @@ main .form-area form.default {
 main .form-area form.default fieldset {
   position: relative;
   margin-bottom: 1rem;
-}
-main .form-area form.default fieldset input[type=text], main .form-area form.default fieldset input[type=password], main .form-area form.default fieldset input[type=mail] {
-  padding-left: 50px;
 }
 main .form-area form.default input[type=submit] {
   margin-top: 1rem;

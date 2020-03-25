@@ -59,11 +59,20 @@ h2, .h2 {
 }
 
 h3, .h3 {
-    font-size: rem($h2-fs * 0.8);
-    line-height: rem($h2-fs * 0.8 + 10px);
+    font-size: rem($h3-fs * 0.8);
+    line-height: rem($h3-fs * 0.8 + 10px);
     @include breakpoint(m) {
-        font-size: rem($h2-fs);
-        line-height: rem($h2-fs + 10px);
+        font-size: rem($h3-fs);
+        line-height: rem($h3-fs + 10px);
+    }
+}
+
+h4, .h4 {
+    font-size: rem($h4-fs * 0.8);
+    line-height: rem($h4-fs * 0.8 + 10px);
+    @include breakpoint(m) {
+        font-size: rem($h4-fs);
+        line-height: rem($h4-fs + 10px);
     }
 }
 
@@ -96,9 +105,10 @@ form {
                 color: lighten($primary, 30%);
             }
 
-            &[type=text], &[type=password], &[type=mail] {
+            &[type=text], &[type=password], &[type=mail], &[type=number], &[type=date] {
                 background: darken($light, 3%);
                 width: 100%;
+                padding-left: 50px;
                 &:focus {
                     background: darken($light, 5%);
                 }
@@ -125,6 +135,9 @@ form {
                     display: flex;
                     justify-content: center;
                     align-items: center;
+                    &.opt-sec {
+                        background: lighten($secondary, 15%);
+                    }
                     i {
                         font-size: 18px;
                         position: relative;
@@ -148,6 +161,7 @@ form {
             font-size: rem(14px);
             font-weight: lighter;
             outline: none;
+            display: block;
             &:focus {
                 background: darken($light, 5%);
             }
