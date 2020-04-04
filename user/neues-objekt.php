@@ -3,17 +3,24 @@
     <div class="col">
 		<div class="form-area row">
 			<div class="col sm-8">
-				<div class="obj-ctn" v-show="registrationShow">
-					<form v-on:submit.prevent="validate" class="default" action="<?php echo $web->root; ?>/register.php" method="POST">
+				<?php
+					if(isset($_GET['error'])) {
+						echo '<span class="error">'.$_GET['error'].'</span>';
+					} else if(isset($_GET['bestaetigung'])) {
+						echo '<span class="success">'.$_GET['bestaetigung'].'</span>';
+					}
+				?>
+				<div class="obj-ctn">
+					<form class="default" action="<?php echo $web->root; ?>/actions/insert-obj.php" method="POST">
 						<fieldset>
 							<label for="obj-name"><i class="fa fa-home"></i></label>
-							<input name="obj-name" id="obj-name" type="text" placeholder="Objektname" required 
-							oninvalid="this.setCustomValidity('Bitte gib einen Objektnamein ein')" oninput="setCustomValidity('')">
+							<input name="obj-name" maxlength="61" id="obj-name" type="text" placeholder="Objektname" required 
+							oninvalid="this.setCustomValidity('Bitte gib einen Objektnamen ein (max. 61 Zeichen)')" oninput="setCustomValidity('')">
 						</fieldset>
 						
 						<fieldset>
 							<label class="big-label" for="obj-desc"><i class="fa fa-align-left"></i></label>
-							<textarea name="obj-desc" id="obj-desc" cols="30" required rows="10" placeholder="Objektbeschreibung" oninvalid="this.setCustomValidity('Bitte gib eine kurze Objektbeschreibung ein')" oninput="setCustomValidity('')"></textarea>
+							<textarea name="obj-desc" id="obj-desc" cols="30" required rows="10" placeholder="Objektbeschreibung" oninvalid="this.setCustomValidity('Bitte gib eine kurze Objektbeschreibung ein (max. 1500 Zeichen)')" oninput="setCustomValidity('')"></textarea>
 						</fieldset>
 
 						<fieldset>
@@ -29,13 +36,24 @@
 						</fieldset>
 
 						<fieldset>
-							<label for="obj-kalt"><i class="fa fa-dollar-sign"></i></label>
+							<label for="obj-adresse"><i class="fa fa-map-marker-alt"></i></label>
+							<input v-model="objAddress" @focus="allowInput" @focusout="setFirstAddress" name="obj-adresse" id="obj-adresse" type="text" placeholder="Bitte Postleitzahl eingeben" required 
+							oninvalid="this.setCustomValidity('Bitte gib eine gültige Postleitzahl oder einen Ort aus der Liste ein')" oninput="setCustomValidity('')">
+							<div class="addressMenu" v-show="objAddressMenu.visible">
+								<div v-show="showLoader"><i class="fa fa-spinner"></i></div>
+								<div v-show="noPlace">Bitte versuche es mit einer andere Postleitzahl</div>
+								<a @click="setAddress" tabindex="0" v-for="place in placeList">{{ place.plz }} {{ place.ort }}</a>
+							</div>
+						</fieldset>
+
+						<fieldset>
+							<label for="obj-kalt"><i class="fa fa-euro-sign"></i></label>
 							<input maxlength="6" name="obj-kalt" id="obj-kalt" type="number" placeholder="Kaltmiete" required 
 							oninvalid="this.setCustomValidity('Bitte gib die Kaltmiete ein')" oninput="setCustomValidity('')">
 						</fieldset>
 
 						<fieldset>
-							<label class="opt-sec" for="obj-warm"><i class="fa fa-dollar-sign"></i></label>
+							<label class="opt-sec" for="obj-warm"><i class="fa fa-euro-sign"></i></label>
 							<input maxlength="6" name="obj-warm" id="obj-warm" type="number" placeholder="Warmmiete (optional)">
 						</fieldset>
 
@@ -46,7 +64,7 @@
 
 						<fieldset>
 							<label class="opt-sec" for="obj-einzugsdatum"><i class="fa fa-calendar-alt"></i></label>
-							<input placeholder="voraussichtliches Einzugsdatum (optional)" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="date" />
+							<input placeholder="voraussichtliches Einzugsdatum (optional)" name="obj-einzugsdatum" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="date" />
 						</fieldset>
 
 						<input type="submit" class="btn" value="Neue Wohnung einfügen">

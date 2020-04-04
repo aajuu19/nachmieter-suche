@@ -254,6 +254,11 @@ main {
                 &.first {
                     background: #0074e1;
                     order: 1;
+                    border-top-left-radius: rem(25px);
+                    border-top-right-radius: rem(25px);
+                    @include breakpoint(s) {
+                        border-top-right-radius: 0;
+                    }
                     &:before {
                         content: '1';
                     }
@@ -270,6 +275,13 @@ main {
                 &.second {
                     background: #008ae1;
                     order: 2;
+                    @include breakpoint(s) {
+                        border-top-right-radius: rem(25px);
+                    }
+                    @include breakpoint(m) {
+                        border-top-right-radius: 0;
+                    }
+                    
                     &:before {
                         content: '2';
                     }
@@ -294,6 +306,7 @@ main {
                     }
                     @include breakpoint(m) {
                         order: 3;
+                        border-top-right-radius: rem(25px);
                     }
                     &:after {
                         border-top: 20px solid #00a4e1;
@@ -322,6 +335,7 @@ main {
                     }
                     @include breakpoint(m) {
                         order: 6;
+                        border-bottom-right-radius: rem(25px);
                     }
                     &:after {
                         border-top: 20px solid #00b9e1;
@@ -336,6 +350,12 @@ main {
                 &.fifth {
                     background: #00c9e1;
                     order: 5;
+                    @include breakpoint(s) {
+                        border-bottom-left-radius: rem(25px);
+                    }
+                    @include breakpoint(m) {
+                        border-bottom-left-radius: 0;
+                    }
                     &:before {
                         content: '5';
                     }
@@ -358,6 +378,15 @@ main {
                 &.sixth {
                     background: #f79e02;
                     order: 6;
+                    border-bottom-left-radius: rem(25px);
+                    border-bottom-right-radius: rem(25px);
+                    @include breakpoint(s) {
+                        border-bottom-left-radius: 0;
+                    }
+                    @include breakpoint(m) {
+                        border-bottom-right-radius: 0;
+                        border-bottom-left-radius: rem(25px);
+                    }
                     &:before {
                         content: '6';
                     }
@@ -528,6 +557,49 @@ main {
                 margin-top: 0;
                 border-left: $lightborder;
                 border-top: 0;
+            }
+        }
+    }
+    .obj-ctn {
+        .addressMenu {
+            position: absolute;
+            border-radius: rem(25px);
+            top: 100%;
+            width: 100%;
+            background: darken($light, 5%);
+            z-index: 99;
+            padding: 1rem;
+            > div {
+                text-align: center;
+                i {
+                    font-size: rem(30px);
+                    animation: spinIt 1s infinite;
+                    animation-timing-function: linear;
+                    @keyframes spinIt {
+                        from {
+                            transform: rotate(0);
+                        }
+                        to {
+                            transform: rotate(360deg);
+                        }
+                    }
+                }
+            }
+            a {
+                padding: .5rem .8rem;
+                border-radius: rem(25px);
+                display: block;
+                text-decoration: none;
+                color: $dark;
+                cursor: pointer;
+                &:first-child {
+                    background: $primary;
+                    color: $light;
+                }
+                &:hover {
+                    background: $primary;
+                    color: $light;
+                }
             }
         }
     }

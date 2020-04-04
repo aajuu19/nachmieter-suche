@@ -214,3 +214,107 @@
         });
     }
 })();
+
+// new object page
+(function(){
+    if(document.body.classList.contains('neues-objekt')) {
+        let timeOut;
+        let vm = new Vue({
+            el: '.obj-ctn',
+            data: {
+                objIsSet: false,
+                objAddress: '',
+                objAddressMenu: {
+                    visible: false
+                },
+                placeList: [],
+                waitForTypedSpeed: 600,
+                showLoader: true,
+                noPlace: false
+            },
+            watch: {
+                objAddress: function(search) {                
+                    if(!this.objIsSet) {
+                        if(timeOut) {
+                            clearTimeout(timeOut);
+                        }
+                        timeOut = setTimeout(()=>{
+                            this.generateAddress(search);
+                        }, this.waitForTypedSpeed);
+                    }
+                }
+            },
+            methods: {
+                generateAddress: function(search) {
+                    // reset array on new Search
+                    this.placeList.length = 0;
+                        
+                    // set searchString and replace all whitespaces
+                    let searchStr = search.replace(/ /g, '%20');
+                    if(searchStr.length > 2) {
+                        let searchQuery = `https://public.opendatasoft.com/api/records/1.0/search/?dataset=postleitzahlen-deutschland&q=${searchStr}`;
+                        let fetched = fetch(searchQuery).then(res=>res.json());
+                        this.objAddressMenu.visible = true;
+                        this.showLoader = true;
+                        
+                        fetched.then(data=> {
+                            let places = data.records;
+                            // check if results exist
+                            if(places.length >= 1) {
+                                
+                                places.forEach(e=>{
+                                    let ortData = e.fields.note;
+                                    let plzData = e.fields.plz;
+                                    
+                                    this.placeList.push({ort: ortData, plz: plzData});
+                                });
+                                this.showLoader = false;
+                                this.noPlace = false;
+                                // console.log(this.placeList);
+                            } else {
+                                // do this if not
+                                // this.objAddressMenu.visible = false;
+
+                                // reset array if non result
+                                this.noPlace = true;
+                                this.showLoader = false;
+                                this.placeList.length = 0;
+                                // console.log("kein Ergebnis");
+                            }
+                        });
+                        
+                    } else {
+                        this.objAddressMenu.visible = false;
+                        this.noPlace = false;
+                        this.showLoader = true
+                        // this.timeoutActive = false;
+                    }
+                    
+                },
+                setAddress: function(e) {
+                    clearTimeout(timeOut);
+                    this.objAddressMenu.visible = false;
+                    this.objIsSet = true;
+
+                    this.objAddress = e.target.textContent;
+                },
+                setFirstAddress: function() {
+                    clearTimeout(timeOut);
+                    this.objAddressMenu.visible = false;
+                    this.objIsSet = true;
+
+                    if(this.placeList.length === 0) {
+                        this.objAddress = '';
+                    } else {
+                        let firstPlace = this.placeList[0];
+                        this.objAddress = `${firstPlace.plz} ${firstPlace.ort}`;
+                    }
+                },
+                allowInput: function() {
+                    this.objIsSet = false;
+                    this.showLoader = true;
+                }
+            }
+        });
+    }
+})();

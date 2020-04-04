@@ -6717,8 +6717,8 @@
 
 body {
   font-family: "Barlow", sans-serif;
-  color: #333;
-  background: white;
+  color: #312f2c;
+  background: #fff;
 }
 
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
@@ -6811,7 +6811,6 @@ form.default input {
   padding: 0.7rem;
   color: #312f2c;
   font-size: 0.875rem;
-  font-weight: lighter;
   outline: none;
   display: block;
   border: 1px solid transparent;
@@ -6879,7 +6878,6 @@ form.default textarea {
   padding-left: 3.125rem;
   color: #312f2c;
   font-size: 0.875rem;
-  font-weight: lighter;
   outline: none;
   display: block;
 }
@@ -7291,6 +7289,13 @@ main .procedure .procedure-ctn .tab:after {
 main .procedure .procedure-ctn .tab.first {
   background: #0074e1;
   order: 1;
+  border-top-left-radius: 1.5625rem;
+  border-top-right-radius: 1.5625rem;
+}
+@media (min-width: 680px) {
+  main .procedure .procedure-ctn .tab.first {
+    border-top-right-radius: 0;
+  }
 }
 main .procedure .procedure-ctn .tab.first:before {
   content: "1";
@@ -7314,6 +7319,16 @@ main .procedure .procedure-ctn .tab.first:after {
 main .procedure .procedure-ctn .tab.second {
   background: #008ae1;
   order: 2;
+}
+@media (min-width: 680px) {
+  main .procedure .procedure-ctn .tab.second {
+    border-top-right-radius: 1.5625rem;
+  }
+}
+@media (min-width: 1025px) {
+  main .procedure .procedure-ctn .tab.second {
+    border-top-right-radius: 0;
+  }
 }
 main .procedure .procedure-ctn .tab.second:before {
   content: "2";
@@ -7349,6 +7364,7 @@ main .procedure .procedure-ctn .tab.third:before {
 @media (min-width: 1025px) {
   main .procedure .procedure-ctn .tab.third {
     order: 3;
+    border-top-right-radius: 1.5625rem;
   }
 }
 main .procedure .procedure-ctn .tab.third:after {
@@ -7395,6 +7411,7 @@ main .procedure .procedure-ctn .tab.fourth:before {
 @media (min-width: 1025px) {
   main .procedure .procedure-ctn .tab.fourth {
     order: 6;
+    border-bottom-right-radius: 1.5625rem;
   }
 }
 main .procedure .procedure-ctn .tab.fourth:after {
@@ -7416,6 +7433,16 @@ main .procedure .procedure-ctn .tab.fourth:after {
 main .procedure .procedure-ctn .tab.fifth {
   background: #00c9e1;
   order: 5;
+}
+@media (min-width: 680px) {
+  main .procedure .procedure-ctn .tab.fifth {
+    border-bottom-left-radius: 1.5625rem;
+  }
+}
+@media (min-width: 1025px) {
+  main .procedure .procedure-ctn .tab.fifth {
+    border-bottom-left-radius: 0;
+  }
 }
 main .procedure .procedure-ctn .tab.fifth:before {
   content: "5";
@@ -7452,6 +7479,19 @@ main .procedure .procedure-ctn .tab.fifth:after {
 main .procedure .procedure-ctn .tab.sixth {
   background: #f79e02;
   order: 6;
+  border-bottom-left-radius: 1.5625rem;
+  border-bottom-right-radius: 1.5625rem;
+}
+@media (min-width: 680px) {
+  main .procedure .procedure-ctn .tab.sixth {
+    border-bottom-left-radius: 0;
+  }
+}
+@media (min-width: 1025px) {
+  main .procedure .procedure-ctn .tab.sixth {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 1.5625rem;
+  }
 }
 main .procedure .procedure-ctn .tab.sixth:before {
   content: "6";
@@ -7617,6 +7657,47 @@ main .form-area .side-info {
     border-left: 1px solid #bce2f7;
     border-top: 0;
   }
+}
+main .obj-ctn .addressMenu {
+  position: absolute;
+  border-radius: 1.5625rem;
+  top: 100%;
+  width: 100%;
+  background: #f2f2f2;
+  z-index: 99;
+  padding: 1rem;
+}
+main .obj-ctn .addressMenu > div {
+  text-align: center;
+}
+main .obj-ctn .addressMenu > div i {
+  font-size: 1.875rem;
+  animation: spinIt 1s infinite;
+  animation-timing-function: linear;
+}
+@keyframes spinIt {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+main .obj-ctn .addressMenu a {
+  padding: 0.5rem 0.8rem;
+  border-radius: 1.5625rem;
+  display: block;
+  text-decoration: none;
+  color: #312f2c;
+  cursor: pointer;
+}
+main .obj-ctn .addressMenu a:first-child {
+  background: #1c9ce5;
+  color: #fff;
+}
+main .obj-ctn .addressMenu a:hover {
+  background: #1c9ce5;
+  color: #fff;
 }
 
 .footer-img {

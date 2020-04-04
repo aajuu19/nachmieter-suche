@@ -6,8 +6,8 @@
 
 body {
     font-family: $main-font;
-    color: #333;
-    background: white;
+    color: $dark;
+    background: $light;
 }
 
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
@@ -90,7 +90,6 @@ form {
             padding: .7rem;
             color: $dark;
             font-size: rem(14px);
-            font-weight: lighter;
             @include breakpoint(m) {
                 font-size: rem(15px);
             }
@@ -159,7 +158,6 @@ form {
             padding-left: rem(50px);
             color: $dark;
             font-size: rem(14px);
-            font-weight: lighter;
             outline: none;
             display: block;
             &:focus {

@@ -22,7 +22,7 @@
             <span class="heading primary object-heading">Deine Objekte</span>
             <div class="user-object-list">            
                 <?php 
-                    $user_objects = $db->get_this_all('SELECT * FROM `objekt` WHERE '.$user['p_id'].' = 2 ORDER BY `einstellungsdatum` DESC');
+                    $user_objects = $db->get_this_all('SELECT * FROM `objekt` WHERE p_id = '.$user['p_id'].' ORDER BY `einstellungsdatum` DESC');
                     if(!empty($user_objects)) {
                         foreach($user_objects as $k => $v) {
                             $shorten_desc = $web->shorten_str($v['beschreibung'], 70);
@@ -31,7 +31,7 @@
                                 <span class="id">ID: '.$v['o_id'].'</span>
                                 <span class="name">'.$v['name'].'</span>
                                 <span class="beschreibung">'.$shorten_desc.'</span>
-                                <a class="object-link" href="#link-dahin"><i class="fa fa-eye"></i></a>
+                                <a class="object-link" href="'.$web->root.'/objekte/'.$v['link'].'"><i class="fa fa-eye"></i></a>
                             </div>';
                             echo $object;
                         } 

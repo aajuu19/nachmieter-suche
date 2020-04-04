@@ -2,6 +2,8 @@
 
     class Website {
 
+        protected $debug = false;
+
         public function __construct($metaDatas, $db) {
             // GET META DATAS
             $this->meta = $metaDatas;
@@ -76,6 +78,18 @@
 
         public function shorten_str($str, $len) {
             return (strlen($str) >= $len) ? substr($str, 0, $len). " ... " :  $str;
+        }
+        
+        public function get_from_url($url) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            $result = curl_exec($ch);
+            curl_close($ch);
+
+            $obj = json_decode($result);
+            return $obj;
         }
     }
 
