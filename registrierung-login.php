@@ -26,7 +26,7 @@
 								}
 							?>
 							<div class="login-ctn" v-show="loginShow">
-								<form v-on:submit.prevent="validate" class="default" action="<?php echo $web->root; ?>/login.php" method="POST">
+								<form v-on:submit.prevent="validate" class="default" action="<?php echo $web->root; ?>/actions/login.php" method="POST">
 									<fieldset>
 										<label for="log-mail"><i class="fa fa-envelope"></i></label>
 										<input name="log-mail" id="log-mail" type="mail" placeholder="E-Mail-Adresse" required 
@@ -40,7 +40,7 @@
 								</form>
 							</div>
 							<div class="registration-ctn" v-show="registrationShow">
-								<form v-on:submit.prevent="validate" class="default" action="<?php echo $web->root; ?>/register.php" method="POST">
+								<form v-on:submit.prevent="validate" class="default" action="<?php echo $web->root; ?>/actions/register.php" method="POST">
 									<fieldset>
 										<label for="reg-name"><i class="fa fa-portrait"></i></label>
 										<input minlength="6" name="reg-name" id="reg-name" type="text" placeholder="Wunschname eingeben" required 

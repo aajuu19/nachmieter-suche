@@ -14,7 +14,7 @@
     </div>
 </div>
 
-<div class="object-teaser">
+<div class="object-teaser primaryOverlay">
     <div class="row space-both">
         <div class="col">
             <span class="h1 light">Unsere Top-Wohnungen</span>
@@ -35,7 +35,7 @@
                             <span class="heading">'.$val['name'].'</span>
                             <span class="time">'.$web->format_date($val['einstellungsdatum']).' Uhr</span>
                             <span class="desc">'.$web->shorten_str($val['beschreibung'], 80).'</span>
-                            <a href="'.$web->root.'/'.$link.'" class="btn secondary">Mehr erfahren</a>
+                            <a href="'.$web->root.'/objekte/'.$val['link'].'" class="btn secondary">Mehr erfahren</a>
                         </div>
                     </div> 
                 </div>';

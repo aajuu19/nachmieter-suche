@@ -91,6 +91,10 @@
             $obj = json_decode($result);
             return $obj;
         }
+
+        public function get_upl_img($src, $alt, $class = "fluid") {
+            echo '<img src="'.$this->root.'/uploads/'.$src.'" alt="'.$alt.'" class="'.$class.'">';
+        }
     }
 
     $web = new Website($meta, $db);

@@ -56,7 +56,7 @@
             </div>   
         </div>
     </div>
-    <header>
+    <header class="primaryOverlay">
         <div class="header-ctn">
             <?php 
                 if(isset($meta[$web->file_name]['claim'])) {

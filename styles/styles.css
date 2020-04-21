@@ -1,5 +1,6 @@
 @charset "UTF-8";
 .row {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
@@ -6721,6 +6722,17 @@ body {
   background: #fff;
 }
 
+::-moz-selection {
+  /* Code for Firefox */
+  color: #fff;
+  background: #f79e02;
+}
+
+::selection {
+  color: #fff;
+  background: #f79e02;
+}
+
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   display: block;
   font-weight: 700;
@@ -6801,6 +6813,10 @@ h4, .h4 {
   }
 }
 
+a {
+  text-decoration: none;
+}
+
 main p {
   margin-bottom: 1.25rem;
 }
@@ -6824,15 +6840,19 @@ form.default input.error {
   border: 1px solid #ff9797;
 }
 form.default input::placeholder {
+  font-family: "Barlow", sans-serif;
   color: #a5d8f5;
 }
-form.default input[type=text], form.default input[type=password], form.default input[type=mail], form.default input[type=number], form.default input[type=date] {
+form.default input[type=text], form.default input[type=password], form.default input[type=mail], form.default input[type=number], form.default input[type=date], form.default input[type=file] {
   background: #f7f7f7;
   width: 100%;
   padding-left: 50px;
 }
-form.default input[type=text]:focus, form.default input[type=password]:focus, form.default input[type=mail]:focus, form.default input[type=number]:focus, form.default input[type=date]:focus {
+form.default input[type=text]:focus, form.default input[type=password]:focus, form.default input[type=mail]:focus, form.default input[type=number]:focus, form.default input[type=date]:focus, form.default input[type=file]:focus {
   background: #f2f2f2;
+}
+form.default input[type=file] {
+  color: #a5d8f5;
 }
 form.default input[type=submit] {
   cursor: pointer;
@@ -6840,6 +6860,29 @@ form.default input[type=submit] {
 }
 form.default fieldset {
   border: none;
+}
+form.default fieldset select {
+  font-family: "Barlow", sans-serif;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8nwYAAmoBZ0eMiB8AAAAASUVORK5CYII=) repeat;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  height: 40px;
+  outline: none;
+  padding-left: 50px;
+  background: #f7f7f7;
+  width: 100%;
+  color: #312f2c;
+}
+form.default fieldset select:required:invalid {
+  color: #a5d8f5;
+}
+form.default fieldset select option {
+  color: #312f2c;
 }
 form.default fieldset label {
   display: block;
@@ -6869,6 +6912,7 @@ form.default fieldset label.big-label {
   border-bottom-left-radius: 25px;
 }
 form.default textarea {
+  font-family: "Barlow", sans-serif;
   border: none;
   border-radius: 25px;
   background: #f7f7f7;
@@ -6908,6 +6952,38 @@ ul.styled-list li:before {
   content: "";
   padding-right: 10px;
   font-family: "Font Awesome 5 Free", sans-serif;
+}
+
+.email {
+  color: #1c9ce5;
+}
+.email:hover {
+  text-decoration: underline;
+}
+
+table {
+  display: block;
+  width: 100%;
+}
+table thead, table tbody {
+  display: block;
+  width: 100%;
+}
+table thead tr, table tbody tr {
+  display: flex;
+  padding: 0.7rem;
+}
+table thead tr:nth-child(odd), table tbody tr:nth-child(odd) {
+  background: #d3ecfa;
+}
+table thead tr th, table thead tr td, table tbody tr th, table tbody tr td {
+  width: 50%;
+  flex-basis: 50%;
+  text-align: left;
+}
+table thead tr {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #1c9ce5;
 }
 
 .light {
@@ -7008,6 +7084,51 @@ ul.styled-list li:before {
   color: #1c9ce5;
 }
 
+.noPad {
+  padding: 0 !important;
+}
+
+.noMarg {
+  margin: 0 !important;
+}
+
+.optional:after, .dropdown:after {
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 3%;
+  content: "optional";
+  color: #a5d8f5;
+  font-size: 0.8125rem;
+}
+
+.dropdown:after {
+  font-family: "Font Awesome 5 Free", sans-serif;
+  content: "";
+}
+
+.primaryOverlay {
+  position: relative;
+}
+.primaryOverlay:before {
+  background: #1c9ce5;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  content: "";
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 header {
   height: 100vh;
   min-height: 31.25rem;
@@ -7023,6 +7144,7 @@ header {
 body:not(.index) header {
   height: 35vh;
   min-height: 18.75rem;
+  background-attachment: scroll;
 }
 body:not(.index) header .header-ctn {
   margin-top: 3.125rem;
@@ -7047,6 +7169,7 @@ body:not(.index) header .header-ctn .claim {
 header .header-ctn {
   text-align: center;
   width: 90%;
+  z-index: 1;
 }
 @media (min-width: 680px) {
   header .header-ctn {
@@ -7211,7 +7334,7 @@ main .object-teaser .teaser-box .teaser-content .object-infos > span {
 main .object-teaser .teaser-box .teaser-content .object-infos > span small {
   display: block;
   color: #1c9ce5;
-  border-bottom: 1px solid #bce2f7;
+  border-bottom: 1px solid #a5d8f5;
   padding-bottom: 10px;
   margin-bottom: 10px;
 }
@@ -7543,7 +7666,7 @@ main .all-objects .object-teaser aside.filter-ctn .filter input {
   width: 60%;
   padding: 0.7rem;
   outline: none;
-  border: 1px solid #bce2f7;
+  border: 1px solid #a5d8f5;
   border-radius: 15px;
   font-size: 14px;
 }
@@ -7645,7 +7768,7 @@ main .form-area form.default input[type=submit] {
   width: 100%;
 }
 main .form-area .side-info {
-  border-top: 1px solid #bce2f7;
+  border-top: 1px solid #a5d8f5;
   margin-top: 2rem;
   height: 100%;
   padding: 2rem 0;
@@ -7654,11 +7777,93 @@ main .form-area .side-info {
   main .form-area .side-info {
     padding: 2rem;
     margin-top: 0;
-    border-left: 1px solid #bce2f7;
+    border-left: 1px solid #a5d8f5;
     border-top: 0;
   }
 }
-main .obj-ctn .addressMenu {
+main .obj-ctn form.default .image-ctn label {
+  background: transparent;
+  position: static;
+  width: auto;
+  cursor: pointer;
+}
+main .obj-ctn form.default .image-ctn label .icon {
+  position: absolute;
+  display: block;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  background: #febc48;
+  color: #fff;
+  border-bottom-left-radius: 25px;
+  border-top-left-radius: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+main .obj-ctn form.default .image-ctn label span.img-placeholder {
+  border: none;
+  border-radius: 25px;
+  padding: 0.7rem;
+  color: #312f2c;
+  font-size: 0.875rem;
+  outline: none;
+  display: block;
+  border: 1px solid transparent;
+  background: #f7f7f7;
+  width: 100%;
+  padding-left: 50px;
+  transition: 0.3s;
+}
+@media (min-width: 1025px) {
+  main .obj-ctn form.default .image-ctn label span.img-placeholder {
+    font-size: 0.9375rem;
+  }
+}
+main .obj-ctn form.default .image-ctn label span.img-placeholder .opt {
+  font-size: 0.875rem;
+  padding-left: 0.375rem;
+  color: #a5d8f5;
+}
+@media (min-width: 1025px) {
+  main .obj-ctn form.default .image-ctn label span.img-placeholder .opt {
+    font-size: 0.9375rem;
+  }
+}
+main .obj-ctn form.default .image-ctn label span.img-placeholder .img-btn {
+  transition: 0.3s;
+  background: #fed894;
+  border-radius: 25px;
+  display: inline-block;
+  padding: 0.3rem 1rem;
+  color: #fff;
+}
+main .obj-ctn form.default .image-ctn label span.img-placeholder i {
+  color: #fff;
+  font-size: 0.75rem;
+}
+main .obj-ctn form.default .image-ctn label span.img-placeholder .file-item {
+  display: block;
+  color: #78c4ef;
+}
+main .obj-ctn form.default .image-ctn label span.img-placeholder .file-item:nth-child(2) {
+  margin-top: 0.7rem;
+}
+main .obj-ctn form.default .image-ctn label span.img-placeholder .file-item .fa-file-image {
+  color: #1c9ce5;
+  padding-right: 5px;
+}
+main .obj-ctn form.default .image-ctn label span:hover {
+  background: #f2f2f2;
+}
+main .obj-ctn form.default .image-ctn label span:hover .img-btn {
+  background: #fec561;
+}
+main .obj-ctn form.default .image-ctn input[type=file] {
+  display: none;
+}
+main .obj-ctn form.default .addressMenu {
   position: absolute;
   border-radius: 1.5625rem;
   top: 100%;
@@ -7667,10 +7872,10 @@ main .obj-ctn .addressMenu {
   z-index: 99;
   padding: 1rem;
 }
-main .obj-ctn .addressMenu > div {
+main .obj-ctn form.default .addressMenu > div {
   text-align: center;
 }
-main .obj-ctn .addressMenu > div i {
+main .obj-ctn form.default .addressMenu > div i {
   font-size: 1.875rem;
   animation: spinIt 1s infinite;
   animation-timing-function: linear;
@@ -7683,7 +7888,7 @@ main .obj-ctn .addressMenu > div i {
     transform: rotate(360deg);
   }
 }
-main .obj-ctn .addressMenu a {
+main .obj-ctn form.default .addressMenu a {
   padding: 0.5rem 0.8rem;
   border-radius: 1.5625rem;
   display: block;
@@ -7691,13 +7896,99 @@ main .obj-ctn .addressMenu a {
   color: #312f2c;
   cursor: pointer;
 }
-main .obj-ctn .addressMenu a:first-child {
+main .obj-ctn form.default .addressMenu a:first-child {
   background: #1c9ce5;
   color: #fff;
 }
-main .obj-ctn .addressMenu a:hover {
+main .obj-ctn form.default .addressMenu a:hover {
   background: #1c9ce5;
   color: #fff;
+}
+main .object-container span.address {
+  margin-bottom: 1.5625rem;
+  display: block;
+  color: #b2afaa;
+}
+main .object-container .user-infos {
+  border: 1px solid #a5d8f5;
+  border-radius: 10px;
+  margin-top: 2.5rem;
+  padding: 1.25rem;
+}
+main .object-container .user-infos span {
+  display: block;
+}
+main .object-container .user-infos span.desc {
+  margin-top: 0.9375rem;
+}
+main .object-container .user-infos .buttons {
+  display: flex;
+  margin-top: 1.25rem;
+}
+main .object-container .user-infos .buttons a:first-child {
+  margin-right: 0.625rem;
+}
+main .object-container .object-details {
+  margin-top: 3.125rem;
+}
+main .object-container .object-details .important-ctn {
+  padding: 1.875rem;
+  border: 1px solid #a5d8f5;
+  border-radius: 15px;
+}
+main .object-container .object-details .important-ctn .important-block {
+  display: flex;
+  align-items: center;
+}
+main .object-container .object-details .important-ctn .important-block:first-child {
+  margin-bottom: 1.25rem;
+}
+main .object-container .object-details .important-ctn .important-block span {
+  display: block;
+  margin-left: 1.25rem;
+}
+main .object-container .object-details .important-ctn .important-block .important-icon {
+  width: 4.0625rem;
+  height: 4.0625rem;
+  background: #1c9ce5;
+  color: #fff;
+  font-size: 1.5625rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+main .object-container .object-details .more-info {
+  margin-top: 2.5rem;
+}
+main .object-container .object-details .more-info .data-box {
+  display: flex;
+  align-items: center;
+  padding: 2rem 1.5rem;
+  border-bottom: 4px solid #1c9ce5;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+  border-radius: 0.9375rem;
+}
+main .object-container .object-details .more-info .data-box i {
+  display: flex;
+  width: 50%;
+  flex-basis: 50%;
+  justify-content: center;
+  align-items: center;
+  color: #1c9ce5;
+  font-size: 2.5rem;
+}
+main .object-container .object-details .more-info .data-box .data-info span {
+  display: block;
+}
+main .object-container .object-details .more-info .data-box .data-info span.data-name {
+  font-size: 0.875rem;
+  color: #b2afaa;
+}
+main .object-container .object-details .more-info .data-box .data-info span.data-value {
+  font-weight: 700;
+  font-size: 1.5rem;
 }
 
 .footer-img {
@@ -7752,7 +8043,7 @@ footer {
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  border-bottom: 1px solid #bce2f7;
+  border-bottom: 1px solid #a5d8f5;
   transition: 0.3s;
 }
 .user-area .user-object-list .user-object:nth-child(odd) {

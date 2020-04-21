@@ -11,7 +11,7 @@
 					}
 				?>
 				<div class="obj-ctn">
-					<form class="default" action="<?php echo $web->root; ?>/actions/insert-obj.php" method="POST">
+					<form class="default" v-on:submit.prevent="validate" action="<?php echo $web->root; ?>/actions/insert-obj.php" enctype="multipart/form-data" method="POST">
 						<fieldset>
 							<label for="obj-name"><i class="fa fa-home"></i></label>
 							<input name="obj-name" maxlength="61" id="obj-name" type="text" placeholder="Objektname" required 
@@ -35,14 +35,23 @@
 							oninvalid="this.setCustomValidity('Bitte gib die Anzahl der Zimmer ein')" oninput="setCustomValidity('')">
 						</fieldset>
 
-						<fieldset>
+						<fieldset class="dropdown">
+							<label for="obj-typ"><i class="fa fa-bed"></i></label>
+							<select name="obj-typ" id="obj-typ" required oninvalid="this.setCustomValidity('Bitte gib einen Objekttypen ein')" oninput="setCustomValidity('')">
+								<option value="" selected disabled>Bitte wählen</option>
+								<option value="">Altbau</option>
+								<option value="">Neubau</option>
+							</select>
+						</fieldset>
+
+						<fieldset class="dropdown">
 							<label for="obj-adresse"><i class="fa fa-map-marker-alt"></i></label>
-							<input v-model="objAddress" @focus="allowInput" @focusout="setFirstAddress" name="obj-adresse" id="obj-adresse" type="text" placeholder="Bitte Postleitzahl eingeben" required 
+							<input v-model="objAddress" @focus="allowInput" @focusout="setFirstAddress" name="obj-adresse" autocomplete="off" id="obj-adresse" type="text" placeholder="Postleitzahl" required 
 							oninvalid="this.setCustomValidity('Bitte gib eine gültige Postleitzahl oder einen Ort aus der Liste ein')" oninput="setCustomValidity('')">
 							<div class="addressMenu" v-show="objAddressMenu.visible">
 								<div v-show="showLoader"><i class="fa fa-spinner"></i></div>
 								<div v-show="noPlace">Bitte versuche es mit einer andere Postleitzahl</div>
-								<a @click="setAddress" tabindex="0" v-for="place in placeList">{{ place.plz }} {{ place.ort }}</a>
+								<a @mousedown="setAddress(place)" tabindex="0" v-for="place in placeList">{{ place.plz }} {{ place.ort }}</a>
 							</div>
 						</fieldset>
 
@@ -52,19 +61,34 @@
 							oninvalid="this.setCustomValidity('Bitte gib die Kaltmiete ein')" oninput="setCustomValidity('')">
 						</fieldset>
 
-						<fieldset>
+						<fieldset class="optional">
 							<label class="opt-sec" for="obj-warm"><i class="fa fa-euro-sign"></i></label>
-							<input maxlength="6" name="obj-warm" id="obj-warm" type="number" placeholder="Warmmiete (optional)">
+							<input maxlength="6" name="obj-warm" id="obj-warm" type="number" placeholder="Warmmiete">
 						</fieldset>
 
-						<fieldset>
+						<fieldset class="optional">
 							<label class="opt-sec" for="obj-etage"><i class="fa fa-layer-group"></i></label>
-							<input maxlength="6" name="obj-etage" id="obj-etage" type="number" placeholder="Etage (optional)">
+							<input maxlength="6" name="obj-etage" id="obj-etage" type="number" placeholder="Etage">
 						</fieldset>
 
-						<fieldset>
+						<fieldset class="optional">
 							<label class="opt-sec" for="obj-einzugsdatum"><i class="fa fa-calendar-alt"></i></label>
-							<input placeholder="voraussichtliches Einzugsdatum (optional)" name="obj-einzugsdatum" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="date" />
+							<input placeholder="Einzugsdatum" name="obj-einzugsdatum" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="date" />
+						</fieldset>
+						
+						<fieldset class="image-ctn">
+							<label class="opt-sec" for="obj-images">
+								<i class="icon fa fa-images"></i>
+								<span class="img-placeholder optional">
+									<span class="img-btn">
+										Bilder hochladen <i class="fa fa-plus"></i> 
+									</span>
+									<template v-if="fileList.length >= 1">
+										<span class="file-item" v-for="file in fileList"><i class="fa fa-file-image"></i> {{ file.name }}</span>
+									</template>	
+								</span>
+							</label>
+							<input type="file" @change="showFileDetails" name="obj-images[]" id="obj-images" multiple accept="image/*">
 						</fieldset>
 
 						<input type="submit" class="btn" value="Neue Wohnung einfügen">

@@ -16,18 +16,50 @@
     $etage = $_POST['obj-etage'] == "" ? null : $_POST['obj-etage'];
     $einzug = $_POST['obj-einzugsdatum'] == "" ? null : $_POST['obj-einzugsdatum'];
     $uniq_id = uniqid();
-
+    
     $p_id = $user_id['p_id'];
     $next_o_id = $db->get_this_one("SELECT * FROM objekt ORDER BY o_id DESC LIMIT 1")['o_id'] + 1;
     $link = $web->format_link($name).'-'.$uniq_id.'.php';
-
     $address_obj = $web->get_from_url('https://public.opendatasoft.com/api/records/1.0/search/?dataset=postleitzahlen-deutschland&q='.rawurlencode($adresse));
+    
+
+    $image_files = $_FILES['obj-images'];
+    $img_names = $image_files['name'];
+    if($img_names[0] != "") {   
+        // Count total files
+        $countfiles = count($img_names);
+
+        if($countfiles > 7) {
+            $error_message = rawurlencode('Bitte lade maximal 7 Bilder hoch.');
+            header('Location: '.$web->root.'/user/neues-objekt.php?bestaetigung='.$error_message);
+        } else {
+            // Looping all files
+            for($i=1;$i<=7;$i++) {
+                if($i <= $countfiles) {
+                    $filename = $web->format_link($image_files['name'][$i-1]);
+                    $new_id = uniqid();
+                    $img_link = $new_id.'-'.$filename;
+                    ${"image_$i"} = $img_link;
+                } else {
+                    ${"image_$i"} = null;
+                }
+            }
+        }   
+    } else {
+        $image_1 = "placeholder.jpg";
+        $image_2 = null;
+        $image_3 = null;
+        $image_4 = null;
+        $image_5 = null;
+        $image_6 = null;
+        $image_7 = null;
+    }
 
     if($address_obj->records) {
         // if record was found
         $db->prep_exec(
             // sql statement here
-            'INSERT INTO objekt (name, beschreibung, quadratmeter, zimmer, adresse, kalt, warm, etage, einzug, link, p_id) VALUES (?,?,?,?,?,?,?,?,?,?,?)'
+            'INSERT INTO objekt (name, beschreibung, quadratmeter, zimmer, adresse, kalt, warm, etage, einzug, link, image_1, image_2, image_3, image_4, image_5, image_6, image_7, p_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
             ,
             // execute here
             [
@@ -41,6 +73,13 @@
                 $etage,
                 $einzug,
                 $link,
+                $image_1,
+                $image_2,
+                $image_3,
+                $image_4,
+                $image_5,
+                $image_6,
+                $image_7,
                 $p_id
             ]
         );
@@ -51,6 +90,15 @@
         
         if (copy($src_file, $new_file)) { 
             // if copy worked
+
+            if($img_names[0] != "") {   
+                // Looping all files
+                for($i=1;$i<=$countfiles;$i++) {
+                    // Upload file
+                    copy($image_files['tmp_name'][$i-1], '../uploads/'.${"image_$i"});
+                }
+            }
+
             $success_message = rawurlencode('Das Objekt wurde erfolgreich eingefügt.');
             header('Location: '.$web->root.'/user/neues-objekt.php?bestaetigung='.$success_message);
         } 
@@ -69,6 +117,6 @@
     } else {
         // if record was not found
         $error_message = rawurlencode('Bitte gib eine gültige Postleitzahl ein.');
-	    header('Location: '.$web->root.'/user/neues-objekt.php?bestaetigung='.$error_message);
+	    header('Location: '.$web->root.'/user/neues-objekt.php?error='.$error_message);
     }
         

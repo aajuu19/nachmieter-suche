@@ -230,7 +230,10 @@
                 placeList: [],
                 waitForTypedSpeed: 600,
                 showLoader: true,
-                noPlace: false
+                noPlace: false,
+                maxFiles: 7,
+                fileList: [],
+                lastValidObj: null               
             },
             watch: {
                 objAddress: function(search) {                
@@ -270,16 +273,15 @@
                                 });
                                 this.showLoader = false;
                                 this.noPlace = false;
+                                this.lastValidObj = this.placeList[0];
                                 // console.log(this.placeList);
                             } else {
                                 // do this if not
-                                // this.objAddressMenu.visible = false;
 
                                 // reset array if non result
                                 this.noPlace = true;
                                 this.showLoader = false;
                                 this.placeList.length = 0;
-                                // console.log("kein Ergebnis");
                             }
                         });
                         
@@ -287,32 +289,51 @@
                         this.objAddressMenu.visible = false;
                         this.noPlace = false;
                         this.showLoader = true
-                        // this.timeoutActive = false;
                     }
-                    
                 },
-                setAddress: function(e) {
+                setAddress: function(place) {
                     clearTimeout(timeOut);
                     this.objAddressMenu.visible = false;
                     this.objIsSet = true;
-
-                    this.objAddress = e.target.textContent;
+                    this.lastValidObj = place;
                 },
                 setFirstAddress: function() {
                     clearTimeout(timeOut);
                     this.objAddressMenu.visible = false;
                     this.objIsSet = true;
 
-                    if(this.placeList.length === 0) {
+                    if (this.objAddress.length <= 2) {
                         this.objAddress = '';
-                    } else {
+                    } else if(this.placeList.length === 0) {
+                        if(this.lastValidObj) {
+                            this.objAddress = `${this.lastValidObj.plz} ${this.lastValidObj.ort}`;
+                        } else {
+                            this.objAddress = '';
+                        }
+                    } else if(this.objAddress !== "" && this.objAddress.length >= 3 && this.placeList.length === 1){
                         let firstPlace = this.placeList[0];
                         this.objAddress = `${firstPlace.plz} ${firstPlace.ort}`;
-                    }
+                    } else if (this.placeList.length >= 2) {
+                        this.objAddress = `${this.lastValidObj.plz} ${this.lastValidObj.ort}`;
+                    }  
+
                 },
                 allowInput: function() {
                     this.objIsSet = false;
                     this.showLoader = true;
+                },
+                validate: function($event) {
+                    let input = document.querySelector('input[type="file"]');
+
+                    if(input.files.length > this.maxFiles) {
+                        input.setCustomValidity('Du kannst nicht mehr als 7 Bilder hochladen.');
+                        input.reportValidity();
+                    } else {
+                        $event.target.submit();
+                    }
+                },
+                showFileDetails: function($event) {
+                    this.fileList = $event.target.files;
                 }
             }
         });

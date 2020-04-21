@@ -10,6 +10,16 @@ body {
     background: $light;
 }
 
+::-moz-selection { /* Code for Firefox */
+    color: $light;
+    background: $secondary;
+}
+
+::selection {
+    color: $light;
+    background: $secondary;
+}
+
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     display: block;
     font-weight: 700;
@@ -76,6 +86,10 @@ h4, .h4 {
     }
 }
 
+a {
+    text-decoration: none;
+}
+
 main {
     p {
         margin-bottom: 1.25rem;
@@ -101,16 +115,21 @@ form {
             }
     
             &::placeholder {
+                font-family: $main-font;
                 color: lighten($primary, 30%);
             }
 
-            &[type=text], &[type=password], &[type=mail], &[type=number], &[type=date] {
+            &[type=text], &[type=password], &[type=mail], &[type=number], &[type=date], &[type=file] {
                 background: darken($light, 3%);
                 width: 100%;
                 padding-left: 50px;
                 &:focus {
                     background: darken($light, 5%);
                 }
+            }
+
+            &[type=file] {
+                color: lighten($primary, 30%);
             }
     
             &[type=submit] {
@@ -120,6 +139,29 @@ form {
         }
         fieldset {
             border: none;
+            select {
+                font-family: $main-font;
+                -moz-appearance: none;
+                -webkit-appearance: none;
+                appearance: none;
+                background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8nwYAAmoBZ0eMiB8AAAAASUVORK5CYII=) repeat;
+                border: none;
+                border-radius: 25px;
+                cursor: pointer;
+                font-size: rem(14px);
+                height: 40px;
+                outline: none;
+                padding-left: 50px;
+                background: darken($light, 3%);
+                width: 100%;
+                color: $dark;
+                &:required:invalid {
+                    color: $lightprimary;
+                }
+                option {
+                    color: $dark;
+                }
+            }
                 label {
                     display: block;
                     position: absolute;
@@ -149,6 +191,7 @@ form {
                 }
         }
         textarea {
+            font-family: $main-font;
             border: none;
             border-radius: 25px;
             background: darken($light, 3%);
@@ -164,7 +207,7 @@ form {
                 background: darken($light, 5%);
             }
             &::placeholder {
-                color: lighten($primary, 30%);
+                color: $lightprimary;
             }
             @include breakpoint(m) {
                 font-size: rem(15px);
@@ -190,6 +233,40 @@ ul {
                 padding-right: 10px;
                 font-family: $icon-font;
             }
+        }
+    }
+}
+
+.email {
+    color: $primary;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+table {
+    display: block;
+    width: 100%;
+    thead, tbody {
+        display: block;
+        width: 100%;
+        tr {
+            display: flex;
+            padding: .7rem;
+            &:nth-child(odd) {
+                background: lighten($lightprimary, 10%);
+            }
+            th, td {
+                width: 50%;
+                flex-basis: 50%;
+                text-align: left;
+            }
+        }
+    }
+    thead {
+        tr {
+            padding-bottom: 1rem;
+            border-bottom: 1px solid $primary;
         }
     }
 }
