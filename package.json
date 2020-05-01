@@ -1,0 +1,29 @@
+{
+  "name": "packages",
+  "version": "1.0.0",
+  "description": "Mein Paket",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-vue": "^6.2.2"
+  },
+  "scripts": {
+    "test": "hallo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aajuu19/nachmieter-suche.git"
+  },
+  "keywords": [
+    "nachmieter"
+  ],
+  "author": "Aaron Jung",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/aajuu19/nachmieter-suche/issues"
+  },
+  "homepage": "https://github.com/aajuu19/nachmieter-suche#readme"
+}
