@@ -6870,7 +6870,7 @@ form.default fieldset select {
   border: none;
   border-radius: 25px;
   cursor: pointer;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   height: 40px;
   outline: none;
   padding-left: 50px;
@@ -7264,15 +7264,23 @@ main .object-teaser .teaser-box {
   overflow: hidden;
   height: 100%;
 }
-@media (min-width: 1200px) {
+@media (min-width: 1025px) {
   main .object-teaser .teaser-box {
     display: flex;
   }
 }
-@media (min-width: 1200px) {
+main .object-teaser .teaser-box .teaser-img img {
+  height: 18.75rem;
+  width: 100%;
+  object-fit: cover;
+}
+@media (min-width: 1025px) {
   main .object-teaser .teaser-box .teaser-img {
     flex-basis: 30%;
     width: 30%;
+  }
+  main .object-teaser .teaser-box .teaser-img img {
+    height: 100%;
   }
 }
 @media (min-width: 1400px) {
@@ -7281,15 +7289,10 @@ main .object-teaser .teaser-box {
     width: 35%;
   }
 }
-main .object-teaser .teaser-box .teaser-img img {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-}
 main .object-teaser .teaser-box .teaser-content {
   padding: 1rem;
 }
-@media (min-width: 1200px) {
+@media (min-width: 1025px) {
   main .object-teaser .teaser-box .teaser-content {
     flex-basis: 70%;
     width: 70%;
@@ -7317,7 +7320,7 @@ main .object-teaser .teaser-box .teaser-content span.time {
 main .object-teaser .teaser-box .teaser-content span.desc {
   margin: 1.5rem 0;
 }
-@media (min-width: 1200px) {
+@media (min-width: 1025px) {
   main .object-teaser .teaser-box .teaser-content span.desc {
     margin: 2.3rem 0;
   }
@@ -7903,6 +7906,9 @@ main .obj-ctn form.default .addressMenu a:first-child {
 main .obj-ctn form.default .addressMenu a:hover {
   background: #1c9ce5;
   color: #fff;
+}
+main .object-container .main-img {
+  max-height: 34.375rem;
 }
 main .object-container span.address {
   margin-bottom: 1.5625rem;

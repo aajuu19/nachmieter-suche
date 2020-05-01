@@ -6,7 +6,7 @@
 <div class="object-container">
     <div class="row">
         <div class="col sm-6">
-            <?php $web->get_upl_img($obj['image_1'], $obj['name'], 'cover'); ?>
+            <?php $web->get_upl_img($obj['image_1'], $obj['name'], 'cover main-img'); ?>
         </div>
         <div class="col sm-6">
             <h2 class="align-left noMarg">
@@ -24,14 +24,14 @@
                     <?php echo $web->shorten_str($user['beschreibung'], 180); ?>
                 </span>
                 <div class="buttons">
-                    <a href="" class="btn"><i class="fa fa-user"></i> Nutzerprofil ansehen</a>      
+                    <a href="<?php echo $web->root; ?>/user/user.php?id=<?php echo $user['p_id']; ?>" class="btn"><i class="fa fa-user"></i> Nutzerprofil ansehen</a>      
                     <a href="" class="btn secondary"><i class="fa fa-comments"></i> Nachricht senden</a>      
                 </div>
             </div>
         </div>
     </div>
     <div class="object-details">
-        <div class="row">
+        <!-- <div class="row">
             <div class="col">
                 <div class="important-ctn">
                     <h3>Die wichtigsten Fakten auf einen Blick</h3>
@@ -53,27 +53,27 @@
                 </div>
                 <div class="important-block">
                     <i class="important-icon fa fa-layer-group"></i>
-                    <span><strong>3.</strong> Etage</span>
+                    <span><strong><?php echo $obj['etage']; ?>.</strong> Etage</span>
                 </div>
             </div>
             <div class="col m-4">
                 <div class="important-block">
                     <i class="important-icon fa fa-home"></i>
-                    <span><strong>Altbau</strong></span>
+                    <span><strong><?php echo $obj['typ']; ?></strong></span>
                 </div>
                 <div class="important-block">
                     <i class="important-icon fa fa-restroom"></i>
-                    <span><strong>1</strong> Badezimmer</span>
+                    <span><strong><?php echo $obj['bad']; ?></strong> Badezimmer</span>
                 </div>
             </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <div class="row more-info">
             <div class="col">
-                <h4>Datenblatt</h4>
+                <h3>Die wichtigsten Fakten auf einen Blick</h3>
             </div>
                 <?php 
                     $data_array = [
@@ -93,12 +93,20 @@
                             'name' => 'Warmmiete',
                             'icon' => 'euro-sign'
                         ],
+                        $obj['typ'] => [
+                            'name' => 'Wohnungstyp',
+                            'icon' => 'home'
+                        ],
                         $obj['etage'] => [
                             'name' => 'Etage',
                             'icon' => 'layer-group'
                         ],
+                        $obj['bad'] => [
+                            'name' => 'Badezimmer',
+                            'icon' => 'restroom'
+                        ],
                         $obj['einzug'] => [
-                            'name' => 'Einzugsdatum',
+                            'name' => 'Einzugsdatum ab',
                             'icon' => 'calendar-alt'
                         ]
                     ];

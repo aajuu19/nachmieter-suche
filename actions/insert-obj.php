@@ -8,8 +8,10 @@
     $desc = $_POST['obj-desc'];
     $quadratmeter = $_POST['obj-quadratmeter'];
     $zimmer = $_POST['obj-zimmer'];
+    $bad = $_POST['obj-bad'];
     $adresse = $_POST['obj-adresse'];
     $kalt = $_POST['obj-kalt'];
+    $typ = $_POST['obj-typ'];
 
     // optional entries
     $warm = $_POST['obj-warm'] == "" ? null : $_POST['obj-warm'];
@@ -59,7 +61,7 @@
         // if record was found
         $db->prep_exec(
             // sql statement here
-            'INSERT INTO objekt (name, beschreibung, quadratmeter, zimmer, adresse, kalt, warm, etage, einzug, link, image_1, image_2, image_3, image_4, image_5, image_6, image_7, p_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
+            'INSERT INTO objekt (name, beschreibung, quadratmeter, zimmer, bad, adresse, kalt, typ, warm, etage, einzug, link, image_1, image_2, image_3, image_4, image_5, image_6, image_7, p_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
             ,
             // execute here
             [
@@ -67,8 +69,10 @@
                 $desc,
                 $quadratmeter,
                 $zimmer,
+                $bad,
                 $adresse,
                 $kalt,
+                $typ,
                 $warm,
                 $etage,
                 $einzug,

@@ -31,16 +31,22 @@
 
 						<fieldset>
 							<label for="obj-zimmer"><i class="fa fa-bed"></i></label>
-							<input maxlength="6" name="obj-zimmer" id="obj-zimmer" type="number" placeholder="Zimmer" required 
+							<input maxlength="6" name="obj-zimmer" id="obj-zimmer" type="number" placeholder="Anzahl Zimmer" required 
 							oninvalid="this.setCustomValidity('Bitte gib die Anzahl der Zimmer ein')" oninput="setCustomValidity('')">
 						</fieldset>
 
+						<fieldset>
+							<label for="obj-bad"><i class="fa fa-restroom"></i></label>
+							<input maxlength="6" name="obj-bad" id="obj-bad" type="number" placeholder="Anzahl Badezimmer" required 
+							oninvalid="this.setCustomValidity('Bitte gib die Anzahl der Badezimmer ein')" oninput="setCustomValidity('')">
+						</fieldset>
+
 						<fieldset class="dropdown">
-							<label for="obj-typ"><i class="fa fa-bed"></i></label>
+							<label for="obj-typ"><i class="fa fa-home"></i></label>
 							<select name="obj-typ" id="obj-typ" required oninvalid="this.setCustomValidity('Bitte gib einen Objekttypen ein')" oninput="setCustomValidity('')">
-								<option value="" selected disabled>Bitte wählen</option>
-								<option value="">Altbau</option>
-								<option value="">Neubau</option>
+								<option value="" selected disabled>Wohnungstyp</option>
+								<option value="Altbau">Altbau</option>
+								<option value="Neubau">Neubau</option>
 							</select>
 						</fieldset>
 

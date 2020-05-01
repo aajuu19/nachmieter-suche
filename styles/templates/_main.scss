@@ -120,27 +120,30 @@ main {
             border-radius: 15px;
             overflow: hidden;
             height: 100%;
-            @include breakpoint(l) {
+            @include breakpoint(m) {
                 display: flex;
             }
             .teaser-img {
-                @include breakpoint(l) {
+                img {
+                    height: rem(300px);
+                    width: 100%;
+                    object-fit: cover;
+                }
+                @include breakpoint(m) {
                     flex-basis: 30%;
                     width: 30%;
+                    img {
+                        height: 100%;
+                    }
                 }
                 @include breakpoint(xl) {
                     flex-basis: 35%;
                     width: 35%;
                 }
-                img {
-                    height: 100%;
-                    width: 100%;
-                    object-fit: cover;
-                }
             }
             .teaser-content {
                 padding: 1rem;
-                @include breakpoint(l) {
+                @include breakpoint(m) {
                     flex-basis: 70%;
                     width: 70%;
                 }
@@ -162,7 +165,7 @@ main {
                     }
                     &.desc {
                         margin: 1.5rem 0;
-                        @include breakpoint(l) {
+                        @include breakpoint(m) {
                             margin: 2.3rem 0;
                         }
                     }
@@ -693,6 +696,9 @@ main {
         }
     }
     .object-container {
+        .main-img {
+            max-height: rem(550px);
+        }
         span.address {
             margin-bottom: rem(25px);
             display: block;

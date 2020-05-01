@@ -30,6 +30,12 @@
             'desc' => 'Dies ist die Beschreibung der Zweite',
             'include_nav'=> true
         ],
+        'user.php' => [
+            'name' => 'User',
+            'title' => 'Dies ist die User Seite',
+            'desc' => 'Dies ist die Beschreibung der Seite User',
+            'include_nav'=> true
+        ],
         'registrierung-login.php' => [
             'name' => 'Registrierung - Login',
             'title' => 'Dies ist die Registrierungsseite',
@@ -42,6 +48,14 @@
             'title' => 'Dies ist das Dashboard',
             'desc' => 'Dies ist die Beschreibung des Dashboards',
             'claim' => 'Dashboard',
+            'include_nav'=> false,
+            'login_required' => true
+        ],
+        'nachrichten-center.php' => [
+            'name' => 'Nachrichtencenter',
+            'title' => 'Dies ist das Nachrichtencenter',
+            'desc' => 'Dies ist die Beschreibung des Nachrichtencenters',
+            'claim' => 'Nachrichtencenter',
             'include_nav'=> false,
             'login_required' => true
         ],

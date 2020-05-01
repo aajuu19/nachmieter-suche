@@ -37,6 +37,7 @@
                                         <li>Mein Bereich <i class="fa fa-angle-down"></i>
                                             <ul class="sub-navi">
                                                 <li><a href="<?php echo $web->root; ?>/user/dashboard.php" title="<?php echo $meta['dashboard.php']['title'] ?>">Dashboard</a></li>
+                                                <li><a href="<?php echo $web->root; ?>/user/nachrichten-center.php" title="<?php echo $meta['nachrichten-center.php']['title'] ?>">Nachrichtencenter</a></li>
                                                 <li><a href="<?php echo $web->root; ?>/user/settings.php" title="<?php echo $meta['settings.php']['title'] ?>">Einstellungen</a></li>
                                                 <li><a href="<?php echo $web->root; ?>/logout.php" title="<?php echo $meta['logout.php']['title'] ?>">Abmelden</a></li>
                                             </ul>

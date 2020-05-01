@@ -1,6 +1,16 @@
+/* eslint-disable func-names */
+/* eslint-disable no-useless-escape */
+/* eslint-disable consistent-return */
+/* eslint-disable object-property-newline */
+/* eslint-disable object-shorthand */
+/* eslint-disable indent */
+/* eslint-disable space-before-blocks */
+
 // wohnung-finden
-(function(){
-    if(document.body.classList.contains('wohnung-finden')) {
+(function (){
+    if (document.body.classList.contains('wohnung-finden')) {
+        // eslint-disable-next-line indent
+        // eslint-disable-next-line no-undef
         Vue.component('min-max', {
             props: ['element'],
             template: `
@@ -10,18 +20,19 @@
                 </div>
             `,
             methods: {
-                toggleActive: function(direction) {
-                    if(direction === 'min') {
+                toggleActive: function (direction) {
+                    if (direction === 'min') {
                         this.element.min = true;
                         this.element.max = false;
-                    } else if(direction === 'max') {
+                    } else if (direction === 'max') {
                         this.element.min = false;
                         this.element.max = true;
                     }
-                }
-            }
+                },
+            },
         });
 
+        // eslint-disable-next-line no-undef
         Vue.component('filter-box', {
             props: ['ele'],
             template: `
@@ -30,21 +41,22 @@
                     <input v-model="ele.val" type="number" :max="ele.maxVal" :min="ele.minVal" :step="ele.step">
                     <min-max v-bind:element="ele"></min-max>
                 </div>
-            `
+            `,
         });
-        
+
+        // eslint-disable-next-line no-undef
         Vue.component('object-item', {
             props: ['object'],
-            data: function(){
+            data: function (){
                 return {
-                    maxWordLength: 150
-                }
+                    maxWordLength: 150,
+                };
             },
             template: `
                 <div class="teaser">
                     <div class="teaser-box">
                         <div class="teaser-img">
-                            <img src="images/layout/placeholder.png" alt="Platzhalter">
+                            <img :src="imgLink" alt="Platzhalter">
                         </div> 
                         <div class="teaser-content">
                             <span class="heading">{{ object.name }}</span>
@@ -55,132 +67,142 @@
                                 <span><small>Zimmer</small> <span>{{ object.zimmer }}</span></span>
                                 <span><small>Kaltmiete</small> <span>{{ object.kalt }} €</span></span>
                             </div>
-                            <a :href="'http://localhost:8888/nachmieter-suche/objekte/'+ object.link" class="btn secondary">Mehr erfahren</a>
+                            <a :href="objLinkPath" class="btn secondary">Mehr erfahren</a>
                         </div>
                     </div> 
                 </div> 
             `,
             computed: {
-                shortenedDesc: function() {
-                    if(this.object.beschreibung.length >= this.maxWordLength) {
-                        return this.object.beschreibung.slice(0, this.maxWordLength)+'...';
-                    } else {
-                        return this.object.beschreibung;
+                shortenedDesc: function () {
+                    if (this.object.beschreibung.length >= this.maxWordLength) {
+                        return `${this.object.beschreibung.slice(0, this.maxWordLength)}...`;
                     }
-                }
-            }
+                    return this.object.beschreibung;
+                },
+                objLinkPath: function () {
+                    return `${document.location.origin}/nachmieter-suche/objekte/${this.object.link}`;
+                },
+                imgLink: function () {
+                    return `${document.location.origin}/nachmieter-suche/uploads/${this.object.image_1}`;
+                },
+            },
         });
 
-        let vm = new Vue({
+        // eslint-disable-next-line no-undef
+        const vm = new Vue({
             el: '.all-objects',
             data: {
                 objects: [],
                 filterList: {
-                    quadratmeter: { 
-                        id: 1, 
-                        name: 'Quadratmeter', 
-                        val: '', minVal: 20, maxVal: 1000, step: 5, 
-                        min: true, 
-                        max: false 
+                    quadratmeter: {
+                        id: 1,
+                        name: 'Quadratmeter',
+                        val: '', minVal: 20, maxVal: 1000, step: 5,
+                        min: true,
+                        max: false,
                     },
-                    zimmer: { 
-                        id: 2, 
-                        name: 'Zimmer', 
-                        val: '', minVal: 1, maxVal: 100, step: 0.5, 
-                        min: true, 
-                        max: false 
+                    zimmer: {
+                        id: 2,
+                        name: 'Zimmer',
+                        val: '', minVal: 1, maxVal: 100, step: 0.5,
+                        min: true,
+                        max: false,
                     },
-                    kalt: { 
-                        id: 3, 
-                        name: 'Kaltmiete', 
-                        val: '', minVal: 50, maxVal: 1000000, step: 10, 
-                        max: true 
+                    kalt: {
+                        id: 3,
+                        name: 'Kaltmiete',
+                        val: '', minVal: 50, maxVal: 1000000, step: 10,
+                        max: true,
                     },
-                    etage: { 
-                        id: 4, 
-                        name: 'Etage', 
-                        val: '', minVal: 1, maxVal: 200, step: 1, 
+                    etage: {
+                        id: 4,
+                        name: 'Etage',
+                        val: '', minVal: 1, maxVal: 200, step: 1,
                         min: false,
-                        max: true 
-                    }
+                        max: true,
+                    },
                 },
-                errorMsg: false                
+                errorMsg: false,
             },
-            created: function() {
-                let fetched = fetch('essentials/dbs_json.php?page=1&limit=50').then(data=>data.json());
-                fetched.then((data)=>{
+            created: function () {
+                const fetched = fetch('essentials/dbs_json.php?page=1&limit=50').then((data) => data.json());
+                fetched.then((data) => {
                     vm.objects = data;
 
                     // for debugging
                     // vm.objects.forEach(e=>console.log(e));
                 })
-                .catch((err)=>{
+                .catch((err) => {
                     console.log(err);
-                })
+                });
             },
             methods: {
-                filterIt: function() {
+                filterIt: function () {
                     const fL = this.filterList;
                     let paramStr = '';
 
-                    for(let i in fL) {
-                        const filter = fL[i];
-                        const getMaxMin = function(){
-                            if(filter.min == true) {
-                                return 'min'
-                            } else if(filter.max = true) {
-                                return 'max';
+                    // eslint-disable-next-line no-restricted-syntax
+                    for (const i in fL) {
+                        if (Object.prototype.hasOwnProperty.call(fL, i)) {
+                            const filter = fL[i];
+                            const getMaxMin = function (){
+                                if (filter.min === true) {
+                                    return 'min';
+                                }
+                                if (filter.max === true) {
+                                    return 'max';
+                                }
+                            };
+                            if (filter.val !== '') {
+                                paramStr += `${i}=${getMaxMin()}-${filter.val}&`;
                             }
-                        }
-                        if(filter.val !== '') {
-                            paramStr += i+'='+getMaxMin()+'-'+filter.val+'&';
                         }
                     }
 
-                    let fetched = fetch('essentials/dbs_json.php?'+paramStr+'page=1&limit=50').then(data=>data.json());
-                    fetched.then((data)=>{
+                    const fetched = fetch(`essentials/dbs_json.php?${paramStr}page=1&limit=50`).then((data) => data.json());
+                    fetched.then((data) => {
                         this.objects = data;
-                        if(this.objects.length === 0) {
-                            this.errorMsg = true
+                        if (this.objects.length === 0) {
+                            this.errorMsg = true;
                         } else {
-                            this.errorMsg = false
+                            this.errorMsg = false;
                         }
                     })
-                    .catch((err)=>{
+                    .catch((err) => {
                         console.log(err);
-                    })
-                }
-            }
+                    });
+                },
+            },
         });
     }
-})();
+}());
 
 
 // register-login page
-(function(){
-    if(document.body.classList.contains('registrierung-login')) {
-        let vm = new Vue({
+(function (){
+    if (document.body.classList.contains('registrierung-login')) {
+        const vm = new Vue({
             el: '.register-login-app',
             data: {
                 registrationShow: true,
                 loginShow: false,
                 logMail: '',
-                regMail: ''
+                regMail: '',
             },
-            created: function() {
+            created: function () {
                 const loc = document.location.search.substr(1);
                 const clearLoc = loc.split('&');
 
-                if(clearLoc) {
+                if (clearLoc) {
                     this.changeVal(clearLoc[0]);
                 }
             },
             methods: {
-                changeVal: function(operation) {
-                    if(operation == 'login') {
+                changeVal: function (operation) {
+                    if (operation === 'login') {
                         this.loginShow = true;
                         this.registrationShow = false;
-                    } else if(operation == 'register') {
+                    } else if (operation === 'register') {
                         this.loginShow = false;
                         this.registrationShow = true;
                     }
@@ -190,8 +212,8 @@
 
                     const mail = form.querySelector('input[type=mail]');
                     // check if email is valid
-                    var reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;                    
-                    if(!reg.test(String(mail.value).toLowerCase())) {
+                    const reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                    if (!reg.test(String(mail.value).toLowerCase())) {
                         mail.classList.add('error');
                         mail.setCustomValidity('Bitte gib eine gültige E-Mail-Adresse ein.');
                         mail.reportValidity();
@@ -201,31 +223,30 @@
                     }
 
                     const allInputs = form.querySelectorAll('input[type=text], input[type=password]');
-                    allInputs.forEach(e=>{
-                        if(e.value.length === 0) {
+                    allInputs.forEach((e) => {
+                        if (e.value.length === 0) {
                             e.classList.add('error');
                         } else {
                             e.classList.remove('error');
-                            
                         }
                     });
-                }
-            }
+                },
+            },
         });
     }
-})();
+}());
 
 // new object page
-(function(){
-    if(document.body.classList.contains('neues-objekt')) {
+(function (){
+    if (document.body.classList.contains('neues-objekt')) {
         let timeOut;
-        let vm = new Vue({
+        const vm = new Vue({
             el: '.obj-ctn',
             data: {
                 objIsSet: false,
                 objAddress: '',
                 objAddressMenu: {
-                    visible: false
+                    visible: false,
                 },
                 placeList: [],
                 waitForTypedSpeed: 600,
@@ -233,46 +254,46 @@
                 noPlace: false,
                 maxFiles: 7,
                 fileList: [],
-                lastValidObj: null               
+                lastValidObj: null,
             },
             watch: {
-                objAddress: function(search) {                
-                    if(!this.objIsSet) {
-                        if(timeOut) {
+                objAddress: function (search) {
+                    if (!this.objIsSet) {
+                        if (timeOut) {
                             clearTimeout(timeOut);
                         }
-                        timeOut = setTimeout(()=>{
+                        timeOut = setTimeout(() => {
                             this.generateAddress(search);
                         }, this.waitForTypedSpeed);
                     }
-                }
+                },
             },
             methods: {
-                generateAddress: function(search) {
+                generateAddress: function (search) {
                     // reset array on new Search
                     this.placeList.length = 0;
-                        
+
                     // set searchString and replace all whitespaces
-                    let searchStr = search.replace(/ /g, '%20');
-                    if(searchStr.length > 2) {
-                        let searchQuery = `https://public.opendatasoft.com/api/records/1.0/search/?dataset=postleitzahlen-deutschland&q=${searchStr}`;
-                        let fetched = fetch(searchQuery).then(res=>res.json());
+                    const searchStr = search.replace(/ /g, '%20');
+                    if (searchStr.length > 2) {
+                        const searchQuery = `https://public.opendatasoft.com/api/records/1.0/search/?dataset=postleitzahlen-deutschland&q=${searchStr}`;
+                        const fetched = fetch(searchQuery).then((res) => res.json());
                         this.objAddressMenu.visible = true;
                         this.showLoader = true;
-                        
-                        fetched.then(data=> {
-                            let places = data.records;
+
+                        fetched.then((data) => {
+                            const places = data.records;
                             // check if results exist
-                            if(places.length >= 1) {
-                                
-                                places.forEach(e=>{
-                                    let ortData = e.fields.note;
-                                    let plzData = e.fields.plz;
-                                    
-                                    this.placeList.push({ort: ortData, plz: plzData});
+                            if (places.length >= 1) {
+                                places.forEach((e) => {
+                                    const ortData = e.fields.note;
+                                    const plzData = e.fields.plz;
+
+                                    this.placeList.push({ ort: ortData, plz: plzData });
                                 });
                                 this.showLoader = false;
                                 this.noPlace = false;
+                                // eslint-disable-next-line prefer-destructuring
                                 this.lastValidObj = this.placeList[0];
                                 // console.log(this.placeList);
                             } else {
@@ -284,58 +305,56 @@
                                 this.placeList.length = 0;
                             }
                         });
-                        
                     } else {
                         this.objAddressMenu.visible = false;
                         this.noPlace = false;
-                        this.showLoader = true
+                        this.showLoader = true;
                     }
                 },
-                setAddress: function(place) {
+                setAddress: function (place) {
                     clearTimeout(timeOut);
                     this.objAddressMenu.visible = false;
                     this.objIsSet = true;
                     this.lastValidObj = place;
                 },
-                setFirstAddress: function() {
+                setFirstAddress: function () {
                     clearTimeout(timeOut);
                     this.objAddressMenu.visible = false;
                     this.objIsSet = true;
 
                     if (this.objAddress.length <= 2) {
                         this.objAddress = '';
-                    } else if(this.placeList.length === 0) {
-                        if(this.lastValidObj) {
+                    } else if (this.placeList.length === 0) {
+                        if (this.lastValidObj) {
                             this.objAddress = `${this.lastValidObj.plz} ${this.lastValidObj.ort}`;
                         } else {
                             this.objAddress = '';
                         }
-                    } else if(this.objAddress !== "" && this.objAddress.length >= 3 && this.placeList.length === 1){
-                        let firstPlace = this.placeList[0];
+                    } else if (this.objAddress !== '' && this.objAddress.length >= 3 && this.placeList.length === 1){
+                        const firstPlace = this.placeList[0];
                         this.objAddress = `${firstPlace.plz} ${firstPlace.ort}`;
                     } else if (this.placeList.length >= 2) {
                         this.objAddress = `${this.lastValidObj.plz} ${this.lastValidObj.ort}`;
-                    }  
-
+                    }
                 },
-                allowInput: function() {
+                allowInput: function () {
                     this.objIsSet = false;
                     this.showLoader = true;
                 },
-                validate: function($event) {
-                    let input = document.querySelector('input[type="file"]');
+                validate: function ($event) {
+                    const input = document.querySelector('input[type="file"]');
 
-                    if(input.files.length > this.maxFiles) {
+                    if (input.files.length > this.maxFiles) {
                         input.setCustomValidity('Du kannst nicht mehr als 7 Bilder hochladen.');
                         input.reportValidity();
                     } else {
                         $event.target.submit();
                     }
                 },
-                showFileDetails: function($event) {
+                showFileDetails: function ($event) {
                     this.fileList = $event.target.files;
-                }
-            }
+                },
+            },
         });
     }
-})();
+}());

@@ -1,4 +1,4 @@
-<?php require_once('essentials/functions.php');
+<?php require_once('../essentials/functions.php');
 	$conn = $db->pdo;
 
 	$error = false;
