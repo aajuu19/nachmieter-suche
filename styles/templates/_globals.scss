@@ -270,3 +270,8 @@ table {
         }
     }
 }
+
+textarea {
+    resize: none;
+    font-family: $main-font;
+}

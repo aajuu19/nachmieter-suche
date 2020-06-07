@@ -62,6 +62,7 @@
     border-radius: 15px;
     color: $light;
     display: block;
+    width: 100%;
     &:before {
         content: 'Fehler: ';
         font-weight: 700;
@@ -135,4 +136,10 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.round-border-box {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    border-bottom: 4px solid $primary;
 }

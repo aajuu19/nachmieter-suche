@@ -1,3 +1,4 @@
+/* eslint-disable vue/no-side-effects-in-computed-properties */
 /* eslint-disable func-names */
 /* eslint-disable no-useless-escape */
 /* eslint-disable consistent-return */
@@ -5,6 +6,8 @@
 /* eslint-disable object-shorthand */
 /* eslint-disable indent */
 /* eslint-disable space-before-blocks */
+
+const isDev = true;
 
 // wohnung-finden
 (function (){
@@ -125,7 +128,15 @@
                 errorMsg: false,
             },
             created: function () {
-                const fetched = fetch('essentials/dbs_json.php?page=1&limit=50').then((data) => data.json());
+                const fetched = fetch('./essentials/dbs_json.php',
+                {
+                    method: 'POST',
+                    body: 'wohnungen&page=1&limit=50',
+                    headers:
+                    {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                }).then((data) => data.json());
                 fetched.then((data) => {
                     vm.objects = data;
 
@@ -159,7 +170,15 @@
                         }
                     }
 
-                    const fetched = fetch(`essentials/dbs_json.php?${paramStr}page=1&limit=50`).then((data) => data.json());
+                    const fetched = fetch('./essentials/dbs_json.php',
+                    {
+                        method: 'POST',
+                        body: `wohnungen&${paramStr}page=1&limit=50`,
+                        headers:
+                        {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                    }).then((data) => data.json());
                     fetched.then((data) => {
                         this.objects = data;
                         if (this.objects.length === 0) {
@@ -353,6 +372,219 @@
                 },
                 showFileDetails: function ($event) {
                     this.fileList = $event.target.files;
+                },
+            },
+        });
+    }
+}());
+
+// Nachrichten Center App
+(function (){
+    if (document.body.classList.contains('nachrichten-center')) {
+        Vue.component('user-thumb', {
+            props: ['user', 'activeuser'],
+            data: function () {
+                return {
+                    hasUserImage: false,
+                };
+            },
+            template: `
+                <div v-on:click="changeActiveChat" class="user-preview" :class="{ active : isActive }">
+                    <img v-if="hasUserImage" :src="imageUrl" :alt="user.name">
+                    <div v-if="!hasUserImage" class="userInitial">
+                        <span>{{ user.name[0] }}</span>
+                    </div>
+                    <span>{{ user.name }}</span>
+                </div>
+            `,
+            computed: {
+                imageUrl: function () {
+                    // return `../uploads/${this.user.profilepic}`;
+                    return '../uploads/placeholder.jpg';
+                },
+                isActive: function () {
+                    if (this.user.p_id == this.activeuser) {
+                        return true;
+                    }
+                }
+            },
+            created: function () {
+                if (this.user.profilepic) {
+                    this.hasUserImage = true;
+                } else {
+                    this.hasUserImage = false;
+                }
+            },
+            methods: {
+                changeActiveChat: function () {
+                    this.$emit('change-active-chat');
+                }
+            }
+        });
+        Vue.component('chat-bubble', {
+            props: ['chat', 'iamuser'],
+            data: function () {
+                return {
+
+                };
+            },
+            template: `
+                <div class="chat-bubble" :class="{send : isSender}">
+                    <span class="message">{{ chat.message }}</span>
+                    <span class="time">{{ this.chatTime }} Uhr</span>
+                </div>
+            `,
+            computed: {
+                isSender: function () {
+                    if (this.chat.send_p_id == this.iamuser) {
+                        return true;
+                    }
+                },
+                chatTime: function () {
+                    const date = new Date(this.chat.timestamp.replace(/-/g, "/"));
+                    const clockTime = date.toLocaleTimeString();
+                    const dateTime = date.toLocaleDateString();
+                    return `${dateTime} - ${clockTime}`;
+                },
+            }
+        });
+        const vm = new Vue({
+            el: '.message-ctn',
+            data: {
+                outputData: null,
+                errorMsg: {
+                    isError: false,
+                    message: 'Bitte logge dich zuerst ein.',
+                },
+                isUser: null,
+                chatList: [],
+                userList: [],
+                activeChatWithUser: null,
+                activeChatList: [],
+                messageContent: null,
+                activeFlat: null,
+                firstChat: true,
+                updateTimer: '',
+                hasScrolled: false,
+            },
+            created: function () {
+                // check if valid session exists
+                fetch('./../essentials/get-session.php')
+                .then((json) => json.json())
+                .then((sessionId) => {
+                    this.isUser = sessionId.person.p_id;
+                    this.updateChat();
+                })
+                .catch((err) => {
+                    if (isDev) {
+                        console.log(err);
+                    } else {
+                        this.errorMsg.isError = true;
+                    }
+                });
+                this.updateTimer = setInterval(this.updateChat, 2000);
+            },
+            methods: {
+                getChatsWithUserId: function (userId) {
+                    const res = this.chatList.find((ele) => {
+                        return ele[0] == userId;
+                    });
+                    return res[1];
+                },
+                changeActiveChat: function (userId) {
+                    this.activeChatWithUser = userId;
+                    this.activeChatList = this.getChatsWithUserId(this.activeChatWithUser);
+                    fetch('./../essentials/dbs_json.php',
+                    {
+                        method: 'POST',
+                        body: `flat_by_id=${this.activeChatList[this.activeChatList.length - 1].o_id}`,
+                        headers:
+                        {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                    })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        // console.log(data);
+                        this.activeFlat = data;
+                        // this.hasScrolled = false;
+                        if (!this.hasScrolled) {
+                            this.setScrollPos();
+                            this.hasScrolled = true;
+                        }
+                    });
+                },
+                updateChat: function () {
+                    // get relevant chats
+                    fetch('./../essentials/dbs_json.php',
+                    {
+                        method: 'POST',
+                        body: `chats&user=${this.isUser}`,
+                        headers:
+                        {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                    })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        this.chatList = Object.entries(data);
+                        this.chatList.forEach((user) => {
+                            fetch('./../essentials/dbs_json.php',
+                            {
+                                method: 'POST',
+                                body: `user_by_id=${user[0]}`,
+                                headers:
+                                {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                            })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                if (this.firstChat || !this.userList.some(e => e.p_id == data.p_id)) {
+                                    this.userList.push(data);
+                                }
+                                if (!this.hasScrolled) {
+                                    this.setScrollPos();
+                                    this.hasScrolled = true;
+                                }
+                            });
+                        });
+
+                        // if chats were found
+                        if (this.chatList.length > 0 && this.firstChat) {
+                            // set first chat as initial
+                            this.changeActiveChat(this.chatList[0][0]);
+                            this.firstChat = false;
+                        } else {
+                            this.changeActiveChat(this.activeChatWithUser);
+                        }
+                    });
+                },
+                setScrollPos: function () {
+                    const chatCtn = document.querySelector('.message-box .inner-ctn');
+                    chatCtn.scrollTop = chatCtn.scrollHeight;
+                    chatCtn.addEventListener('scroll', function (){
+                        this.hasScrolled = true;
+                    });
+                },
+                onSubmit: function () {
+                    fetch('./../actions/send-chat.php',
+                    {
+                        method: 'POST',
+                        body: `rec=${this.activeChatWithUser}&send=${this.isUser}&msg=${this.messageContent}&o_id=${this.activeFlat.o_id}`,
+                        headers:
+                        {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                    }).then(res=>res.text())
+                    .then(data=>{
+                        // if data true
+                        if (data == 1) {
+                            this.updateChat();
+                            this.messageContent = '';
+                            this.hasScrolled = false;
+                        }
+                    });
                 },
             },
         });

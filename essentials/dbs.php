@@ -16,16 +16,16 @@
         }
 
         // $sql = SQL-Searchcommand which returns associative array
-        public function get_this_all($sql) {
+        public function get_this_all($sql, $pdo_fetch = PDO::FETCH_ASSOC) {
             $stmt = $this->pdo->query($sql);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $stmt->fetchAll($pdo_fetch);
         }
 
         // return first object of sql-command
         // $sql = sql-command
-        public function get_this_one($sql) {
+        public function get_this_one($sql, $pdo_fetch = PDO::FETCH_ASSOC) {
             $stmt = $this->pdo->query($sql);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            return $stmt->fetch($pdo_fetch);
         }
 
         // prepare and execute
@@ -33,17 +33,17 @@
         // $exec = array
         // $fetch = Bool / if true, fetch exec
 
-        public function prep_exec($prep, $exec, $fetch = false) {
+        public function prep_exec($prep, $exec, $fetch = false, $fetch_mode = PDO::FETCH_ASSOC) {
             
             $stmt = $this->pdo->prepare($prep);
             $res = $stmt->execute($exec);
 
             if($fetch == 'one') {
-                $fetched = $stmt->fetch(PDO::FETCH_ASSOC);
-                return [$res, $fetched];
+                $fetched = $stmt->fetch($fetch_mode);
+                return $fetched;
             } else if($fetch == 'all') {
-                $fetched = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                return [$res, $fetched];
+                $fetched = $stmt->fetchAll($fetch_mode);
+                return $fetched;
             } else {
                 return $res;
             } 

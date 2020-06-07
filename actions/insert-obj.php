@@ -61,10 +61,11 @@
         // if record was found
         $db->prep_exec(
             // sql statement here
-            'INSERT INTO objekt (name, beschreibung, quadratmeter, zimmer, bad, adresse, kalt, typ, warm, etage, einzug, link, image_1, image_2, image_3, image_4, image_5, image_6, image_7, p_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
+            'INSERT INTO objekt (o_id, name, beschreibung, quadratmeter, zimmer, bad, adresse, kalt, typ, warm, etage, einzug, link, image_1, image_2, image_3, image_4, image_5, image_6, image_7, p_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
             ,
             // execute here
             [
+                $uniq_id,
                 $name,
                 $desc,
                 $quadratmeter,

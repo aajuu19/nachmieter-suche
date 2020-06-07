@@ -1,27 +1,25 @@
 <?php require_once('dbs.php');
+    session_start();
     // $data content depends on $_POST / $_GET
     $data = [];
 
-    // $_GET / $_POST consists of 
-    // operation => which should be shown?
-    // limit => how much should be shown?
-    // page => which page am I?
+    if(isset($_POST['wohnungen'])) {
 
-    // smaller or greater? returns operand and value without min or max string
-    function sm_or_gr($str) {  
-        $arr = explode('-', $str);
-        if($arr[0] == 'min') {
-            return '>='.$arr[1].' AND ';
-        } else if($arr[0] == 'max') {
-            return '<='.$arr[1].' AND ';
-        } 
-    }
+        // smaller or greater? returns operand and value without min or max string
+        function sm_or_gr($str) {  
+            $arr = explode('-', $str);
+            if($arr[0] == 'min') {
+                return '>='.$arr[1].' AND ';
+            } else if($arr[0] == 'max') {
+                return '<='.$arr[1].' AND ';
+            } 
+        }
 
-    // build sql statement - be sure no sql injection can be made
-    $sql_stmt = 'SELECT * FROM `objekt` WHERE ';
+        // build sql statement - be sure no sql injection can be made
+        $sql_stmt = 'SELECT * FROM `objekt` WHERE ';
 
-    if(isset($_GET)) {
-        foreach($_GET as $key => $val) {
+        
+        foreach($_POST as $key => $val) {
             switch($key) {
                 case 'quadratmeter':
                 case 'zimmer':
@@ -31,8 +29,8 @@
                     break;
                 // limit always on the end
                 case 'limit':
-                    if(isset($_GET['page'])) {
-                        $sql_stmt .= 'ORDER BY einstellungsdatum DESC LIMIT '.($_GET['page'] * $_GET['limit'] - $_GET['limit']).','.$_GET['limit'];
+                    if(isset($_POST['page'])) {
+                        $sql_stmt .= 'ORDER BY einstellungsdatum DESC LIMIT '.($_POST['page'] * $_POST['limit'] - $_POST['limit']).','.$_POST['limit'];
                     } else {
                         // ?page-parameter has to be set
                         die('Seitenanzahl muss angegeben werden.');
@@ -40,42 +38,83 @@
                     break;     
             }
         }
+        
+
+        // delete AND && WHERE statement when no parameter (except page and limit) is given
+        $pos = strrpos($sql_stmt, 'AND');
+
+        if($pos != 0) {
+            $sql_stmt = substr_replace($sql_stmt, '', $pos, 3);
+        } else {
+            $pos2 = strrpos($sql_stmt, 'WHERE');
+            $sql_stmt = substr_replace($sql_stmt, '', $pos2, 5);
+        }
+
+        $data = $db->get_this_all($sql_stmt);
     }
 
-    // delete AND && WHERE statement when no parameter (except page and limit) is given
-    $pos = strrpos($sql_stmt, 'AND');
+    // check if chats json is requested and if requested session p_ID is actual Session p_ID
+    if(isset($_POST['chats'])) {
+        $user_id = $_POST['user'];
+        $user_id_int = (is_numeric($user_id) ? (int)$user_id : 0);
 
-    if($pos != 0) {
-        $sql_stmt = substr_replace($sql_stmt, '', $pos, 3);
-    } else {
-        $pos2 = strrpos($sql_stmt, 'WHERE');
-        $sql_stmt = substr_replace($sql_stmt, '', $pos2, 5);
+        if($user_id_int == $_SESSION['person']['p_id']) {
+            // build sql statement - be sure no sql injection can be made
+            // fetch all user based chats
+            $sql_stmt = 'SELECT chat.c_id, chat.* FROM chat WHERE rec_p_id = :u_id1 OR send_p_id = :u_id2';
+            $chat_data = $db->prep_exec($sql_stmt, ['u_id1' => $user_id_int, 'u_id2' => $user_id_int], 'all');
+
+            // create array with all foreign p_id's
+            $chat_with_users = [];
+            foreach($chat_data as $key) {
+                if($key['rec_p_id'] != $user_id) {
+                    if(!in_array($key['rec_p_id'], $chat_with_users)) {
+                        array_push($chat_with_users, $key['rec_p_id']);
+                    }
+                } else if($key['send_p_id'] != $user_id) {
+                    if(!in_array($key['send_p_id'], $chat_with_users)) {
+                        array_push($chat_with_users, $key['send_p_id']);
+                    }
+                }
+            }
+
+            // create associative array $data with all chats based on their p_id
+            foreach($chat_with_users as $p_id) {
+                foreach($chat_data as $chat) {
+                    if($chat['send_p_id'] == $p_id || $chat['rec_p_id'] == $p_id) {
+                        $data[$p_id][] = $chat;
+                    }
+                }
+            }
+            
+            // $attributes = array('fat', 'quantity', 'ratio', 'label');
+
+            // foreach ($levels as $key => $level) {
+            //     foreach ($attributes as $k =>$attribute) {
+            //         $variables[$level][] = $attribute . '_' . $level; // changed $variables[] to $variables[$level][]
+            //     }
+            // }
+            // echo '<pre>' . print_r($variables,1) . '</pre>';  
+            // die();
+
+        } else {
+            die('Anfrage konnte nicht ausgeführt werden.');
+        }
     }
 
-    $data = $db->get_this_all($sql_stmt);
+    if(isset($_POST['flat_by_id'])) {
+        $o_id = $_POST['flat_by_id'];
+        $data = $db->prep_exec('SELECT * FROM `objekt` WHERE o_id = :o_id', ['o_id' => $o_id], 'one');
+    }
 
+    if(isset($_POST['user_by_id'])) {
+        $p_id = $_POST['user_by_id'];
+        $data = $db->prep_exec('SELECT * FROM `person` WHERE p_id = :p_id', ['p_id' => $p_id], 'one');
+        unset($data['password']);
+    }
 
-    // $_POST WHEN PRODUCTION
-    // switch ($_GET) {
-    //     case [
-    //         'operation' => 'all-objects',
-    //     ]:
-    //         $data = $db->get_this_all("SELECT * FROM `objekt`");
-    //         break;
-    //     case [
-    //         'operation' => 'all-objects',
-    //         'limit' => $_GET['limit'],
-    //         'page'  => $_GET['page']
-    //     ]:
-    //         $data = $db->get_this_all("SELECT * FROM `objekt` LIMIT ".($_GET['page'] * $_GET['limit'] - $_GET['limit']).','.$_GET['limit']);
-    //         break;
-    //     case [
-    //         'operation' => 'last-object',
-    //     ]:
-    //         $data = $db->get_this_one("SELECT * FROM `objekt`");
-    //         break;
-    // }
-    
+    $db->close_connect();
+
     // create JSON from $data variable
     header('Content-Type: application/json;charset=utf-8');
     echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);

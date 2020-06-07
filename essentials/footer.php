@@ -3,7 +3,7 @@
         <footer>
 
         </footer>
-        <script src="<?php echo $web->root ?>/js/vue.js"></script>
-        <script src="<?php echo $web->root ?>/js/main.js"></script>
+        <script type="module" src="<?php echo $web->root ?>/js/vue.js"></script>
+        <script type="module" src="<?php echo $web->root ?>/js/main.js"></script>
     </body>
 </html>

@@ -77,55 +77,53 @@
             </div>
                 <?php 
                     $data_array = [
-                        $obj['quadratmeter'] => [
-                            'name' => 'Quadratmeter',
+                        'Quadratmeter' => [
+                            'value' => $obj['quadratmeter'],
                             'icon' => 'cube'
                         ],
-                        $obj['zimmer'] => [
-                            'name' => 'Zimmer',
+                        'Zimmer' => [
+                            'value' => $obj['zimmer'],
                             'icon' => 'bed'
                         ],
-                        $obj['kalt'] => [
-                            'name' => 'Kaltmiete',
+                        'Kaltmiete' => [
+                            'value' => $obj['kalt'],
                             'icon' => 'euro-sign'
                         ],
-                        $obj['warm'] => [
-                            'name' => 'Warmmiete',
+                        'Warmmiete' => [
+                            'value' => $obj['warm'],
                             'icon' => 'euro-sign'
                         ],
-                        $obj['typ'] => [
-                            'name' => 'Wohnungstyp',
+                        'Wohnungstyp' => [
+                            'value' => $obj['typ'],
                             'icon' => 'home'
                         ],
-                        $obj['etage'] => [
-                            'name' => 'Etage',
+                        'Etage' => [
+                            'value' => $obj['etage'],
                             'icon' => 'layer-group'
                         ],
-                        $obj['bad'] => [
-                            'name' => 'Badezimmer',
+                        'Badezimmer' => [
+                            'value' => $obj['bad'],
                             'icon' => 'restroom'
                         ],
-                        $obj['einzug'] => [
-                            'name' => 'Einzugsdatum ab',
+                        'Einzugsdatum ab' => [
+                            'value' => $obj['einzug'],
                             'icon' => 'calendar-alt'
                         ]
                     ];
 
-                    $count = 1;
                     foreach($data_array as $key => $val) {
-                        if($key != NULL) {
+                        if($val['value'] != NULL) {
                             echo '
                                 <div class="col s-6 sm-4 l-3">
                                     <div class="data-box">
                                         <i class="fa fa-'.$val['icon'].'"></i>
                                         <div class="data-info">
-                                            <span class="data-name">'.$val['name'].'</span>
-                                            <span class="data-value">'.$key.'</span>
+                                            <span class="data-name">'.$key.'</span>
+                                            <span class="data-value">'.$val['value'].'</span>
                                         </div>
                                     </div>            
                                 </div>            
                             ';
-                            $count++;
                         }
                     }
                     ?>

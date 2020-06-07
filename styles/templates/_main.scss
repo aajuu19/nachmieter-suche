@@ -788,6 +788,120 @@ main {
             }
         }
     }
+    .message-ctn {
+        .user-preview {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 4px solid $lightprimary;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+            border-radius: rem(15px);
+            transition: .3s;
+            cursor: pointer;
+            &.active, &:hover {
+                border-bottom: 4px solid $primary;
+            }
+            img {
+                width: 40%;
+                flex-basis: 40%;
+                height: auto;
+                border-radius: 25px;
+            }
+            .userInitial {
+                background: $primary;
+                width: rem(65px);
+                height: rem(65px);
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: rem(35px);
+                span {
+                    color: $light;
+                    display: inline-block;
+                    font-weight: 400;
+                }
+            }
+            > span {
+                display: block;
+                font-weight: 700;
+                font-size: rem(18px);
+                margin-left: rem(15px);
+            }
+        }
+        .message-box {
+            border-radius: 15px;
+            padding: 1rem;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            border-bottom: 4px solid $primary;
+            .inner-ctn {
+                display: flex;
+                flex-direction: column;
+                max-height: 300px;
+                overflow: scroll;
+            }
+            .chat-bubble {
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+                border-radius: 15px;
+                border-bottom: 3px solid $lightprimary;
+                padding: 1rem;
+                margin-bottom: .7rem;
+                width: auto;
+                max-width: 70%;
+                background: $primary;
+                color: $light;
+                align-self: flex-start;
+                &.send {
+                    align-self: flex-end;
+                    border-bottom: 3px solid $primary;
+                    background: $lightprimary;
+                    .time {
+                        color: $primary;
+                    }
+                }
+                .time {
+                    display: block;
+                    font-size: rem(13px);
+                    margin-top: rem(5px);
+                    color: $lightprimary;
+                }
+            }
+        }
+        .send-form {
+            position: relative;
+            margin-top: 1rem;
+            #send_chat {
+                width: 100%;
+                height: rem(160px);
+                padding: 1rem;
+                border-top: none;
+                border-left: none;
+                border-right: none;
+                padding-right: rem(70px);
+                &:focus {
+                    outline: none;
+                }
+            }
+            .submit-button {
+                position: absolute;
+                right: 0;
+                top: 0;
+                bottom: 3px;
+                padding: 1rem;
+                border-radius: 15px;
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+                color: $light;
+                background: $primary;
+                transition: .3s;
+                &:hover {
+                    background: $primary;
+                }
+            }
+        }
+    }
 }
 
 .footer-img {

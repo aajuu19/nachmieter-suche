@@ -6986,6 +6986,11 @@ table thead tr {
   border-bottom: 1px solid #1c9ce5;
 }
 
+textarea {
+  resize: none;
+  font-family: "Barlow", sans-serif;
+}
+
 .light {
   color: #fff;
 }
@@ -7058,6 +7063,7 @@ table thead tr {
   border-radius: 15px;
   color: #fff;
   display: block;
+  width: 100%;
 }
 .error:before, .success:before {
   content: "Fehler: ";
@@ -7127,6 +7133,12 @@ table thead tr {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.round-border-box {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  border-bottom: 4px solid #1c9ce5;
 }
 
 header {
@@ -7995,6 +8007,118 @@ main .object-container .object-details .more-info .data-box .data-info span.data
 main .object-container .object-details .more-info .data-box .data-info span.data-value {
   font-weight: 700;
   font-size: 1.5rem;
+}
+main .message-ctn .user-preview {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 4px solid #a5d8f5;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+  border-radius: 0.9375rem;
+  transition: 0.3s;
+  cursor: pointer;
+}
+main .message-ctn .user-preview.active, main .message-ctn .user-preview:hover {
+  border-bottom: 4px solid #1c9ce5;
+}
+main .message-ctn .user-preview img {
+  width: 40%;
+  flex-basis: 40%;
+  height: auto;
+  border-radius: 25px;
+}
+main .message-ctn .user-preview .userInitial {
+  background: #1c9ce5;
+  width: 4.0625rem;
+  height: 4.0625rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.1875rem;
+}
+main .message-ctn .user-preview .userInitial span {
+  color: #fff;
+  display: inline-block;
+  font-weight: 400;
+}
+main .message-ctn .user-preview > span {
+  display: block;
+  font-weight: 700;
+  font-size: 1.125rem;
+  margin-left: 0.9375rem;
+}
+main .message-ctn .message-box {
+  border-radius: 15px;
+  padding: 1rem;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  border-bottom: 4px solid #1c9ce5;
+}
+main .message-ctn .message-box .inner-ctn {
+  display: flex;
+  flex-direction: column;
+  max-height: 300px;
+  overflow: scroll;
+}
+main .message-ctn .message-box .chat-bubble {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  border-bottom: 3px solid #a5d8f5;
+  padding: 1rem;
+  margin-bottom: 0.7rem;
+  width: auto;
+  max-width: 70%;
+  background: #1c9ce5;
+  color: #fff;
+  align-self: flex-start;
+}
+main .message-ctn .message-box .chat-bubble.send {
+  align-self: flex-end;
+  border-bottom: 3px solid #1c9ce5;
+  background: #a5d8f5;
+}
+main .message-ctn .message-box .chat-bubble.send .time {
+  color: #1c9ce5;
+}
+main .message-ctn .message-box .chat-bubble .time {
+  display: block;
+  font-size: 0.8125rem;
+  margin-top: 0.3125rem;
+  color: #a5d8f5;
+}
+main .message-ctn .send-form {
+  position: relative;
+  margin-top: 1rem;
+}
+main .message-ctn .send-form #send_chat {
+  width: 100%;
+  height: 10rem;
+  padding: 1rem;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  padding-right: 4.375rem;
+}
+main .message-ctn .send-form #send_chat:focus {
+  outline: none;
+}
+main .message-ctn .send-form .submit-button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 3px;
+  padding: 1rem;
+  border-radius: 15px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  color: #fff;
+  background: #1c9ce5;
+  transition: 0.3s;
+}
+main .message-ctn .send-form .submit-button:hover {
+  background: #1c9ce5;
 }
 
 .footer-img {
