@@ -96,8 +96,7 @@
 							</label>
 							<input type="file" @change="showFileDetails" name="obj-images[]" id="obj-images" multiple accept="image/*">
 						</fieldset>
-
-						<input type="submit" class="btn" value="Neue Wohnung einfügen">
+						<button type="submit" class="btn wide"><i class="fa fa-plus-circle"></i>Neue Wohnung einfügen</button>
 					</form>
 				</div>
 			</div>

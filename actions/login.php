@@ -5,11 +5,11 @@
 	
 	// fetch person with certain email
 	$person = $db->prep_exec("SELECT * FROM person WHERE email = :email", ['email' => $mail], 'one');	        
-	
+
 	// check if password is correct
 	if (password_verify($password, $person['password'])) {
 		$_SESSION['person'] = $person;
-		unset($_SESSION['person']['password']);
+		unset($person['password']);
 		header('Location: '.$web->root.'/user/dashboard.php');
 	} else {
 		$error_message = rawurlencode('Falsche E-Mail-Adresse oder falsches Passwort eingegeben');

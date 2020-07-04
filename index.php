@@ -29,7 +29,7 @@
                 echo '<div class="col s-6 teaser">
                     <div class="teaser-box">
                         <div class="teaser-img">
-                            <img src="'.$web->root.'/images/layout/placeholder.png" alt="Platzhalter">
+                            <img src="'.$web->root.'/uploads/'.$val['image_1'].'" alt="Platzhalter">
                         </div> 
                         <div class="teaser-content">
                             <span class="heading">'.$val['name'].'</span>

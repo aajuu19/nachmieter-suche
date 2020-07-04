@@ -1,19 +1,13 @@
-/* eslint-disable vue/no-side-effects-in-computed-properties */
-/* eslint-disable func-names */
-/* eslint-disable no-useless-escape */
-/* eslint-disable consistent-return */
-/* eslint-disable object-property-newline */
-/* eslint-disable object-shorthand */
-/* eslint-disable indent */
-/* eslint-disable space-before-blocks */
+import './../styles/styles';
+import "regenerator-runtime/runtime";
+import Vue from './vue.js';
 
-const isDev = true;
+const isDev = false;
+const root = `${document.location.origin}/nachmieter-suche`;
 
-// wohnung-finden
-(function (){
+// wohnung-finden page
+(function() { 
     if (document.body.classList.contains('wohnung-finden')) {
-        // eslint-disable-next-line indent
-        // eslint-disable-next-line no-undef
         Vue.component('min-max', {
             props: ['element'],
             template: `
@@ -35,7 +29,6 @@ const isDev = true;
             },
         });
 
-        // eslint-disable-next-line no-undef
         Vue.component('filter-box', {
             props: ['ele'],
             template: `
@@ -47,7 +40,6 @@ const isDev = true;
             `,
         });
 
-        // eslint-disable-next-line no-undef
         Vue.component('object-item', {
             props: ['object'],
             data: function (){
@@ -90,8 +82,6 @@ const isDev = true;
                 },
             },
         });
-
-        // eslint-disable-next-line no-undef
         const vm = new Vue({
             el: '.all-objects',
             data: {
@@ -138,7 +128,7 @@ const isDev = true;
                     },
                 }).then((data) => data.json());
                 fetched.then((data) => {
-                    vm.objects = data;
+                    this.objects = data;
 
                     // for debugging
                     // vm.objects.forEach(e=>console.log(e));
@@ -152,7 +142,6 @@ const isDev = true;
                     const fL = this.filterList;
                     let paramStr = '';
 
-                    // eslint-disable-next-line no-restricted-syntax
                     for (const i in fL) {
                         if (Object.prototype.hasOwnProperty.call(fL, i)) {
                             const filter = fL[i];
@@ -312,7 +301,6 @@ const isDev = true;
                                 });
                                 this.showLoader = false;
                                 this.noPlace = false;
-                                // eslint-disable-next-line prefer-destructuring
                                 this.lastValidObj = this.placeList[0];
                                 // console.log(this.placeList);
                             } else {
@@ -379,7 +367,6 @@ const isDev = true;
 }());
 
 // Nachrichten Center App
-(function (){
     if (document.body.classList.contains('nachrichten-center')) {
         Vue.component('user-thumb', {
             props: ['user', 'activeuser'],
@@ -389,7 +376,7 @@ const isDev = true;
                 };
             },
             template: `
-                <div v-on:click="changeActiveChat" class="user-preview" :class="{ active : isActive }">
+                <div v-on:click="handleUserClick" class="user-preview" :class="{ active : isActive }">
                     <img v-if="hasUserImage" :src="imageUrl" :alt="user.name">
                     <div v-if="!hasUserImage" class="userInitial">
                         <span>{{ user.name[0] }}</span>
@@ -406,7 +393,7 @@ const isDev = true;
                     if (this.user.p_id == this.activeuser) {
                         return true;
                     }
-                }
+                },
             },
             created: function () {
                 if (this.user.profilepic) {
@@ -416,8 +403,8 @@ const isDev = true;
                 }
             },
             methods: {
-                changeActiveChat: function () {
-                    this.$emit('change-active-chat');
+                handleUserClick: function () {
+                    this.$emit('handle-user-click');
                 }
             }
         });
@@ -430,7 +417,7 @@ const isDev = true;
             },
             template: `
                 <div class="chat-bubble" :class="{send : isSender}">
-                    <span class="message">{{ chat.message }}</span>
+                    <span class="message" v-html="chat.message"></span>
                     <span class="time">{{ this.chatTime }} Uhr</span>
                 </div>
             `,
@@ -446,6 +433,29 @@ const isDev = true;
                     const dateTime = date.toLocaleDateString();
                     return `${dateTime} - ${clockTime}`;
                 },
+            }
+        });
+        Vue.component('flat-details', {
+            props: ['flat'],
+            template: `
+                <a class="flat-details" :href="flatLink" title="zum Mietobjekt wechseln">
+                    <div class="flat-preview-img primaryOverlay">
+                        <img :src="imgLink" class="cover">
+                    </div>
+                    <div class="description">
+                        <span class="headline">{{ flat.name }}</span>
+                        <span class="address">{{ flat.adresse }}</span>
+                    </div>
+                    <span class="price">{{ flat.kalt }} €</span>  
+                </a>
+            `,
+            computed: {
+                imgLink: function() {
+                    return `${root}/uploads/${this.flat.image_1}`;
+                },
+                flatLink: function() {
+                    return `${root}/objekte/${this.flat.link}`;
+                }
             }
         });
         const vm = new Vue({
@@ -465,15 +475,22 @@ const isDev = true;
                 activeFlat: null,
                 firstChat: true,
                 updateTimer: '',
-                hasScrolled: false,
+                sentFromFlat: null,
+                sentFromUser: null,
+                sentParamsValid: false,
+                sentIsAlreadyinChats: false
             },
             created: function () {
                 // check if valid session exists
                 fetch('./../essentials/get-session.php')
                 .then((json) => json.json())
                 .then((sessionId) => {
-                    this.isUser = sessionId.person.p_id;
+                    this.isUser = sessionId.person.p_id; 
                     this.updateChat();
+                    // update chat every 2 seconds
+                    this.updateTimer = setInterval(this.updateChat, 2000);
+
+
                 })
                 .catch((err) => {
                     if (isDev) {
@@ -482,41 +499,113 @@ const isDev = true;
                         this.errorMsg.isError = true;
                     }
                 });
-                this.updateTimer = setInterval(this.updateChat, 2000);
+            },
+            watch: {
+                activeChatList: function () {
+                    this.setScrollPos();
+                },
+            },
+            watch: {
             },
             methods: {
+                formatMsg: function() {
+                    return '<p>' + this.messageContent.replace(/\n/g, "</p>\n<p>") + '</p>';
+                },
+                getUrlParameters: function(getName) {
+                    var url = new URL(window.location.href);
+                    var param = url.searchParams.get(getName);
+                    return param;
+                },
                 getChatsWithUserId: function (userId) {
                     const res = this.chatList.find((ele) => {
                         return ele[0] == userId;
                     });
                     return res[1];
                 },
-                changeActiveChat: function (userId) {
+                handleUserClick: function(userId) {
                     this.activeChatWithUser = userId;
-                    this.activeChatList = this.getChatsWithUserId(this.activeChatWithUser);
-                    fetch('./../essentials/dbs_json.php',
-                    {
-                        method: 'POST',
-                        body: `flat_by_id=${this.activeChatList[this.activeChatList.length - 1].o_id}`,
-                        headers:
-                        {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                    })
-                    .then((res) => res.json())
-                    .then((data) => {
-                        // console.log(data);
-                        this.activeFlat = data;
-                        // this.hasScrolled = false;
-                        if (!this.hasScrolled) {
-                            this.setScrollPos();
-                            this.hasScrolled = true;
-                        }
-                    });
+                    this.updateChat();
                 },
-                updateChat: function () {
+                changeActiveChat: async function (userId, isFirstChat = false) {
+                    this.activeChatWithUser = userId;
+                    let newChatList = [];
+                    if(this.sentParamsValid && isFirstChat) {
+                        if(this.sentIsAlreadyinChats) {
+                            newChatList = this.getChatsWithUserId(this.activeChatWithUser);
+                        }
+                    } else {
+                        newChatList = this.getChatsWithUserId(this.activeChatWithUser);
+                    }
+                    let isSameChatList = this.isSameArray(this.activeChatList, newChatList);
+
+                    if(!isFirstChat) {
+                        if (!isSameChatList) {
+                            this.activeChatList = [...newChatList];
+                        }
+                    } else {
+                        this.activeChatList = [...newChatList];
+                    }
+
+                    if(this.sentParamsValid && isFirstChat) {
+                        this.setScrollPos();
+                        this.firstChat = false;
+                    } else if(this.sentParamsValid && this.activeChatWithUser == this.sentFromUser.p_id && !isFirstChat) {
+                        this.activeFlat = this.sentFromFlat;
+                    } else {
+                        await fetch('./../essentials/dbs_json.php',
+                        {
+                            method: 'POST',
+                            body: `flat_by_id=${this.activeChatList[this.activeChatList.length - 1].o_id}`,
+                            headers:
+                            {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                        })
+                        .then((res) => res.json())
+                        .then((data) => {
+                            // console.log(data);
+                            this.activeFlat = data[0];
+    
+                            // if this is not the first chat
+                            if(isFirstChat) {
+                                this.setScrollPos();
+                                this.firstChat = false;
+                                // if new chats are not the same as active chat set scroll
+                            } else if (!isSameChatList) {
+                                this.setScrollPos();
+                            }
+                        });
+                    }
+                    
+                },
+                updateChat: async function () {
+                    if (this.getUrlParameters('user_by_id') && this.getUrlParameters('flat_by_id')) {
+                        await fetch('./../essentials/dbs_json.php',
+                        {
+                            method: 'POST',
+                            body: `user_by_id=${this.getUrlParameters('user_by_id')}&flat_by_id=${this.getUrlParameters('flat_by_id')}`,
+                            headers:
+                            {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                        })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            // data array index of flat and user
+                            // 0 = flat
+                            // 1 = user
+                            // if flat by id foreign key is user id 
+                            if(data[1].p_id === data[0].p_id && data[1].p_id != this.isUser) {
+                                // if user comes from wohnung-finden page, add to userList
+                                this.sentParamsValid = true;
+                                this.sentFromFlat = data[0];
+                                this.sentFromUser = data[1];
+                            }
+                            
+                        });
+                    }
                     // get relevant chats
-                    fetch('./../essentials/dbs_json.php',
+                    await fetch('./../essentials/dbs_json.php',
                     {
                         method: 'POST',
                         body: `chats&user=${this.isUser}`,
@@ -528,8 +617,9 @@ const isDev = true;
                     .then((response) => response.json())
                     .then((data) => {
                         this.chatList = Object.entries(data);
-                        this.chatList.forEach((user) => {
-                            fetch('./../essentials/dbs_json.php',
+                        // sentUser muss hier geprüft werden ob bereits miteinander geschrieben wurde
+                        this.chatList.forEach(async (user) => {
+                            await fetch('./../essentials/dbs_json.php',
                             {
                                 method: 'POST',
                                 body: `user_by_id=${user[0]}`,
@@ -540,38 +630,45 @@ const isDev = true;
                             })
                             .then((response) => response.json())
                             .then((data) => {
-                                if (this.firstChat || !this.userList.some(e => e.p_id == data.p_id)) {
-                                    this.userList.push(data);
-                                }
-                                if (!this.hasScrolled) {
-                                    this.setScrollPos();
-                                    this.hasScrolled = true;
+                                if (this.firstChat || !this.userList.some(e => e.p_id == data[0].p_id)) {
+                                    this.userList.push(data[0]);
                                 }
                             });
                         });
 
-                        // if chats were found
+                        
+                        if (this.firstChat && this.sentParamsValid) {
+                            this.userList.push(this.sentFromUser);
+                            if (this.chatList.some(e => e[0] == this.sentFromUser.p_id)) {
+                                this.sentIsAlreadyinChats = true;
+                            }
+                        }
+
+                        if(this.sentParamsValid && !this.sentIsAlreadyinChats) {
+                            this.chatList.unshift([this.sentFromUser.p_id.toString(), []]);
+                        }
+                        
                         if (this.chatList.length > 0 && this.firstChat) {
                             // set first chat as initial
-                            this.changeActiveChat(this.chatList[0][0]);
-                            this.firstChat = false;
+                            if(this.sentParamsValid) {
+                                this.changeActiveChat(this.sentFromUser.p_id, this.firstChat);
+                            } else {   
+                                this.changeActiveChat(this.chatList[0][0], this.firstChat);
+                            }
                         } else {
                             this.changeActiveChat(this.activeChatWithUser);
                         }
+
                     });
                 },
                 setScrollPos: function () {
-                    const chatCtn = document.querySelector('.message-box .inner-ctn');
-                    chatCtn.scrollTop = chatCtn.scrollHeight;
-                    chatCtn.addEventListener('scroll', function (){
-                        this.hasScrolled = true;
-                    });
+                    this.$refs.chatCtn.scrollTop = this.$refs.chatCtn.scrollHeight;
                 },
-                onSubmit: function () {
-                    fetch('./../actions/send-chat.php',
+                onSubmit: async function () {
+                    await fetch('./../actions/send-chat.php',
                     {
                         method: 'POST',
-                        body: `rec=${this.activeChatWithUser}&send=${this.isUser}&msg=${this.messageContent}&o_id=${this.activeFlat.o_id}`,
+                        body: `rec=${this.activeChatWithUser}&send=${this.isUser}&msg=${this.formatMsg()}&o_id=${this.activeFlat.o_id}`,
                         headers:
                         {
                             'Content-Type': 'application/x-www-form-urlencoded',
@@ -582,11 +679,17 @@ const isDev = true;
                         if (data == 1) {
                             this.updateChat();
                             this.messageContent = '';
-                            this.hasScrolled = false;
+                            this.setScrollPos();
                         }
                     });
                 },
+                isSameArray: function(arr1, arr2) {
+                    if(arr1.length === arr2.length) {
+                        return true
+                    } else {
+                        return false;
+                    }
+                }
             },
         });
     }
-}());

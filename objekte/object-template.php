@@ -1,5 +1,6 @@
 <?php 
     $obj = $db->get_this_one("SELECT * FROM `objekt` WHERE link='".$web->file_name."'");
+    $this_is_user = $_SESSION['person'];
     $user = $db->get_this_one("SELECT * FROM `person` WHERE p_id=".$obj['p_id']);
     unset($user['password']);
 ?>
@@ -25,7 +26,11 @@
                 </span>
                 <div class="buttons">
                     <a href="<?php echo $web->root; ?>/user/user.php?id=<?php echo $user['p_id']; ?>" class="btn"><i class="fa fa-user"></i> Nutzerprofil ansehen</a>      
-                    <a href="" class="btn secondary"><i class="fa fa-comments"></i> Nachricht senden</a>      
+                    <?php if(isset($this_is_user) && $user['p_id'] != $this_is_user['p_id']) { ?>
+                        <a href="<?php echo $web->root; ?>/user/nachrichten-center.php?flat_by_id=<?php echo $obj['o_id']; ?>&user_by_id=<?php echo $user['p_id']; ?>" class="btn secondary"><i class="fa fa-comments"></i> Nachricht senden</a>      
+                    <?php } else { ?>
+                        <a href="<?php echo $web->root; ?>/user/nachrichten-center.php" class="btn secondary disabled"><i class="fa fa-comments"></i> Nachricht senden</a>      
+                    <?php } ?>
                 </div>
             </div>
         </div>

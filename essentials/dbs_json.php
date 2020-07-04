@@ -104,13 +104,13 @@
 
     if(isset($_POST['flat_by_id'])) {
         $o_id = $_POST['flat_by_id'];
-        $data = $db->prep_exec('SELECT * FROM `objekt` WHERE o_id = :o_id', ['o_id' => $o_id], 'one');
+        $data[] = $db->prep_exec('SELECT * FROM `objekt` WHERE o_id = :o_id', ['o_id' => $o_id], 'one');
     }
 
     if(isset($_POST['user_by_id'])) {
         $p_id = $_POST['user_by_id'];
-        $data = $db->prep_exec('SELECT * FROM `person` WHERE p_id = :p_id', ['p_id' => $p_id], 'one');
-        unset($data['password']);
+        $data[] = $db->prep_exec('SELECT * FROM `person` WHERE p_id = :p_id', ['p_id' => $p_id], 'one');
+        unset($data[0]['password']);
     }
 
     $db->close_connect();

@@ -22,6 +22,10 @@
             background: darken($secondary, 5%);
         }
     }
+    &.disabled {
+        pointer-events: none;
+        background: lighten($secondary, 25%);
+    }
 }
 
 .fluid {
@@ -142,4 +146,8 @@
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
     border-radius: 15px;
     border-bottom: 4px solid $primary;
+}
+
+.wide {
+    width: 100%;
 }

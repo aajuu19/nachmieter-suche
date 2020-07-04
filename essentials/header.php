@@ -10,7 +10,7 @@
         }
     ?>
 
-	<link rel="stylesheet" href="<?php echo $web->root; ?>/styles/styles.css">
+	<link rel="stylesheet" href="<?php echo $web->root; ?>/dist/main.css">
 	<link href="https://fonts.googleapis.com/css?family=Barlow:400,700,900&display=swap" rel="stylesheet">
 
 </head>
