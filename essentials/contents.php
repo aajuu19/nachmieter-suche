@@ -34,6 +34,7 @@
             'name' => 'User',
             'title' => 'Dies ist die User Seite',
             'desc' => 'Dies ist die Beschreibung der Seite User',
+            'claim' => 'Werde ein Teil von uns',
             'include_nav'=> true
         ],
         'registrierung-login.php' => [

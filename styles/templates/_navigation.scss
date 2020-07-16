@@ -173,7 +173,8 @@
                             padding-top: rem(10px);
                             top: 100%;
                             position: absolute;
-                            left: 0;
+                            right: 0;
+                            text-align: right;
                             z-index: 1;
                             max-height: 0;
                             transition: .3s;

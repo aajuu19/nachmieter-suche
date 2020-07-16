@@ -5,6 +5,13 @@ import Vue from './vue.js';
 const isDev = false;
 const root = `${document.location.origin}/nachmieter-suche`;
 
+// index js
+(function() { 
+    if (document.body.classList.contains('index')) {
+        
+    }
+})();
+
 // wohnung-finden page
 (function() { 
     if (document.body.classList.contains('wohnung-finden')) {

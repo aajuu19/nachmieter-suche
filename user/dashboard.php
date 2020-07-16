@@ -20,7 +20,7 @@
         <h1 class="align-left"><i class="fa fa-address-card"></i> <?php echo $user['name']; ?> <span><?php echo $user['job']; ?></span></h1>
             <p class="desc"><?php echo $user['beschreibung'] ?></p>
             <span class="heading primary object-heading">Deine Objekte</span>
-            <div class="user-object-list">            
+            <div class="user-object-list">
                 <?php 
                     $user_objects = $db->get_this_all('SELECT * FROM `objekt` WHERE p_id = '.$user['p_id'].' ORDER BY `einstellungsdatum` DESC');
                     if(!empty($user_objects)) {
@@ -28,7 +28,7 @@
                             $shorten_desc = $web->shorten_str($v['beschreibung'], 70);
                             $object = 
                             '<div class="user-object">
-                                <span class="id">ID: '.$v['o_id'].'</span>
+                                <span class="id">'.($k + 1).'.</span>
                                 <span class="name">'.$v['name'].'</span>
                                 <span class="beschreibung">'.$shorten_desc.'</span>
                                 <a class="object-link" href="'.$web->root.'/objekte/'.$v['link'].'"><i class="fa fa-eye"></i></a>

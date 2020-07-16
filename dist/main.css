@@ -4963,7 +4963,8 @@
                 padding-top: 0.625rem;
                 top: 100%;
                 position: absolute;
-                left: 0;
+                right: 0;
+                text-align: right;
                 z-index: 1;
                 max-height: 0;
                 transition: .3s;
@@ -5360,7 +5361,7 @@ header {
   background-image: url(images/l-header-bg.jpg);
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center center;
+  background-position: 50% 50%;
   background-attachment: fixed; }
   body:not(.index) header {
     height: 35vh;
