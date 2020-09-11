@@ -5,10 +5,96 @@ import Vue from './vue.js';
 const isDev = false;
 const root = `${document.location.origin}/nachmieter-suche`;
 
-// index js
+// user js
 (function() { 
-    if (document.body.classList.contains('index')) {
-        
+    if (document.body.classList.contains('profil-bearbeiten')) {
+        const vm = new Vue({
+            el: '.edit-profile-app',
+            data: {
+                userProfile: {},
+                fileList: [],
+            },
+            computed: {
+                name: function() {
+                    if(this.userProfile.name) {
+                        return this.userProfile.name;
+                    } else {
+                        return "";
+                    }
+                },
+                gender: function() {
+                    if(this.userProfile.gender) {
+                        return this.userProfile.gender;
+                    } else {
+                        return "";
+                    }
+                },
+                description: function() {
+                    if(this.userProfile.beschreibung) {
+                        return this.userProfile.beschreibung;
+                    } else {
+                        return "";
+                    }
+                },
+                job: function() {
+                    if(this.userProfile.job) {
+                        return this.userProfile.job;
+                    } else {
+                        return "";
+                    }
+                },
+                lookingfrom: function() {
+                    if(this.userProfile.lookingfrom) {
+                        return this.userProfile.lookingfrom;
+                    } else {
+                        return "";
+                    }
+                },
+                birthdate: function() {
+                    if(this.userProfile.birthdate) {
+                        return this.userProfile.birthdate;
+                    } else {
+                        return "";
+                    }
+                }
+            },
+            created: function () {
+                fetch('./../essentials/get-session.php')
+                .then((json) => json.json())
+                .then((sessionId) => {
+                    let isUser = sessionId.person.p_id; 
+                    
+                    fetch('./../essentials/dbs_json.php',
+                    {
+                        method: 'POST',
+                        body: 'user_by_id=' + isUser,
+                        headers:
+                        {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                    })
+                    .then((data) => data.json())
+                    .then((data) => {
+                        this.userProfile = data[0];
+                        console.log(this.userProfile);
+
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+                })
+                .catch((err) => {
+                    if (isDev) {
+                        console.log(err);
+                    }
+                });
+            },
+            methods: {
+                showFileDetails: function ($event) {
+                    this.fileList = $event.target.files;
+                },
+            }
+        });
     }
 })();
 
@@ -41,7 +127,7 @@ const root = `${document.location.origin}/nachmieter-suche`;
             template: `
                 <div class="filter">
                     <span class="heading">{{ ele.name }}</span>
-                    <input v-model="ele.val" type="number" :max="ele.maxVal" :min="ele.minVal" :step="ele.step">
+                    <input v-model="ele.val" type="number" autocomplete="off" :max="ele.maxVal" :min="ele.minVal" :step="ele.step">
                     <min-max v-bind:element="ele"></min-max>
                 </div>
             `,
@@ -97,27 +183,39 @@ const root = `${document.location.origin}/nachmieter-suche`;
                     quadratmeter: {
                         id: 1,
                         name: 'Quadratmeter',
-                        val: '', minVal: 20, maxVal: 1000, step: 5,
+                        val: '', 
+                        minVal: 20, 
+                        maxVal: 1000, 
+                        step: 5,
                         min: true,
                         max: false,
                     },
                     zimmer: {
                         id: 2,
                         name: 'Zimmer',
-                        val: '', minVal: 1, maxVal: 100, step: 0.5,
+                        val: '', 
+                        minVal: 1, 
+                        maxVal: 100, 
+                        step: 0.5,
                         min: true,
                         max: false,
                     },
                     kalt: {
                         id: 3,
                         name: 'Kaltmiete',
-                        val: '', minVal: 50, maxVal: 1000000, step: 10,
+                        val: '', 
+                        minVal: 50, 
+                        maxVal: 1000000, 
+                        step: 10,
                         max: true,
                     },
                     etage: {
                         id: 4,
                         name: 'Etage',
-                        val: '', minVal: 1, maxVal: 200, step: 1,
+                        val: '', 
+                        minVal: 1, 
+                        maxVal: 200, 
+                        step: 1,
                         min: false,
                         max: true,
                     },
@@ -199,10 +297,25 @@ const root = `${document.location.origin}/nachmieter-suche`;
         const vm = new Vue({
             el: '.register-login-app',
             data: {
-                registrationShow: true,
-                loginShow: false,
+                registration: {
+                    isActive: true,
+                    title: 'Registrierung'
+                },
+                login: {
+                    isActive: false,
+                    title: 'Login'
+                },
                 logMail: '',
-                regMail: '',
+                regMail: ''
+            },
+            computed: {
+                appTitle: function() {
+                    if (this.registration.isActive) {
+                        return this.registration.title;
+                    } else if (this.login.isActive) {
+                        return this.login.title;
+                    }
+                }
             },
             created: function () {
                 const loc = document.location.search.substr(1);
@@ -215,11 +328,11 @@ const root = `${document.location.origin}/nachmieter-suche`;
             methods: {
                 changeVal: function (operation) {
                     if (operation === 'login') {
-                        this.loginShow = true;
-                        this.registrationShow = false;
+                        this.login.isActive = true;
+                        this.registration.isActive = false;
                     } else if (operation === 'register') {
-                        this.loginShow = false;
-                        this.registrationShow = true;
+                        this.login.isActive = false;
+                        this.registration.isActive = true;
                     }
                 },
                 validate: function ($event) {
@@ -301,8 +414,14 @@ const root = `${document.location.origin}/nachmieter-suche`;
                             // check if results exist
                             if (places.length >= 1) {
                                 places.forEach((e) => {
-                                    const ortData = e.fields.note;
-                                    const plzData = e.fields.plz;
+                                    let ortData = e.fields.note;
+                                    let plzData = e.fields.plz;
+                                    ortData = ortData.replace('Ã¶', 'ö');
+                                    ortData = ortData.replace('Ã', 'Ö');
+                                    ortData = ortData.replace('Ã', 'Ü');
+                                    ortData = ortData.replace('Ã¼', 'ü');
+                                    ortData = ortData.replace('Ã¤', 'ä');
+                                    ortData = ortData.replace('Ã', 'ß');
 
                                     this.placeList.push({ ort: ortData, plz: plzData });
                                 });
@@ -374,248 +493,221 @@ const root = `${document.location.origin}/nachmieter-suche`;
 }());
 
 // Nachrichten Center App
-    if (document.body.classList.contains('nachrichten-center')) {
-        Vue.component('user-thumb', {
-            props: ['user', 'activeuser'],
-            data: function () {
-                return {
-                    hasUserImage: false,
-                };
-            },
-            template: `
-                <div v-on:click="handleUserClick" class="user-preview" :class="{ active : isActive }">
-                    <img v-if="hasUserImage" :src="imageUrl" :alt="user.name">
-                    <div v-if="!hasUserImage" class="userInitial">
-                        <span>{{ user.name[0] }}</span>
-                    </div>
-                    <span>{{ user.name }}</span>
+if (document.body.classList.contains('nachrichten-center')) {
+    Vue.component('user-thumb', {
+        props: ['user', 'activeuser'],
+        data: function () {
+            return {
+                hasUserImage: false,
+            };
+        },
+        template: `
+            <div v-on:click="handleUserClick" class="user-preview" :class="{ active : isActive }">
+                <img v-if="hasUserImage" :src="imageUrl" :alt="user.name">
+                <div v-if="!hasUserImage" class="userInitial">
+                    <span>{{ user.name[0] }}</span>
                 </div>
-            `,
-            computed: {
-                imageUrl: function () {
-                    // return `../uploads/${this.user.profilepic}`;
-                    return '../uploads/placeholder.jpg';
-                },
-                isActive: function () {
-                    if (this.user.p_id == this.activeuser) {
-                        return true;
-                    }
-                },
+                <span>{{ user.name }}</span>
+            </div>
+        `,
+        computed: {
+            imageUrl: function () {
+                // return `../uploads/${this.user.profilepic}`;
+                return '../uploads/placeholder.jpg';
             },
-            created: function () {
-                if (this.user.profilepic) {
-                    this.hasUserImage = true;
+            isActive: function () {
+                if (this.user.p_id == this.activeuser) {
+                    return true;
+                }
+            },
+        },
+        created: function () {
+            if (this.user.profilepic) {
+                this.hasUserImage = true;
+            } else {
+                this.hasUserImage = false;
+            }
+        },
+        methods: {
+            handleUserClick: function () {
+                this.$emit('handle-user-click');
+            }
+        }
+    });
+    Vue.component('chat-bubble', {
+        props: ['chat', 'iamuser'],
+        data: function () {
+            return {
+
+            };
+        },
+        template: `
+            <div class="chat-bubble" :class="{send : isSender}">
+                <span class="message" v-html="chat.message"></span>
+                <span class="time">{{ this.chatTime }} Uhr</span>
+            </div>
+        `,
+        computed: {
+            isSender: function () {
+                if (this.chat.send_p_id == this.iamuser) {
+                    return true;
+                }
+            },
+            chatTime: function () {
+                const date = new Date(this.chat.timestamp.replace(/-/g, "/"));
+                const clockTime = date.toLocaleTimeString();
+                const dateTime = date.toLocaleDateString();
+                return `${dateTime} - ${clockTime}`;
+            },
+        }
+    });
+    Vue.component('flat-details', {
+        props: ['flat'],
+        template: `
+            <a class="flat-details" :href="flatLink" title="zum Mietobjekt wechseln">
+                <div class="flat-preview-img primaryOverlay">
+                    <img :src="imgLink" class="cover">
+                </div>
+                <div class="description">
+                    <span class="headline">{{ flat.name }}</span>
+                    <span class="address">{{ flat.adresse }}</span>
+                </div>
+                <span class="price">{{ flat.kalt }} €</span>  
+            </a>
+        `,
+        computed: {
+            imgLink: function() {
+                return `${root}/uploads/${this.flat.image_1}`;
+            },
+            flatLink: function() {
+                return `${root}/objekte/${this.flat.link}`;
+            }
+        }
+    });
+    const vm = new Vue({
+        el: '.message-ctn',
+        data: {
+            outputData: null,
+            errorMsg: {
+                isError: false,
+                message: 'Bitte logge dich zuerst ein.',
+            },
+            isUser: null,
+            chatList: [],
+            userList: [],
+            activeChatWithUser: null,
+            activeChatList: [],
+            messageContent: null,
+            activeFlat: null,
+            firstChat: true,
+            updateTimer: '',
+            sentFromFlat: null,
+            sentFromUser: null,
+            sentParamsValid: false,
+            sentIsAlreadyinChats: false
+        },
+        created: function () {
+            // check if valid session exists
+            fetch('./../essentials/get-session.php')
+            .then((json) => json.json())
+            .then((sessionId) => {
+                this.isUser = sessionId.person.p_id; 
+                this.updateChat();
+                // update chat every 2 seconds
+                this.updateTimer = setInterval(this.updateChat, 2000);
+
+
+            })
+            .catch((err) => {
+                if (isDev) {
+                    console.log(err);
                 } else {
-                    this.hasUserImage = false;
+                    this.errorMsg.isError = true;
                 }
+            });
+        },
+        watch: {
+            activeChatList: function () {
+                this.setScrollPos();
             },
-            methods: {
-                handleUserClick: function () {
-                    this.$emit('handle-user-click');
-                }
-            }
-        });
-        Vue.component('chat-bubble', {
-            props: ['chat', 'iamuser'],
-            data: function () {
-                return {
-
-                };
+        },
+        methods: {
+            formatMsg: function() {
+                return '<p>' + this.messageContent.replace(/\n/g, "</p>\n<p>") + '</p>';
             },
-            template: `
-                <div class="chat-bubble" :class="{send : isSender}">
-                    <span class="message" v-html="chat.message"></span>
-                    <span class="time">{{ this.chatTime }} Uhr</span>
-                </div>
-            `,
-            computed: {
-                isSender: function () {
-                    if (this.chat.send_p_id == this.iamuser) {
-                        return true;
-                    }
-                },
-                chatTime: function () {
-                    const date = new Date(this.chat.timestamp.replace(/-/g, "/"));
-                    const clockTime = date.toLocaleTimeString();
-                    const dateTime = date.toLocaleDateString();
-                    return `${dateTime} - ${clockTime}`;
-                },
-            }
-        });
-        Vue.component('flat-details', {
-            props: ['flat'],
-            template: `
-                <a class="flat-details" :href="flatLink" title="zum Mietobjekt wechseln">
-                    <div class="flat-preview-img primaryOverlay">
-                        <img :src="imgLink" class="cover">
-                    </div>
-                    <div class="description">
-                        <span class="headline">{{ flat.name }}</span>
-                        <span class="address">{{ flat.adresse }}</span>
-                    </div>
-                    <span class="price">{{ flat.kalt }} €</span>  
-                </a>
-            `,
-            computed: {
-                imgLink: function() {
-                    return `${root}/uploads/${this.flat.image_1}`;
-                },
-                flatLink: function() {
-                    return `${root}/objekte/${this.flat.link}`;
-                }
-            }
-        });
-        const vm = new Vue({
-            el: '.message-ctn',
-            data: {
-                outputData: null,
-                errorMsg: {
-                    isError: false,
-                    message: 'Bitte logge dich zuerst ein.',
-                },
-                isUser: null,
-                chatList: [],
-                userList: [],
-                activeChatWithUser: null,
-                activeChatList: [],
-                messageContent: null,
-                activeFlat: null,
-                firstChat: true,
-                updateTimer: '',
-                sentFromFlat: null,
-                sentFromUser: null,
-                sentParamsValid: false,
-                sentIsAlreadyinChats: false
+            getUrlParameters: function(getName) {
+                var url = new URL(window.location.href);
+                var param = url.searchParams.get(getName);
+                return param;
             },
-            created: function () {
-                // check if valid session exists
-                fetch('./../essentials/get-session.php')
-                .then((json) => json.json())
-                .then((sessionId) => {
-                    this.isUser = sessionId.person.p_id; 
-                    this.updateChat();
-                    // update chat every 2 seconds
-                    this.updateTimer = setInterval(this.updateChat, 2000);
-
-
-                })
-                .catch((err) => {
-                    if (isDev) {
-                        console.log(err);
-                    } else {
-                        this.errorMsg.isError = true;
-                    }
+            getChatsWithUserId: function (userId) {
+                const res = this.chatList.find((ele) => {
+                    return ele[0] == userId;
                 });
+                return res[1];
             },
-            watch: {
-                activeChatList: function () {
-                    this.setScrollPos();
-                },
+            handleUserClick: function(userId) {
+                this.activeChatWithUser = userId;
+                this.updateChat();
             },
-            watch: {
-            },
-            methods: {
-                formatMsg: function() {
-                    return '<p>' + this.messageContent.replace(/\n/g, "</p>\n<p>") + '</p>';
-                },
-                getUrlParameters: function(getName) {
-                    var url = new URL(window.location.href);
-                    var param = url.searchParams.get(getName);
-                    return param;
-                },
-                getChatsWithUserId: function (userId) {
-                    const res = this.chatList.find((ele) => {
-                        return ele[0] == userId;
-                    });
-                    return res[1];
-                },
-                handleUserClick: function(userId) {
-                    this.activeChatWithUser = userId;
-                    this.updateChat();
-                },
-                changeActiveChat: async function (userId, isFirstChat = false) {
-                    this.activeChatWithUser = userId;
-                    let newChatList = [];
-                    if(this.sentParamsValid && isFirstChat) {
-                        if(this.sentIsAlreadyinChats) {
-                            newChatList = this.getChatsWithUserId(this.activeChatWithUser);
-                        }
-                    } else {
+            changeActiveChat: async function (userId, isFirstChat = false) {
+                this.activeChatWithUser = userId;
+                let newChatList = [];
+                if(this.sentParamsValid && isFirstChat) {
+                    if(this.sentIsAlreadyinChats) {
                         newChatList = this.getChatsWithUserId(this.activeChatWithUser);
                     }
-                    let isSameChatList = this.isSameArray(this.activeChatList, newChatList);
+                } else {
+                    newChatList = this.getChatsWithUserId(this.activeChatWithUser);
+                }
+                let isSameChatList = this.isSameArray(this.activeChatList, newChatList);
 
-                    if(!isFirstChat) {
-                        if (!isSameChatList) {
-                            this.activeChatList = [...newChatList];
-                        }
-                    } else {
+                if(!isFirstChat) {
+                    if (!isSameChatList) {
                         this.activeChatList = [...newChatList];
                     }
+                } else {
+                    this.activeChatList = [...newChatList];
+                }
 
-                    if(this.sentParamsValid && isFirstChat) {
-                        this.setScrollPos();
-                        this.firstChat = false;
-                    } else if(this.sentParamsValid && this.activeChatWithUser == this.sentFromUser.p_id && !isFirstChat) {
-                        this.activeFlat = this.sentFromFlat;
-                    } else {
-                        await fetch('./../essentials/dbs_json.php',
-                        {
-                            method: 'POST',
-                            body: `flat_by_id=${this.activeChatList[this.activeChatList.length - 1].o_id}`,
-                            headers:
-                            {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                        })
-                        .then((res) => res.json())
-                        .then((data) => {
-                            // console.log(data);
-                            this.activeFlat = data[0];
-    
-                            // if this is not the first chat
-                            if(isFirstChat) {
-                                this.setScrollPos();
-                                this.firstChat = false;
-                                // if new chats are not the same as active chat set scroll
-                            } else if (!isSameChatList) {
-                                this.setScrollPos();
-                            }
-                        });
-                    }
-                    
-                },
-                updateChat: async function () {
-                    if (this.getUrlParameters('user_by_id') && this.getUrlParameters('flat_by_id')) {
-                        await fetch('./../essentials/dbs_json.php',
-                        {
-                            method: 'POST',
-                            body: `user_by_id=${this.getUrlParameters('user_by_id')}&flat_by_id=${this.getUrlParameters('flat_by_id')}`,
-                            headers:
-                            {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                        })
-                        .then((response) => response.json())
-                        .then((data) => {
-                            // data array index of flat and user
-                            // 0 = flat
-                            // 1 = user
-                            // if flat by id foreign key is user id 
-                            if(data[1].p_id === data[0].p_id && data[1].p_id != this.isUser) {
-                                // if user comes from wohnung-finden page, add to userList
-                                this.sentParamsValid = true;
-                                this.sentFromFlat = data[0];
-                                this.sentFromUser = data[1];
-                            }
-                            
-                        });
-                    }
-                    // get relevant chats
+                if(this.sentParamsValid && isFirstChat) {
+                    this.setScrollPos();
+                    this.firstChat = false;
+                } else if(this.sentParamsValid && this.activeChatWithUser == this.sentFromUser.p_id && !isFirstChat) {
+                    this.activeFlat = this.sentFromFlat;
+                } else {
                     await fetch('./../essentials/dbs_json.php',
                     {
                         method: 'POST',
-                        body: `chats&user=${this.isUser}`,
+                        body: `flat_by_id=${this.activeChatList[this.activeChatList.length - 1].o_id}`,
+                        headers:
+                        {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                    })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        // console.log(data);
+                        this.activeFlat = data[0];
+
+                        // if this is not the first chat
+                        if(isFirstChat) {
+                            this.setScrollPos();
+                            this.firstChat = false;
+                            // if new chats are not the same as active chat set scroll
+                        } else if (!isSameChatList) {
+                            this.setScrollPos();
+                        }
+                    });
+                }
+                
+            },
+            updateChat: async function () {
+                if (this.getUrlParameters('user_by_id') && this.getUrlParameters('flat_by_id')) {
+                    await fetch('./../essentials/dbs_json.php',
+                    {
+                        method: 'POST',
+                        body: `user_by_id=${this.getUrlParameters('user_by_id')}&flat_by_id=${this.getUrlParameters('flat_by_id')}`,
                         headers:
                         {
                             'Content-Type': 'application/x-www-form-urlencoded',
@@ -623,80 +715,135 @@ const root = `${document.location.origin}/nachmieter-suche`;
                     })
                     .then((response) => response.json())
                     .then((data) => {
-                        this.chatList = Object.entries(data);
-                        // sentUser muss hier geprüft werden ob bereits miteinander geschrieben wurde
-                        this.chatList.forEach(async (user) => {
-                            await fetch('./../essentials/dbs_json.php',
-                            {
-                                method: 'POST',
-                                body: `user_by_id=${user[0]}`,
-                                headers:
-                                {
-                                    'Content-Type': 'application/x-www-form-urlencoded',
-                                },
-                            })
-                            .then((response) => response.json())
-                            .then((data) => {
-                                if (this.firstChat || !this.userList.some(e => e.p_id == data[0].p_id)) {
-                                    this.userList.push(data[0]);
-                                }
-                            });
-                        });
-
-                        
-                        if (this.firstChat && this.sentParamsValid) {
-                            this.userList.push(this.sentFromUser);
-                            if (this.chatList.some(e => e[0] == this.sentFromUser.p_id)) {
-                                this.sentIsAlreadyinChats = true;
-                            }
-                        }
-
-                        if(this.sentParamsValid && !this.sentIsAlreadyinChats) {
-                            this.chatList.unshift([this.sentFromUser.p_id.toString(), []]);
+                        // data array index of flat and user
+                        // 0 = flat
+                        // 1 = user
+                        // if flat by id foreign key is user id 
+                        if(data[1].p_id === data[0].p_id && data[1].p_id != this.isUser) {
+                            // if user comes from wohnung-finden page, add to userList
+                            this.sentParamsValid = true;
+                            this.sentFromFlat = data[0];
+                            this.sentFromUser = data[1];
                         }
                         
-                        if (this.chatList.length > 0 && this.firstChat) {
-                            // set first chat as initial
-                            if(this.sentParamsValid) {
-                                this.changeActiveChat(this.sentFromUser.p_id, this.firstChat);
-                            } else {   
-                                this.changeActiveChat(this.chatList[0][0], this.firstChat);
-                            }
-                        } else {
-                            this.changeActiveChat(this.activeChatWithUser);
-                        }
-
                     });
-                },
-                setScrollPos: function () {
-                    this.$refs.chatCtn.scrollTop = this.$refs.chatCtn.scrollHeight;
-                },
-                onSubmit: async function () {
-                    await fetch('./../actions/send-chat.php',
+                } else if (this.getUrlParameters('user_by_id')){
+                    await fetch('./../essentials/dbs_json.php',
                     {
                         method: 'POST',
-                        body: `rec=${this.activeChatWithUser}&send=${this.isUser}&msg=${this.formatMsg()}&o_id=${this.activeFlat.o_id}`,
+                        body: `user_by_id=${this.getUrlParameters('user_by_id')}`,
                         headers:
                         {
                             'Content-Type': 'application/x-www-form-urlencoded',
                         },
-                    }).then(res=>res.text())
-                    .then(data=>{
-                        // if data true
-                        if (data == 1) {
-                            this.updateChat();
-                            this.messageContent = '';
-                            this.setScrollPos();
+                    })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        // data array index of user
+                        // 0 = user
+                        if(data[0].p_id != this.isUser) {
+                            // if user comes from wohnung-finden page, add to userList
+                            this.sentParamsValid = true;
+                            this.sentFromUser = data[0];
                         }
+                        
                     });
-                },
-                isSameArray: function(arr1, arr2) {
-                    if(arr1.length === arr2.length) {
-                        return true
-                    } else {
-                        return false;
-                    }
                 }
+                // get relevant chats
+                await fetch('./../essentials/dbs_json.php',
+                {
+                    method: 'POST',
+                    body: `chats&user=${this.isUser}`,
+                    headers:
+                    {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    this.chatList = Object.entries(data);
+                    // sentUser muss hier geprüft werden ob bereits miteinander geschrieben wurde
+                    this.chatList.forEach(async (user) => {
+                        await fetch('./../essentials/dbs_json.php',
+                        {
+                            method: 'POST',
+                            body: `user_by_id=${user[0]}`,
+                            headers:
+                            {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                        })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            if (this.firstChat || !this.userList.some(e => e.p_id == data[0].p_id)) {
+                                this.userList.push(data[0]);
+                            }
+                        });
+                    });
+
+                    
+                    if (this.firstChat && this.sentParamsValid) {
+                        this.userList.push(this.sentFromUser);
+                        if (this.chatList.some(e => e[0] == this.sentFromUser.p_id)) {
+                            this.sentIsAlreadyinChats = true;
+                        }
+                    }
+
+                    if(this.sentParamsValid && !this.sentIsAlreadyinChats) {
+                        this.chatList.unshift([this.sentFromUser.p_id.toString(), []]);
+                    }
+                    
+                    if (this.chatList.length > 0 && this.firstChat) {
+                        // set first chat as initial
+                        if(this.sentParamsValid) {
+                            this.changeActiveChat(this.sentFromUser.p_id, this.firstChat);
+                        } else {   
+                            this.changeActiveChat(this.chatList[0][0], this.firstChat);
+                        }
+                    } else {
+                        this.changeActiveChat(this.activeChatWithUser);
+                    }
+
+                });
             },
-        });
-    }
+            setScrollPos: function () {
+                this.$refs.chatCtn.scrollTop = this.$refs.chatCtn.scrollHeight;
+            },
+            onSubmit: async function () {
+                console.log(this.activeFlat);
+                let fetchBody = '';
+
+                if(this.activeFlat) {
+                    fetchBody = `rec=${this.activeChatWithUser}&send=${this.isUser}&msg=${this.formatMsg()}&o_id=${this.activeFlat.o_id}`
+                } else {
+                    fetchBody = `rec=${this.activeChatWithUser}&send=${this.isUser}&msg=${this.formatMsg()}`
+                }
+
+                await fetch('./../actions/send-chat.php',
+                {
+                    method: 'POST',
+                    body: fetchBody,
+                    headers:
+                    {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                }).then(res=>res.text())
+                .then(data=>{
+                    // if data true
+                    if (data == 1) {
+                        this.updateChat();
+                        this.messageContent = '';
+                        this.setScrollPos();
+                    }
+                });
+            },
+            isSameArray: function(arr1, arr2) {
+                if(arr1.length === arr2.length) {
+                    return true
+                } else {
+                    return false;
+                }
+            }
+        },
+    });
+}

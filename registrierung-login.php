@@ -3,21 +3,23 @@
 	<div class="col">
 		<div class="register-login-app">
 			<div class="row">
-				<div class="col s-6">
-					<div class="register-tab big-tab" @click="changeVal('register')">
-						<span class="heading"><i class="fa fa-users"></i> Registrierung</span>
-						<span class="desc">Werde auch du ein Teil unserer nachmieter-suche.de Community!</span>
-					</div>
-				</div>
-				<div class="col s-6">
-					<div class="secondary-tab big-tab" @click="changeVal('login')">
-						<span class="heading"><i class="fa fa-user"></i> Login</span>
-						<span class="desc">Du gehörst schon zu uns? Hier gehts zum Login!</span>
-					</div>
-				</div>
 				<div class="col">
 					<div class="form-area row">
+						<div class="col sm-4">
+							<aside class="side-info bd-right">
+								<div class="register-tab big-tab" :class="{ active: registration.isActive }" @click="changeVal('register')">
+									<span class="heading"><i class="fa fa-users"></i> Registrierung</span>
+									<span class="desc">Werde auch du ein Teil unserer nachmieter-suche.de Community!</span>
+								</div>
+							
+								<div class="secondary-tab big-tab" :class="{ active: login.isActive }" @click="changeVal('login')">
+									<span class="heading"><i class="fa fa-user"></i> Login</span>
+									<span class="desc">Du gehörst schon zu uns? Hier gehts zum Login!</span>
+								</div>
+							</aside>
+						</div>
 						<div class="col sm-8">
+							<h1 class="align-left" :class="{ secondary : login.isActive }">{{ appTitle }}</h1>
 							<?php
 								if(isset($_GET['error'])) {
 									echo '<span class="error">'.$_GET['error'].'</span>';
@@ -25,7 +27,7 @@
 									echo '<span class="success">'.$_GET['bestaetigung'].'</span>';
 								}
 							?>
-							<div class="login-ctn" v-show="loginShow">
+							<div class="login-ctn" v-show="login.isActive">
 								<form v-on:submit.prevent="validate" class="default" action="<?php echo $web->root; ?>/actions/login.php" method="POST">
 									<fieldset>
 										<label for="log-mail"><i class="fa fa-envelope"></i></label>
@@ -39,12 +41,35 @@
 									<input type="submit" class="btn secondary" value="Jetzt einloggen">
 								</form>
 							</div>
-							<div class="registration-ctn" v-show="registrationShow">
+							<div class="registration-ctn" v-show="registration.isActive">
 								<form v-on:submit.prevent="validate" class="default" action="<?php echo $web->root; ?>/actions/register.php" method="POST">
+
+									<fieldset class="dropdown">
+										<label for="reg-gender"><i class="fa fa-user-astronaut"></i></label>
+										<select name="reg-gender" id="reg-gender" required oninvalid="this.setCustomValidity('Bitte gib ein Geschlecht an oder wähle keine Angabe')" oninput="setCustomValidity('')">
+											<option value="" selected disabled>Geschlecht</option>
+											<option value="weiblich">weiblich</option>
+											<option value="männlich">männlich</option>
+											<option value="divers">divers</option>
+											<option value="keine Angabe">keine Angabe</option>
+										</select>
+									</fieldset>
+
+									<fieldset class="dropdown">
+										<label for="reg-lookingfor"><i class="fa fa-home"></i></label>
+										<select name="reg-lookingfor" id="reg-lookingfor" required oninvalid="this.setCustomValidity('Bitte gib ein wonach du suchst')" oninput="setCustomValidity('')">
+											<option value="" selected disabled>Auf der Suche nach</option>
+											<option value="WG">WG</option>
+											<option value="Mietwohnung">Mietwohnung</option>
+											<option value="Haus">Haus</option>
+											<option value="Mieter">Mieter</option>
+										</select>
+									</fieldset>
+								
 									<fieldset>
 										<label for="reg-name"><i class="fa fa-portrait"></i></label>
-										<input minlength="6" name="reg-name" id="reg-name" type="text" placeholder="Wunschname eingeben" required 
-										oninvalid="this.setCustomValidity('Bitte gib einen Namen ein (Mindestens 6 Zeichen)')" oninput="setCustomValidity('')">
+										<input minlength="6" maxlength="50" name="reg-name" id="reg-name" type="text" placeholder="Wunschname eingeben" required 
+										oninvalid="this.setCustomValidity('Bitte gib einen Namen ein (Mindestens 6 Zeichen, Maximal 50 Zeichen)')" oninput="setCustomValidity('')">
 									</fieldset>
 									
 									<fieldset>
@@ -58,17 +83,10 @@
 										<input minlength="6" name="reg-pw" id="reg-pw" type="password" placeholder="Passwort" required 
 										oninvalid="this.setCustomValidity('Bitte gib ein gültiges Passwort ein (Mindestlänge 6 Zeichen)')" oninput="setCustomValidity('')">
 									</fieldset>
+
 									<input type="submit" class="btn" value="Jetzt registrieren">
 								</form>
 							</div>
-						</div>
-						<div class="col sm-4">
-							<aside class="side-info">
-								<h1 class="align-left">Komm zu uns</h1>
-								<p>You think water moves fast? You should see ice. It moves like it has a mind.</p> 
-								<p>Like it knows it killed the world once and got a taste for murder. After the avalanche, it took us a week to climb out.</p> 
-								<p>Now, I don't know exactly when we turned on each other, but I know that seven of us survived the slide... and only five made it out. </p>
-							</aside>
 						</div>
 					</div>
 				</div>

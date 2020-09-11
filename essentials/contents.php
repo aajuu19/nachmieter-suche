@@ -34,8 +34,8 @@
             'name' => 'User',
             'title' => 'Dies ist die User Seite',
             'desc' => 'Dies ist die Beschreibung der Seite User',
-            'claim' => 'Werde ein Teil von uns',
-            'include_nav'=> true
+            'claim' => 'Profil',
+            'include_nav'=> false
         ],
         'registrierung-login.php' => [
             'name' => 'Registrierung - Login',
@@ -52,6 +52,14 @@
             'include_nav'=> false,
             'login_required' => true
         ],
+        'freundschaftsanfragen.php' => [
+            'name' => 'Freundschaftsanfragen',
+            'title' => 'Dies ist das Freundschaftsanfragen-Seite',
+            'desc' => 'Dies ist die Beschreibung der Freundschaftsanfragenseite',
+            'claim' => 'Freundschaftsanfragen',
+            'include_nav'=> false,
+            'login_required' => true
+        ],
         'nachrichten-center.php' => [
             'name' => 'Nachrichtencenter',
             'title' => 'Dies ist das Nachrichtencenter',
@@ -65,6 +73,14 @@
             'title' => 'Dies ist die Maske für das Einfügen eines neuen Objektes',
             'desc' => 'Dies ist die Beschreibung für die Maske für das Einfügen eines neuen Objektes',
             'claim' => 'Neue Wohnung einfügen',
+            'include_nav'=> false,
+            'login_required' => true
+        ],
+        'profil-bearbeiten.php' => [
+            'name' => 'Profil bearbeiten',
+            'title' => 'nachmieter-suche.de - Profil bearbeiten',
+            'desc' => 'Dies ist die Beschreibung der Profil bearbeiten Seite',
+            'claim' => 'Profil bearbeiten',
             'include_nav'=> false,
             'login_required' => true
         ],

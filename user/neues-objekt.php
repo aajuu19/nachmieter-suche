@@ -20,7 +20,7 @@
 						
 						<fieldset>
 							<label class="big-label" for="obj-desc"><i class="fa fa-align-left"></i></label>
-							<textarea name="obj-desc" id="obj-desc" cols="30" required rows="10" placeholder="Objektbeschreibung" oninvalid="this.setCustomValidity('Bitte gib eine kurze Objektbeschreibung ein (max. 1500 Zeichen)')" oninput="setCustomValidity('')"></textarea>
+							<textarea name="obj-desc" id="obj-desc" cols="30" maxlength="1500" required rows="10" placeholder="Objektbeschreibung" oninvalid="this.setCustomValidity('Bitte gib eine kurze Objektbeschreibung ein (max. 1500 Zeichen)')" oninput="setCustomValidity('')"></textarea>
 						</fieldset>
 
 						<fieldset>
@@ -56,7 +56,7 @@
 							oninvalid="this.setCustomValidity('Bitte gib eine gültige Postleitzahl oder einen Ort aus der Liste ein')" oninput="setCustomValidity('')">
 							<div class="addressMenu" v-show="objAddressMenu.visible">
 								<div v-show="showLoader"><i class="fa fa-spinner"></i></div>
-								<div v-show="noPlace">Bitte versuche es mit einer andere Postleitzahl</div>
+								<div v-show="noPlace">Bitte versuche es mit einer anderen Postleitzahl</div>
 								<a @mousedown="setAddress(place)" tabindex="0" v-for="place in placeList">{{ place.plz }} {{ place.ort }}</a>
 							</div>
 						</fieldset>
@@ -101,7 +101,7 @@
 				</div>
 			</div>
 			<div class="col sm-4">
-				<aside class="side-info">
+				<aside class="side-info bd-left">
 					<h3 class="align-left">Tipp:</h3>
 					<p>Einige der Angaben sind zwar optional, wir würden dir dennoch raten diese anzugeben.</p>
 					<p>Je mehr Angaben du machst, desto besser wirst du über die "Wohnung finden"-Suche gefunden.</p>

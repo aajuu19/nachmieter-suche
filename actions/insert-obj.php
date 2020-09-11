@@ -1,22 +1,22 @@
-<?php require_once('../essentials/functions.php'); 
+<?php require_once('../essentials/functions.php'); require_once('../essentials/secure_page.php');
 
     // Abfrage der Nutzer ID vom Login
     $user_id = $_SESSION['person'];
 
     // required entries
-    $name = $_POST['obj-name'];
-    $desc = $_POST['obj-desc'];
-    $quadratmeter = $_POST['obj-quadratmeter'];
-    $zimmer = $_POST['obj-zimmer'];
-    $bad = $_POST['obj-bad'];
-    $adresse = $_POST['obj-adresse'];
-    $kalt = $_POST['obj-kalt'];
-    $typ = $_POST['obj-typ'];
+    $name = $web->htmlchar($_POST['obj-name']);
+    $desc = $web->htmlchar($_POST['obj-desc']);
+    $quadratmeter = $web->htmlchar($_POST['obj-quadratmeter']);
+    $zimmer = $web->htmlchar($_POST['obj-zimmer']);
+    $bad = $web->htmlchar($_POST['obj-bad']);
+    $adresse = $web->htmlchar($_POST['obj-adresse']);
+    $kalt = $web->htmlchar($_POST['obj-kalt']);
+    $typ = $web->htmlchar($_POST['obj-typ']);
 
     // optional entries
-    $warm = $_POST['obj-warm'] == "" ? null : $_POST['obj-warm'];
-    $etage = $_POST['obj-etage'] == "" ? null : $_POST['obj-etage'];
-    $einzug = $_POST['obj-einzugsdatum'] == "" ? null : $_POST['obj-einzugsdatum'];
+    $warm = $_POST['obj-warm'] == "" ? null : $web->htmlchar($_POST['obj-warm']);
+    $etage = $_POST['obj-etage'] == "" ? null : $web->htmlchar($_POST['obj-etage']);
+    $einzug = $_POST['obj-einzugsdatum'] == "" ? null : $web->htmlchar($_POST['obj-einzugsdatum']);
     $uniq_id = uniqid();
     
     $p_id = $user_id['p_id'];

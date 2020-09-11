@@ -46,7 +46,7 @@
             $title = $object['name'].' - '.$this->webname;
             $desc = $object['beschreibung'];
 
-            echo '<meta charset="UTF-8">';
+            echo '<meta charset="utf-8">';
             echo '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
             echo '<meta name="theme-color" content="#344b58">';
             echo '<link rel="shortcut icon" type="image/x-icon" href="'.$this->root.'/favicon.ico">';
@@ -58,7 +58,7 @@
             $title = $this->meta[$this->file_name]['title'];
             $desc = $this->meta[$this->file_name]['desc'];
 
-            echo '<meta charset="UTF-8">';
+            echo '<meta charset="utf-8">';
             echo '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
             echo '<meta name="theme-color" content="#344b58">';
             echo '<link rel="shortcut icon" type="image/x-icon" href="'.$this->root.'/favicon.ico">';
@@ -79,8 +79,37 @@
         public function shorten_str($str, $len) {
             return (strlen($str) >= $len) ? substr($str, 0, $len). " ... " :  $str;
         }
+
+        private function random_color_part() {
+            return str_pad( dechex( mt_rand( 0, 160 ) ), 2, '0', STR_PAD_LEFT);
+        }
+
+        public function random_hex_color() {
+            return '#'.$this->random_color_part() . $this->random_color_part() . $this->random_color_part();
+        }
+
+        public function create_acronym($word) {
+            $words = explode(" ", $word);
+            $acronym = $words[0][0];
+
+            if (count($words) > 1) {
+                $acronym .= $words[1][0];
+            }
+
+            return $acronym;
+        }
+
+        public function get_own_user() {
+            if (isset($_SESSION['person'])) {
+                unset($_SESSION['person']['password']); 
+                return $_SESSION['person'];
+            
+            } else {
+                return false;
+            }
+        }
         
-        public function get_from_url($url) {
+        public function get_from_url($url):string {
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -94,6 +123,11 @@
 
         public function get_upl_img($src, $alt, $class = "fluid") {
             echo '<img src="'.$this->root.'/uploads/'.$src.'" alt="'.$alt.'" class="'.$class.'">';
+        }
+
+        // Prevent XSS (cross-site-scripting)
+        public function htmlchar($userInput):string {
+            return htmlspecialchars($userInput, ENT_QUOTES, 'UTF-8');
         }
     }
 

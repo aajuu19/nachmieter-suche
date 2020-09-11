@@ -3,7 +3,10 @@ header {
     min-height: rem(500px);
     body:not(.index) & {
         height: 35vh;
-        min-height: rem(300px);
+        min-height: rem(150px);
+        @include breakpoint(m) {
+            min-height: rem(300px);
+        }
         .header-ctn {
             margin-top: rem(50px);
             .claim {
@@ -96,6 +99,7 @@ header {
 }
 
 main {
+    background: rgba(217, 230, 249, 0.1);
     @extend .space-top;
 
     .object-teaser {
@@ -109,7 +113,7 @@ main {
         body:not(.index) & {
             background: none;
             .teaser-box {
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
             }
         }
         .teaser {
@@ -498,7 +502,7 @@ main {
             }
             background: $secondary;
             border: 2px solid $secondary;
-            &:hover {
+            &:hover, &.active {
                 span {
                     color: $secondary;
                 }
@@ -508,29 +512,30 @@ main {
         background: $primary;
         transition: .3s;
         border: 2px solid $primary;
-        padding: 1.5rem;
-        @include breakpoint(m) {
-            padding: 2rem;
+        padding: 1rem 1.5rem;
+        &.register-tab {
+            margin-bottom: 1rem;
         }
         span {
             color: $light;
             &.heading {
                 i {
-                    font-size: 22px;
+                    font-size: rem(18px);
                 }
-                font-size: rem(28px);
+                font-size: rem(22px);
                 @include breakpoint(m) {
                     i {
-                        font-size: rem(34px);
+                        font-size: rem(22px);
+                        padding-right: rem(8px);
                     }
-                    font-size: rem(38px);
+                    font-size: rem(24px);
                 }
                 display: block;
-                margin-bottom: 1rem;
+                margin-bottom: .3rem;
                 font-weight: 700;
             }
         }
-        &:hover {
+        &:hover, &.active {
             background: $light;
             span {
                 color: $primary;
@@ -549,23 +554,32 @@ main {
                 input[type=submit] {
                     margin-top: 1rem;
                     width: 100%;
+                    @include breakpoint(m) {
+                        margin-top: 2rem;
+                    }
                 }
             }
         }
         .side-info {
-            border-top: $lightborder;
+            border-bottom: $lightborder;
             margin-top: 2rem;
             height: 100%;
             padding: 2rem 0;
             @include breakpoint(sm) {
                 padding: 2rem;
                 margin-top: 0;
-                border-left: $lightborder;
-                border-top: 0;
+                &.bd-right {
+                    border-right: $lightborder;
+                }
+                &.bd-left {
+                    border-left: $lightborder;
+                }
+                border-bottom: 0;
             }
         }
     }
-    .obj-ctn {
+    .obj-ctn, .edit-profile-app {
+        color: black;
         form.default {
             .image-ctn {
                 label {
@@ -601,7 +615,8 @@ main {
                             outline: none;
                             display: block;
                             border: 1px solid transparent;
-                            background: darken($light, 3%);
+                            background: $light;
+                            box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
                             width: 100%;
                             padding-left: 50px;
                             transition: .3s;
@@ -638,7 +653,7 @@ main {
                             }
                         }
                         &:hover {
-                            background: darken($light, 5%);
+                            box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
                             .img-btn {
                                 background: lighten($secondary, 20%);
                             }
@@ -710,8 +725,6 @@ main {
             color: $grey;
         }
         .user-infos {
-            border: 1px solid $lightprimary;
-            border-radius: 10px;
             margin-top: rem(40px);
             padding: rem(20px);
             span {
@@ -764,9 +777,10 @@ main {
                     align-items: center;
                     padding: 2rem 1.5rem;
                     border-bottom: 4px solid $primary;
-                    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+                    box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
                     margin-bottom: 1rem;
                     border-radius: rem(15px);
+                    background: $light;
                     i {
                         display: flex;
                         width: 50%;
@@ -800,7 +814,8 @@ main {
             align-items: center;
             padding: 1rem;
             border-bottom: 4px solid $lightprimary;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+            background: $light;
             margin-bottom: 1rem;
             border-radius: rem(15px);
             transition: .3s;
@@ -838,9 +853,10 @@ main {
         }
         .message-box {
             border-radius: 15px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
             border-bottom: 4px solid $primary;
             padding-bottom: rem(15px);
+            background: $light;
             .flat-details {
                 box-shadow: 0 8px 7px -6px rgba(128, 128, 128, 0.25);
                 margin-bottom: rem(15px);
@@ -933,6 +949,9 @@ main {
                 overflow: scroll;
             }
             .chat-bubble {
+                &:first-child {
+                    margin-top: rem(10px);
+                }
                 box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
                 border-radius: 15px;
                 border-bottom: 3px solid $lightprimary;

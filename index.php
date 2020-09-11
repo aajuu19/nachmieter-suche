@@ -20,7 +20,7 @@
             <span class="h1 light">Unsere Top-Wohnungen</span>
         </div>
         <?php 
-            $top_objects = $db->get_this_all('SELECT * FROM `objekt` ORDER BY `einstellungsdatum` DESC LIMIT 4');
+            $top_objects = $db->get_this_all('SELECT * FROM `objekt` ORDER BY `einstellungsdatum` DESC LIMIT 6');
 
             foreach($top_objects as $key => $val) {
 

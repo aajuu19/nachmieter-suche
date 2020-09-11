@@ -7,7 +7,7 @@
 body {
     font-family: $main-font;
     color: $dark;
-    background: $light;
+    background: $bodybg;
 }
 
 ::-moz-selection { /* Code for Firefox */
@@ -99,6 +99,7 @@ main {
 form {
     &.default {
         input {
+            font-family: $main-font;
             border: none;
             border-radius: 25px;
             padding: .7rem;
@@ -116,20 +117,24 @@ form {
     
             &::placeholder {
                 font-family: $main-font;
-                color: lighten($primary, 30%);
+                color: lighten($secondary, 20%);
             }
 
             &[type=text], &[type=password], &[type=mail], &[type=number], &[type=date], &[type=file] {
-                background: darken($light, 3%);
+                background: $light;
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
                 width: 100%;
                 padding-left: 50px;
                 &:focus {
-                    background: darken($light, 5%);
+                    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
                 }
+            }
+            &[name=obj-einzugsdatum] {
+                padding-right: rem(80px);
             }
 
             &[type=file] {
-                color: lighten($primary, 30%);
+                color: lighten($primary, 20%);
             }
     
             &[type=submit] {
@@ -139,6 +144,28 @@ form {
         }
         fieldset {
             border: none;
+            &.optional, &.dropdown, .optional {
+                input, textarea {
+                    padding-right: rem(90px);
+                }
+                &:after {
+                    pointer-events: none;
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    right: 3%;
+                    content: 'optional';
+                    color: $lightprimary;
+                    font-size: rem(13px);
+                }
+            }
+            
+            &.dropdown {
+                &:after {
+                    font-family: $icon-font;
+                    content: '\f13a';
+                }
+            }
             select {
                 font-family: $main-font;
                 -moz-appearance: none;
@@ -152,11 +179,12 @@ form {
                 height: 40px;
                 outline: none;
                 padding-left: 50px;
-                background: darken($light, 3%);
+                background: $light;
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
                 width: 100%;
                 color: $dark;
                 &:required:invalid {
-                    color: $lightprimary;
+                    color: lighten($secondary, 20%);;
                 }
                 option {
                     color: $dark;
@@ -194,7 +222,6 @@ form {
             font-family: $main-font;
             border: none;
             border-radius: 25px;
-            background: darken($light, 3%);
             resize: none;
             width: 100%;
             padding: .7rem;
@@ -203,11 +230,13 @@ form {
             font-size: rem(14px);
             outline: none;
             display: block;
+            background: $light;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
             &:focus {
-                background: darken($light, 5%);
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
             }
             &::placeholder {
-                color: $lightprimary;
+                color: lighten($secondary, 20%);
             }
             @include breakpoint(m) {
                 font-size: rem(15px);

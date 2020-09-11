@@ -1,9 +1,17 @@
 <?php require_once('dbs.php');
     session_start();
-    // $data content depends on $_POST / $_GET
+    // $data content depends on $request_type / $_GET
+    $isDev = false;
+
+    if($isDev) {
+        $request_type = $_GET;
+    } else {
+        $request_type = $_POST;
+    }
+
     $data = [];
 
-    if(isset($_POST['wohnungen'])) {
+    if(isset($request_type['wohnungen'])) {
 
         // smaller or greater? returns operand and value without min or max string
         function sm_or_gr($str) {  
@@ -19,7 +27,7 @@
         $sql_stmt = 'SELECT * FROM `objekt` WHERE ';
 
         
-        foreach($_POST as $key => $val) {
+        foreach($request_type as $key => $val) {
             switch($key) {
                 case 'quadratmeter':
                 case 'zimmer':
@@ -29,8 +37,8 @@
                     break;
                 // limit always on the end
                 case 'limit':
-                    if(isset($_POST['page'])) {
-                        $sql_stmt .= 'ORDER BY einstellungsdatum DESC LIMIT '.($_POST['page'] * $_POST['limit'] - $_POST['limit']).','.$_POST['limit'];
+                    if(isset($request_type['page'])) {
+                        $sql_stmt .= 'ORDER BY einstellungsdatum DESC LIMIT '.($request_type['page'] * $request_type['limit'] - $request_type['limit']).','.$request_type['limit'];
                     } else {
                         // ?page-parameter has to be set
                         die('Seitenanzahl muss angegeben werden.');
@@ -54,8 +62,8 @@
     }
 
     // check if chats json is requested and if requested session p_ID is actual Session p_ID
-    if(isset($_POST['chats'])) {
-        $user_id = $_POST['user'];
+    if(isset($request_type['chats'])) {
+        $user_id = $request_type['user'];
         $user_id_int = (is_numeric($user_id) ? (int)$user_id : 0);
 
         if($user_id_int == $_SESSION['person']['p_id']) {
@@ -102,13 +110,13 @@
         }
     }
 
-    if(isset($_POST['flat_by_id'])) {
-        $o_id = $_POST['flat_by_id'];
+    if(isset($request_type['flat_by_id'])) {
+        $o_id = $request_type['flat_by_id'];
         $data[] = $db->prep_exec('SELECT * FROM `objekt` WHERE o_id = :o_id', ['o_id' => $o_id], 'one');
     }
 
-    if(isset($_POST['user_by_id'])) {
-        $p_id = $_POST['user_by_id'];
+    if(isset($request_type['user_by_id'])) {
+        $p_id = $request_type['user_by_id'];
         $data[] = $db->prep_exec('SELECT * FROM `person` WHERE p_id = :p_id', ['p_id' => $p_id], 'one');
         unset($data[0]['password']);
     }

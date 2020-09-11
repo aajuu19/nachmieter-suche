@@ -1,6 +1,8 @@
 <?php 
     $obj = $db->get_this_one("SELECT * FROM `objekt` WHERE link='".$web->file_name."'");
-    $this_is_user = $_SESSION['person'];
+    if(isset($_SESSION['person'])) {
+        $this_is_user = $_SESSION['person'];
+    } 
     $user = $db->get_this_one("SELECT * FROM `person` WHERE p_id=".$obj['p_id']);
     unset($user['password']);
 ?>
@@ -9,7 +11,7 @@
         <div class="col sm-6">
             <?php $web->get_upl_img($obj['image_1'], $obj['name'], 'cover main-img'); ?>
         </div>
-        <div class="col sm-6">
+        <div class="col sm-6 ">
             <h2 class="align-left noMarg">
                 <?php echo $obj['name'];?>
             </h2>
@@ -17,7 +19,7 @@
             <p class="desc">
                 <?php echo $obj['beschreibung'];?> 
             </p>
-            <div class="user-infos">
+            <div class="user-infos whiteBox">
                 <span class="heading primary">Kontaktinformationen</span>
                 <span><strong><?php echo $user['name']; ?></strong></span>
                 <span><a class="email" href="mailto:<?php echo $user['email']; ?>" title="Kontaktiere <?php echo $user['name']; ?>"><?php echo $user['email']; ?></a></span>

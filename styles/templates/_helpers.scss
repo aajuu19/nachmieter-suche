@@ -2,6 +2,10 @@
     color: $light;
 }
 
+.secondary {
+    color: $secondary;
+}
+
 .btn {
     color: $light;
     padding: .6rem 1.3rem;
@@ -60,7 +64,7 @@
     text-align: left;
 }
 
-.error, .success {
+.error, .success, .info {
     padding: 1.5rem; 
     background: $lightalert;
     border-radius: 15px;
@@ -82,6 +86,14 @@
     }
 }
 
+.info {
+    background: $lightprimary;
+    &:before {
+        content: 'Info: ';
+        color: darken($lightprimary, 30%);
+    }
+}
+
 .heading {
     font-weight: 700;
     font-size: rem(22px);
@@ -99,26 +111,6 @@
 
 .noMarg {
     margin: 0 !important;
-}
-
-.optional, .dropdown {
-    &:after {
-        pointer-events: none;
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        right: 3%;
-        content: 'optional';
-        color: $lightprimary;
-        font-size: rem(13px);
-    }
-}
-
-.dropdown {
-    &:after {
-        font-family: $icon-font;
-        content: '\f13a';
-    }
 }
 
 .primaryOverlay {
@@ -143,11 +135,64 @@
 }
 
 .round-border-box {
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+    background: $light;
     border-radius: 15px;
     border-bottom: 4px solid $primary;
 }
 
 .wide {
     width: 100%;
+}
+
+.whiteBox {
+    padding: rem(15px) !important;
+    background: $light !important;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.05) !important;
+    border-radius: rem(15px) !important;
+    margin-bottom: 1rem;
+    @include breakpoint(m) {
+        margin-bottom: 2rem;
+    }
+    &.morePad {
+        padding: rem(15px) !important;
+        @include breakpoint(m) {
+            padding: rem(25px) !important;
+        }
+    }
+}
+
+.hr {
+    &:after {
+        content: '';
+        display: block;
+        width: 100%;
+        background: $lightprimary;
+        height: 1px;
+        margin: rem(40px) 0;
+    }
+}
+
+.gap-top-1 {
+    margin-top: 1rem;
+}
+
+.gap-top-2 {
+    margin-top: 2rem;
+}
+
+.gap-top-3 {
+    margin-top: 3rem;
+}
+
+.gap-bottom-1 {
+    margin-bottom: 1rem;
+}
+
+.gap-bottom-2 {
+    margin-bottom: 2rem;
+}
+
+.gap-bottom-3 {
+    margin-bottom: 3rem;
 }

@@ -1,4 +1,4 @@
-<?php require_once('../essentials/functions.php');
+<?php require_once('../essentials/functions.php'); require_once('../essentials/secure_page.php');
 	
 	$mail = $_POST['log-mail'];
 	$password = $_POST['log-pw'];
