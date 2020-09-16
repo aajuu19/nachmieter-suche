@@ -1,7 +1,6 @@
 <?php require_once('../essentials/header.php');
-    $user = $db->get_this_one('SELECT * FROM `person` WHERE p_id='.$_GET['id']);
+    $user = $db->get_user($_GET['id']);
     $own_user = $web->get_own_user();
-    unset($user['password']);
 
     if($own_user) {
         $is_own_user = $own_user['p_id'] == $user['p_id'];
@@ -22,7 +21,9 @@
                             <span class="acronym"><?php echo $web->create_acronym($user['name']) ?></span>
                         </div>
                     <?php } else { ?>
-                        <?php $web->get_upl_img($user['profilepic'], $user['name'], 'profile-pic-img'); ?>
+                            <div class="profilepic-img-ctn">
+                                <?php echo $web->get_upl_img($user['profilepic'], $user['name'], 'profile-pic-img'); ?>
+                            </div>
                     <?php }?>
                     <span class="name"><?php echo $user['name']; ?></span>
                     <?php if ($user['job']) { ?>
@@ -55,6 +56,7 @@
                 <?php } ?>
 
                 <?php if ($is_own_user) { ?>
+                    <div class="hr"></div>
                     <a href="<?php echo $web->root;?>/user/neues-objekt.php" title="<?php echo $meta['dashboard.php']['title']; ?>" class="new-object big-tab">
                         <span class="heading"><i class="fa fa-home"></i> Neue Wohnung einfügen</span>
                     </a>
@@ -180,7 +182,7 @@
                                         
                                     } else {
                                         $html_string .= '<div class="profilePic">';
-                                        
+                                                $html_string .= $web->get_upl_img($val['profilepic'], $val['name'], 'profile-pic-img');
                                         $html_string .= '</div>';
                                     }
                                     

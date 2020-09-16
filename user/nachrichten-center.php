@@ -4,7 +4,7 @@
     <div class="col" v-if="errorMsg.isError"><span class="error">{{ errorMsg.message }}</span></div>
     <aside class="col m-3">
         <template v-for="user in userList">
-            <user-thumb @handle-user-click="handleUserClick(user.p_id)" :user="user" :activeUser="activeChatWithUser"></user-thumb>
+            <user-thumb :key="user.p_id" @handle-user-click="handleUserClick(user.p_id)" :user="user" :activeUser="activeChatWithUser"></user-thumb>
         </template>
     </aside>
     <div class="col m-9">
@@ -12,7 +12,7 @@
             <flat-details v-if="activeFlat" :flat="activeFlat"></flat-details>
             <div class="inner-ctn" ref="chatCtn">
                 <template v-for="chat in activeChatList">
-                    <chat-bubble :chat="chat" :iAmUser="isUser"></chat-bubble>
+                    <chat-bubble :chat="chat" :iAmUser="isUser" :key="chat.c_id"></chat-bubble>
                 </template>
             </div>
         </div>

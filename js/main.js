@@ -5,6 +5,130 @@ import Vue from './vue.js';
 const isDev = false;
 const root = `${document.location.origin}/nachmieter-suche`;
 
+// objekte
+(function() { 
+    if (document.body.classList.contains('objekte')) {
+        window.vm = new Vue({
+            el: '.obj-slider-app',
+            data: {
+                mainImgSrc: null,
+                flatImages: [],
+                showLeftArrow: false,
+                showRightArrow: false,
+                scrolledThisTimes: 0,
+                thumbsVisible: 3,
+                thumbsVisibleBefore: null
+            },
+            created: function() {
+                this.handleResponsive();
+                window.addEventListener('resize', this.handleResponsive);
+            },
+            mounted: function () {
+                this.flatImages = Object.values(this.$refs);
+                
+                this.handleArrowVisibility();
+            },
+            watch: {
+                scrolledThisTimes: function() {
+                    if (this.scrolledThisTimes === 0) {
+                        this.showLeftArrow = false;
+                    } else if (this.scrolledThisTimes == this.imageCount - this.thumbsVisible) {
+                        this.showRightArrow = false;
+                    } else {
+                        this.showLeftArrow = true;
+                        this.showRightArrow = true;
+                    }
+                }
+            },
+            computed: {
+                imageCount: function() {
+                    return this.flatImages.length;
+                },
+                sliderPosition: function() {
+                    if (this.imageCount > this.thumbsVisible) {
+                        if ((this.imageCount - this.scrolledThisTimes) < this.thumbsVisible) {
+                            this.scrolledThisTimes--;
+                        }
+                        //  if ((this.imageCount - this.scrolledThisTimes) == this.thumbsVisible) {
+                        //     this.scrolledThisTimes++;
+                        // }
+                        return this.scrolledThisTimes * -(this.flatImages[0].offsetWidth + 10);
+                    } else {
+                        return 0;
+                    }
+                }
+            },
+            methods: {
+                handleArrowVisibility: function() {
+                    if (this.imageCount >= this.thumbsVisible) {
+                        this.showLeftArrow = true;
+                        this.showRightArrow = true;
+                    } else {
+                        this.showLeftArrow = false;
+                        this.showRightArrow = false;
+                    }
+    
+                    if (this.scrolledThisTimes === 0) {
+                        this.showLeftArrow = false;
+                    }
+                },
+                handleResponsive: function() {
+                    
+                    let windowWidth = window.innerWidth;
+
+                    if (windowWidth < 480) { 
+                        this.handlePositionOnResize();
+                        this.thumbsVisible = 1; // default breakpoint under 480
+                    } else if (windowWidth < 680) {
+                        this.handlePositionOnResize();
+                        this.thumbsVisible = 2; // higher than 480 lower than 680
+                    } else if (windowWidth < 850) {
+                        this.handlePositionOnResize();
+                        this.thumbsVisible = 3; // higher than 680 lower than 850
+                    } else if (windowWidth < 1200) {
+                        this.handlePositionOnResize();
+                        this.thumbsVisible = 2; // higher than 850 lower than 1200
+                    } else if (windowWidth >= 1200) {
+                        this.handlePositionOnResize();
+                        this.thumbsVisible = 3; // higher than 1200
+                    }
+
+
+                },
+                handlePositionOnResize: function() {
+                    if(this.thumbsVisible !== this.thumbsVisibleBefore) {
+                        if ((this.imageCount - this.scrolledThisTimes == this.thumbsVisibleBefore) && this.thumbsVisibleBefore > this.thumbsVisible) {
+                            this.scrolledThisTimes++;
+                        }
+                        this.thumbsVisibleBefore = this.thumbsVisible;
+                    }
+                },
+                changeMainImg: function(event) {
+                    const ele = event.target;
+                    this.mainImgSrc = ele.src;
+                },
+                swipeLeft: function() {
+                    if (this.scrolledThisTimes >= 0) {
+                        this.scrolledThisTimes--;
+                    }
+                    console.log('So oft gescrollt '+this.scrolledThisTimes);
+                    console.log('imagecount '+this.imageCount);
+                    console.log('sichtbare thumbs '+this.thumbsVisible);
+                },
+                swipeRight: function() {
+                    if (this.scrolledThisTimes <= this.imageCount - this.thumbsVisible) {
+                        this.scrolledThisTimes++;
+                    }
+                    console.log('So oft gescrollt '+this.scrolledThisTimes);
+                    console.log('imagecount '+this.imageCount);
+                    console.log('sichtbare thumbs davor '+this.thumbsVisibleBefore);
+                    console.log('sichtbare thumbs '+this.thumbsVisible);
+                },
+            }
+        });
+    }
+})();
+
 // user js
 (function() { 
     if (document.body.classList.contains('profil-bearbeiten')) {
@@ -76,8 +200,6 @@ const root = `${document.location.origin}/nachmieter-suche`;
                     .then((data) => data.json())
                     .then((data) => {
                         this.userProfile = data[0];
-                        console.log(this.userProfile);
-
                     })
                     .catch((err) => {
                         console.log(err);
@@ -504,8 +626,8 @@ if (document.body.classList.contains('nachrichten-center')) {
         template: `
             <div v-on:click="handleUserClick" class="user-preview" :class="{ active : isActive }">
                 <img v-if="hasUserImage" :src="imageUrl" :alt="user.name">
-                <div v-if="!hasUserImage" class="userInitial">
-                    <span>{{ user.name[0] }}</span>
+                <div v-if="!hasUserImage" :style="{backgroundColor: randDarkColor}" class="userInitial">
+                    <span>{{ acronym }}</span>
                 </div>
                 <span>{{ user.name }}</span>
             </div>
@@ -519,6 +641,29 @@ if (document.body.classList.contains('nachrichten-center')) {
                 if (this.user.p_id == this.activeuser) {
                     return true;
                 }
+            },
+            acronym: function() {
+                let userName = this.user.name.split(' ');
+                if (userName.length >= 2) {
+                    return userName[0][0] + userName[1][0];
+                } else {
+                    return userName[0][0];
+                }
+            },
+            randDarkColor: function() {
+                var lum = -0.25;
+                var hex = String('#' + Math.random().toString(16).slice(2, 8).toUpperCase()).replace(/[^0-9a-f]/gi, '');
+                if (hex.length < 6) {
+                    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+                }
+                var rgb = "#",
+                    c, i;
+                for (i = 0; i < 3; i++) {
+                    c = parseInt(hex.substr(i * 2, 2), 16);
+                    c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+                    rgb += ("00" + c).substr(c.length);
+                }
+                return rgb;
             },
         },
         created: function () {
@@ -543,7 +688,7 @@ if (document.body.classList.contains('nachrichten-center')) {
         },
         template: `
             <div class="chat-bubble" :class="{send : isSender}">
-                <span class="message" v-html="chat.message"></span>
+                <span class="message" v-html="chatMessage"></span>
                 <span class="time">{{ this.chatTime }} Uhr</span>
             </div>
         `,
@@ -559,6 +704,14 @@ if (document.body.classList.contains('nachrichten-center')) {
                 const dateTime = date.toLocaleDateString();
                 return `${dateTime} - ${clockTime}`;
             },
+            chatMessage: function() {
+
+                let chatMsg = this.chat.message;
+                chatMsg = chatMsg.replaceAll("&lt;p&gt;", "");
+                chatMsg = chatMsg.replaceAll("&lt;/p&gt;", "<br>");
+
+                return chatMsg;
+            }
         }
     });
     Vue.component('flat-details', {
@@ -584,7 +737,7 @@ if (document.body.classList.contains('nachrichten-center')) {
             }
         }
     });
-    const vm = new Vue({
+    window.vm = new Vue({
         el: '.message-ctn',
         data: {
             outputData: null,
@@ -612,11 +765,9 @@ if (document.body.classList.contains('nachrichten-center')) {
             .then((json) => json.json())
             .then((sessionId) => {
                 this.isUser = sessionId.person.p_id; 
-                this.updateChat();
+                this.updateChat(true);
                 // update chat every 2 seconds
-                this.updateTimer = setInterval(this.updateChat, 2000);
-
-
+                this.updateTimer = setInterval(this.updateChat, 3000);
             })
             .catch((err) => {
                 if (isDev) {
@@ -648,7 +799,7 @@ if (document.body.classList.contains('nachrichten-center')) {
             },
             handleUserClick: function(userId) {
                 this.activeChatWithUser = userId;
-                this.updateChat();
+                this.updateChat(true);
             },
             changeActiveChat: async function (userId, isFirstChat = false) {
                 this.activeChatWithUser = userId;
@@ -671,8 +822,9 @@ if (document.body.classList.contains('nachrichten-center')) {
                 }
 
                 if(this.sentParamsValid && isFirstChat) {
-                    this.setScrollPos();
                     this.firstChat = false;
+                    this.activeFlat = this.sentFromFlat;
+                    this.setScrollPos();
                 } else if(this.sentParamsValid && this.activeChatWithUser == this.sentFromUser.p_id && !isFirstChat) {
                     this.activeFlat = this.sentFromFlat;
                 } else {
@@ -702,7 +854,7 @@ if (document.body.classList.contains('nachrichten-center')) {
                 }
                 
             },
-            updateChat: async function () {
+            updateChat: async function (isFirst) {
                 if (this.getUrlParameters('user_by_id') && this.getUrlParameters('flat_by_id')) {
                     await fetch('./../essentials/dbs_json.php',
                     {
@@ -762,6 +914,23 @@ if (document.body.classList.contains('nachrichten-center')) {
                 .then((response) => response.json())
                 .then((data) => {
                     this.chatList = Object.entries(data);
+
+                    //Comparing based on the property qty
+                    function compare_time(a, b){
+                        // a should come before b in the sorted order
+                        if (Date.parse(a[1][a[1].length - 1].timestamp) > Date.parse(b[1][b[1].length - 1].timestamp)){
+                            return -1;
+                        // a should come after b in the sorted order
+                        } else if (Date.parse(a[1][a[1].length - 1].timestamp) < Date.parse(b[1][b[1].length - 1].timestamp)){
+                            return 1;
+                        // a and b are the same
+                        } else{
+                            return 0;
+                        }
+                    }
+
+                    this.chatList.sort(compare_time);
+
                     // sentUser muss hier geprüft werden ob bereits miteinander geschrieben wurde
                     this.chatList.forEach(async (user) => {
                         await fetch('./../essentials/dbs_json.php',
@@ -776,11 +945,11 @@ if (document.body.classList.contains('nachrichten-center')) {
                         .then((response) => response.json())
                         .then((data) => {
                             if (this.firstChat || !this.userList.some(e => e.p_id == data[0].p_id)) {
+                                // hier sortieren
                                 this.userList.push(data[0]);
                             }
                         });
                     });
-
                     
                     if (this.firstChat && this.sentParamsValid) {
                         this.userList.push(this.sentFromUser);
@@ -789,7 +958,7 @@ if (document.body.classList.contains('nachrichten-center')) {
                         }
                     }
 
-                    if(this.sentParamsValid && !this.sentIsAlreadyinChats) {
+                    if (this.firstChat && this.sentParamsValid && !this.sentIsAlreadyinChats) {
                         this.chatList.unshift([this.sentFromUser.p_id.toString(), []]);
                     }
                     
@@ -805,12 +974,15 @@ if (document.body.classList.contains('nachrichten-center')) {
                     }
 
                 });
+                if(isFirst) {
+                    this.setScrollPos();
+                }
+
             },
             setScrollPos: function () {
-                this.$refs.chatCtn.scrollTop = this.$refs.chatCtn.scrollHeight;
+                this.$refs.chatCtn.scrollTop = 30000000;
             },
             onSubmit: async function () {
-                console.log(this.activeFlat);
                 let fetchBody = '';
 
                 if(this.activeFlat) {
@@ -829,12 +1001,15 @@ if (document.body.classList.contains('nachrichten-center')) {
                     },
                 }).then(res=>res.text())
                 .then(data=>{
+                    console.log(data);
                     // if data true
                     if (data == 1) {
                         this.updateChat();
                         this.messageContent = '';
                         this.setScrollPos();
                     }
+                }).catch(err=> { 
+                    console.log(err);
                 });
             },
             isSameArray: function(arr1, arr2) {

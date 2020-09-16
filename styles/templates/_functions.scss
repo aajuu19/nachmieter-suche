@@ -101,6 +101,9 @@ $separator: rem-separator($values);
 	width: 100%;
 	max-width: $row-max-width;
 	margin: 0 auto;
+	&.center {
+		justify-content: center;
+	}
 	&.middle {
 		align-items: center;
 	}

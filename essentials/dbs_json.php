@@ -69,7 +69,7 @@
         if($user_id_int == $_SESSION['person']['p_id']) {
             // build sql statement - be sure no sql injection can be made
             // fetch all user based chats
-            $sql_stmt = 'SELECT chat.c_id, chat.* FROM chat WHERE rec_p_id = :u_id1 OR send_p_id = :u_id2';
+            $sql_stmt = 'SELECT chat.c_id, chat.* FROM chat WHERE rec_p_id = :u_id1 OR send_p_id = :u_id2 ORDER BY chat.timestamp ASC';
             $chat_data = $db->prep_exec($sql_stmt, ['u_id1' => $user_id_int, 'u_id2' => $user_id_int], 'all');
 
             // create array with all foreign p_id's
@@ -85,7 +85,7 @@
                     }
                 }
             }
-
+            
             // create associative array $data with all chats based on their p_id
             foreach($chat_with_users as $p_id) {
                 foreach($chat_data as $chat) {
@@ -94,6 +94,37 @@
                     }
                 }
             }
+
+            // letzter chat
+            // // var_dump($chat);
+
+            // foreach($data as $user => $chats) {
+
+            //     var_dump($user);
+            //     var_dump($chats[0]['timestamp']);   
+            // }
+            //     // var_dump($data);
+            // function date_compare($a, $b)
+            // {   
+            //     $t1 = strtotime(end($a)['timestamp']);
+            //     $t2 = strtotime(end($b)['timestamp']);
+            //     return $t1 - $t2;
+            // }    
+            
+            // // usort($data, 'date_compare');
+
+            // foreach($data as $p => $val) {
+            //     var_dump($p);
+            // }
+
+
+            // if('2020-09-11 17:18:26' > "2020-09-11 18:27:41") {
+            //     echo 'neuer';
+            // } else {
+            //     echo 'älter';
+            // }
+
+            // die;
             
             // $attributes = array('fat', 'quantity', 'ratio', 'label');
 

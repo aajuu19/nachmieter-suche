@@ -49,6 +49,16 @@
             } 
         }
 
+        public function get_user($user_id) {
+            if ($user_id !== "") {
+                $user = $this->get_this_one('SELECT * FROM `person` WHERE p_id='.$user_id);
+                unset($user['password']);
+                return $user;
+            } else {
+                return false;
+            }
+        }
+
         // close connection
         public function close_connect() {
             $this->pdo = null;

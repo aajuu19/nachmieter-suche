@@ -10,9 +10,9 @@
 	if (password_verify($password, $person['password'])) {
 		$_SESSION['person'] = $person;
 		unset($person['password']);
-		header('Location: '.$web->root.'/user/dashboard.php');
+		header('Location: '.$web->root.'/user/user.php?id='.$person['p_id']);
 	} else {
-		$error_message = rawurlencode('Falsche E-Mail-Adresse oder falsches Passwort eingegeben');
+		$error_message = rawurlencode('Falsche E-Mail-Adresse oder falsches Passwort eingegeben.');
 		header('Location: '.$web->root.'/registrierung-login.php?login&error='.$error_message);
 	}
 	

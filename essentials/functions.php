@@ -26,6 +26,10 @@
             $this->db = $db;
         }
 
+        public function build_body_class() {
+            return $this->current_dir . ' ' . basename($this->file_name, '.php');
+        }
+
         public function build_nav() {
             $nav = '<nav><ul class="navi">';
 
@@ -122,7 +126,7 @@
         }
 
         public function get_upl_img($src, $alt, $class = "fluid") {
-            echo '<img src="'.$this->root.'/uploads/'.$src.'" alt="'.$alt.'" class="'.$class.'">';
+            return '<img src="'.$this->root.'/uploads/'.$src.'" alt="'.$alt.'" class="'.$class.'">';
         }
 
         // Prevent XSS (cross-site-scripting)

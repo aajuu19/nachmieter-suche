@@ -24,7 +24,6 @@
     $link = $web->format_link($name).'-'.$uniq_id.'.php';
     $address_obj = $web->get_from_url('https://public.opendatasoft.com/api/records/1.0/search/?dataset=postleitzahlen-deutschland&q='.rawurlencode($adresse));
     
-
     $image_files = $_FILES['obj-images'];
     $img_names = $image_files['name'];
     if($img_names[0] != "") {   

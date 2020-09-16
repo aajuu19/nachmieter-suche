@@ -1,4 +1,10 @@
 <?php require_once('essentials/header.php'); ?>
+<?php
+	$own_user = $web->get_own_user();
+	if ($own_user) {
+		header('Location: '.$web->root.'/user/user.php?id='.$own_user['p_id']);
+	}
+?>
 <div class="row">
 	<div class="col">
 		<div class="register-login-app">

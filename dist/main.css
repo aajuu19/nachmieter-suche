@@ -7,6 +7,8 @@
   width: 100%;
   max-width: 1400px;
   margin: 0 auto; }
+  .row.center {
+    justify-content: center; }
   .row.middle {
     align-items: center; }
   .row .col {
@@ -6021,8 +6023,67 @@ main {
           color: #fff; }
     main .obj-ctn button i, main .edit-profile-app button i {
       padding-right: 0.3125rem; }
-  main .object-container .main-img {
-    max-height: 34.375rem; }
+  main .object-container .obj-slider-app {
+    position: relative; }
+    main .object-container .obj-slider-app .obj-slider-main-img {
+      height: 12.5rem;
+      margin-bottom: 0.625rem; }
+      @media (min-width: 480px) {
+        main .object-container .obj-slider-app .obj-slider-main-img {
+          height: 18.75rem; } }
+      @media (min-width: 680px) {
+        main .object-container .obj-slider-app .obj-slider-main-img {
+          height: 25rem; } }
+    main .object-container .obj-slider-app .obj-slider-thumblist {
+      position: relative;
+      width: 9.375rem;
+      margin: 0 auto; }
+      @media (min-width: 480px) {
+        main .object-container .obj-slider-app .obj-slider-thumblist {
+          width: 19.375rem; } }
+      @media (min-width: 680px) {
+        main .object-container .obj-slider-app .obj-slider-thumblist {
+          width: 29.375rem; } }
+      @media (min-width: 850px) {
+        main .object-container .obj-slider-app .obj-slider-thumblist {
+          width: 19.375rem; } }
+      @media (min-width: 1200px) {
+        main .object-container .obj-slider-app .obj-slider-thumblist {
+          width: 29.375rem; } }
+      main .object-container .obj-slider-app .obj-slider-thumblist .obj-overflow-ctn {
+        width: 100%;
+        overflow: hidden; }
+      main .object-container .obj-slider-app .obj-slider-thumblist .obj-inner-ctn {
+        display: flex;
+        width: 625rem;
+        flex-wrap: wrap;
+        position: relative;
+        transition: .3s; }
+      main .object-container .obj-slider-app .obj-slider-thumblist .obj-slider-thumb {
+        margin-right: 10px;
+        cursor: pointer;
+        width: 9.375rem;
+        overflow: hidden; }
+      main .object-container .obj-slider-app .obj-slider-thumblist .obj-slider-arrows {
+        position: absolute;
+        width: 100%;
+        top: 50%; }
+        main .object-container .obj-slider-app .obj-slider-thumblist .obj-slider-arrows .obj-slider-arrow {
+          cursor: pointer;
+          position: absolute;
+          transform: translateY(-50%);
+          border-radius: 50%;
+          width: 1.5625rem;
+          height: 1.5625rem;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: #fff;
+          background: #1c9ce5; }
+          main .object-container .obj-slider-app .obj-slider-thumblist .obj-slider-arrows .obj-slider-arrow.obj-slider-left-arrow {
+            left: -2.8125rem; }
+          main .object-container .obj-slider-app .obj-slider-thumblist .obj-slider-arrows .obj-slider-arrow.obj-slider-right-arrow {
+            right: -2.8125rem; }
   main .object-container span.address {
     margin-bottom: 1.5625rem;
     display: block;
@@ -6074,6 +6135,10 @@ main {
         margin-bottom: 1rem;
         border-radius: 0.9375rem;
         background: #fff; }
+        main .object-container .object-details .more-info .data-box.secondary {
+          border-bottom: 4px solid #f79e02; }
+          main .object-container .object-details .more-info .data-box.secondary i {
+            color: #f79e02; }
         main .object-container .object-details .more-info .data-box i {
           display: flex;
           width: 50%;
@@ -6117,7 +6182,7 @@ main {
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 2.1875rem; }
+      font-size: 1.5rem; }
       main .message-ctn .user-preview .userInitial span {
         color: #fff;
         display: inline-block;
@@ -6363,6 +6428,21 @@ footer {
       color: #fff;
       font-weight: 700;
       font-size: 3.75rem; }
+    .user-datas aside.whiteBox .name-image .profilepic-img-ctn {
+      width: 15.625rem;
+      height: 15.625rem;
+      overflow: hidden;
+      border-radius: 50%;
+      margin-bottom: 25px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+      position: relative; }
+      .user-datas aside.whiteBox .name-image .profilepic-img-ctn img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        height: auto; }
     .user-datas aside.whiteBox .name-image .name {
       font-size: 1.375rem;
       font-weight: 600;
@@ -6452,14 +6532,31 @@ footer {
         .user-datas .userInfoArea .whiteBox .friendArea .friendBox {
           flex-basis: 20%;
           width: 20%; } }
+      .user-datas .userInfoArea .whiteBox .friendArea .friendBox .profilePic {
+        width: 5.625rem;
+        height: 5.625rem;
+        overflow: hidden;
+        border-radius: 50%;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+        position: relative;
+        transition: .3s; }
+        .user-datas .userInfoArea .whiteBox .friendArea .friendBox .profilePic img {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 100%;
+          height: auto; }
+      .user-datas .userInfoArea .whiteBox .friendArea .friendBox:hover .profilePic {
+        transform: scale(1.1); }
       .user-datas .userInfoArea .whiteBox .friendArea .friendBox:hover span.name {
         font-weight: 600; }
       .user-datas .userInfoArea .whiteBox .friendArea .friendBox:hover .acronymProfilePic {
         transform: scale(1.1); }
       .user-datas .userInfoArea .whiteBox .friendArea .friendBox .acronymProfilePic {
         transition: .3s;
-        width: 4.375rem;
-        height: 4.375rem;
+        width: 5.625rem;
+        height: 5.625rem;
         border-radius: 50%;
         background: orangered;
         display: flex;

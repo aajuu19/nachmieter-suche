@@ -1,15 +1,35 @@
 <?php 
     $obj = $db->get_this_one("SELECT * FROM `objekt` WHERE link='".$web->file_name."'");
-    if(isset($_SESSION['person'])) {
-        $this_is_user = $_SESSION['person'];
-    } 
-    $user = $db->get_this_one("SELECT * FROM `person` WHERE p_id=".$obj['p_id']);
-    unset($user['password']);
+    $this_is_user = $web->get_own_user();
+    $user = $db->get_user($obj['p_id']);
 ?>
 <div class="object-container">
-    <div class="row">
-        <div class="col sm-6">
-            <?php $web->get_upl_img($obj['image_1'], $obj['name'], 'cover main-img'); ?>
+    <div class="row center">
+        <div class="col s-10 sm-6 obj-slider-app">
+            <div class="obj-slider-main-img">
+                <img :src="mainImgSrc ||'<?php echo $web->root; ?>/uploads/<?php echo $obj['image_1']; ?>'" alt="<?php $obj['name'] ?>" class="cover main-img">
+            </div>
+            <div class="obj-slider-thumblist">
+                <div class="obj-overflow-ctn">
+                    <div class="obj-inner-ctn" :style="{ left: sliderPosition + 'px' }">
+                        <?php
+                        for($i = 1; $i<=7;$i++) {
+                            if($obj['image_'.$i]) {
+                                $output = '<div title="Klicken um Bild vergößert anzuzeigen" ref="objectThumb'.$i.'" class="obj-slider-thumb" @click="changeMainImg($event)">';
+                                $output .= $web->get_upl_img($obj['image_'.$i], $obj['name'], 'cover thumb-img');
+                                $output .= '</div>';
+                                
+                                echo $output;
+                            }
+                        }
+                        ?>
+                    </div>
+                </div>
+                <div class="obj-slider-arrows">
+                    <i @click="swipeLeft" v-show="showLeftArrow" class="fa fa-angle-left obj-slider-arrow obj-slider-left-arrow"></i>
+                    <i @click="swipeRight" v-show="showRightArrow" class="fa fa-angle-right obj-slider-arrow obj-slider-right-arrow"></i>
+                </div>
+            </div>
         </div>
         <div class="col sm-6 ">
             <h2 class="align-left noMarg">
@@ -120,9 +140,10 @@
 
                     foreach($data_array as $key => $val) {
                         if($val['value'] != NULL) {
+                            $res = ($key === 'Warmmiete') ? 'secondary' : '';
                             echo '
                                 <div class="col s-6 sm-4 l-3">
-                                    <div class="data-box">
+                                    <div class="data-box '.$res.'">
                                         <i class="fa fa-'.$val['icon'].'"></i>
                                         <div class="data-info">
                                             <span class="data-name">'.$key.'</span>

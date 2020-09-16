@@ -14,7 +14,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Barlow:400,700,900&display=swap" rel="stylesheet">
 
 </head>
-<body class="<?php echo $web->body_class; ?>">
+<body class="<?php echo $web->build_body_class(); ?>">
     <div class="navi-ctn">
         <div class="row">
             <div class="col">

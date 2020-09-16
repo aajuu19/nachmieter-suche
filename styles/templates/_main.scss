@@ -715,10 +715,80 @@ main {
             }
         }
     }
+
+    // Objekte
     .object-container {
-        .main-img {
-            max-height: rem(550px);
-        }
+        .obj-slider-app {
+            position: relative;
+            .obj-slider-main-img {
+                height: rem(200px);
+                margin-bottom: rem(10px);
+                @include breakpoint(xs) {
+                    height: rem(300px);
+                }
+                @include breakpoint(s) {
+                    height: rem(400px);
+                }
+            }
+            .obj-slider-thumblist {
+                position: relative;
+                width: rem(150px);
+                @include breakpoint(xs) {
+                    width: rem(310px);
+                }
+                @include breakpoint(s) {
+                    width: rem(470px);
+                }
+                @include breakpoint(sm) {
+                    width: rem(310px);
+                }
+                @include breakpoint(l) {
+                    width: rem(470px);
+                }
+                margin: 0 auto;
+                .obj-overflow-ctn {
+                    width: 100%;
+                    overflow: hidden;
+                }
+                .obj-inner-ctn {
+                    display: flex;
+                    width: rem(10000px);
+                    flex-wrap: wrap;
+                    position: relative;
+                    transition: .3s;
+                }
+                .obj-slider-thumb {
+                    margin-right: 10px;
+                    cursor: pointer;
+                    width: rem(150px);
+                    overflow: hidden;
+                }
+                .obj-slider-arrows {
+                    position: absolute;
+                    width: 100%;
+                    top: 50%;
+                    .obj-slider-arrow {
+                        cursor: pointer;
+                        position: absolute;
+                        transform: translateY(-50%);
+                        border-radius: 50%;
+                        width: rem(25px);
+                        height: rem(25px);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        color: $light;
+                        background: $primary;
+                        &.obj-slider-left-arrow {
+                            left: rem(-45px);
+                        }
+                        &.obj-slider-right-arrow {
+                            right: rem(-45px);
+                        }
+                    }
+                }
+            }
+        }        
         span.address {
             margin-bottom: rem(25px);
             display: block;
@@ -781,6 +851,12 @@ main {
                     margin-bottom: 1rem;
                     border-radius: rem(15px);
                     background: $light;
+                    &.secondary {
+                        border-bottom: 4px solid $secondary;
+                        i {
+                            color: $secondary;
+                        }
+                    }
                     i {
                         display: flex;
                         width: 50%;
@@ -837,7 +913,7 @@ main {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                font-size: rem(35px);
+                font-size: rem(24px);
                 span {
                     color: $light;
                     display: inline-block;
