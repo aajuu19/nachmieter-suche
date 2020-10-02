@@ -18,8 +18,12 @@
                 $send,
             ]
         );
-        echo true;
+        $success_message = rawurlencode('Deine Freundschaftsanfrage wurder erfolgreich verschickt.');
+        header('Location: '.$web->root.'/user/user.php?id='.$user_id['p_id'].'&bestaetigung='.$success_message);
+        die;
     } else {
-        echo false;
+        $error_message = rawurlencode('Ein Fehler ist aufgetreten, bitte versuche es noch einmal.');
+        header('Location: '.$web->root.'/user/user.php?id='.$user_id['p_id'].'&error='.$error_message);
+        die;
     }
         

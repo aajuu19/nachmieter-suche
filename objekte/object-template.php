@@ -11,7 +11,7 @@
             </div>
             <div class="obj-slider-thumblist">
                 <div class="obj-overflow-ctn">
-                    <div class="obj-inner-ctn" :style="{ left: sliderPosition + 'px' }">
+                    <div :class="{center : imageCount < thumbsVisible}" class="obj-inner-ctn" :style="{ left: sliderPosition + 'px'}">
                         <?php
                         for($i = 1; $i<=7;$i++) {
                             if($obj['image_'.$i]) {

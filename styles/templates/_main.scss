@@ -99,10 +99,12 @@ header {
 }
 
 main {
+    position: relative;
     background: rgba(217, 230, 249, 0.1);
+    overflow-y: hidden;
     @extend .space-top;
 
-    .object-teaser {
+    .object-teaser, .user-teaser {
         background: {
             image: url('../images/layout/top-objects-bg.jpg');
             repeat: no-repeat;
@@ -129,14 +131,20 @@ main {
             }
             .teaser-img {
                 img {
-                    height: rem(300px);
+                    height: rem(200px);
                     width: 100%;
                     object-fit: cover;
                 }
                 @include breakpoint(m) {
                     flex-basis: 30%;
                     width: 30%;
+                    position: relative;
                     img {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
                         height: 100%;
                     }
                 }
@@ -150,6 +158,7 @@ main {
                 @include breakpoint(m) {
                     flex-basis: 70%;
                     width: 70%;
+                    padding: 2rem;
                 }
                 @include breakpoint(xl) {
                     padding: 3rem;
@@ -162,6 +171,7 @@ main {
                         color: $medium;
                         font-size: rem(28px);
                         font-weight: 700;
+                        word-break: break-word;
                     }
                     &.time {
                         font-size: rem(15px);
@@ -174,13 +184,27 @@ main {
                         }
                     }
                 }
-                .object-infos {
+                .infoBox {
                     display: flex;
-                    justify-content: space-between;
                     margin-bottom: 1.5rem;
                     > span {
-                        width: 25%;
-                        flex-basis: 25%;
+                        width: 40%;
+                        flex-basis: 40%;
+                        margin-right: 10%;
+                        &:nth-child(2n + 2) {
+                            margin-right: 0;
+                        }
+                        @include breakpoint(l) {
+                            width: 25%;
+                            flex-basis: 25%;
+                            margin-right: 12.5%;
+                            &:nth-child(2n + 2) {
+                                margin-right: auto;
+                            }
+                            &:last-child {
+                                margin-right: 0;
+                            }
+                        }
                         small {
                             display: block;
                             color: $primary;
@@ -411,8 +435,8 @@ main {
     }
 
     // wohhnung-finden page
-    .all-objects {
-        .object-teaser {
+    .all-objects, .all-users {
+        .object-teaser, .user-teaser {
             aside.filter-ctn {
                 padding-left: rem(30px);
                 .main-heading {
@@ -490,6 +514,38 @@ main {
         }
     }
 
+    // user-finden page
+    .all-users {
+        .user-teaser {
+            aside.filter-ctn {
+                .filter {
+                    position: relative;
+                    select {
+                        flex-basis: 60%;
+                        width: 60%;
+                        padding: .7rem 1.3rem;
+                        outline: none;
+                        border: none;
+                        border-radius: 15px;
+                        font-size: 14px;
+                        -webkit-appearance: none;
+                        -moz-appearance: none;
+                        appearance: none;
+                        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+                    }
+                    &:after {
+                        font-family: $icon-font;
+                        content: '\f13a';
+                        color: $lightprimary;
+                        position: absolute;
+                        right: 15px;
+                        font-size: 13px;
+                    }
+                }
+            }
+        }
+    }
+
     // login-register page
     .big-tab {
         border-radius: 25px;
@@ -561,33 +617,41 @@ main {
             }
         }
         .side-info {
-            border-bottom: $lightborder;
             margin-top: 2rem;
             height: 100%;
             padding: 2rem 0;
+            &.bd-right {
+                border-bottom: $lightborder;
+            }
+            &.bd-left {
+                border-top: $lightborder;
+            }
             @include breakpoint(sm) {
                 padding: 2rem;
                 margin-top: 0;
+                padding-top: 0;
                 &.bd-right {
                     border-right: $lightborder;
+                    border-bottom: 0;
                 }
                 &.bd-left {
                     border-left: $lightborder;
+                    border-top: 0;
                 }
-                border-bottom: 0;
             }
         }
     }
     .obj-ctn, .edit-profile-app {
         color: black;
         form.default {
+            margin-top: 0;
             .image-ctn {
                 label {
                     background: transparent;
                     position: static;
                     width: auto;
                     cursor: pointer;
-                        .icon {
+                        .icon-ctn {
                             position: absolute;
                             display: block;
                             left: 0;
@@ -601,6 +665,15 @@ main {
                             display: flex;
                             justify-content: center;
                             align-items: center;
+                            span {
+                                &:hover {
+                                    box-shadow: none;
+                                }
+                            }
+                            @include breakpoint(s) {
+                                justify-content: flex-start;
+                                width: rem(170px);
+                            }
                         }
                     span {
                         &.img-placeholder {
@@ -609,6 +682,13 @@ main {
                             padding: .7rem;
                             color: $dark;
                             font-size: rem(14px);
+                            @include breakpoint(s) {
+                                margin-left: rem(170px);
+                                padding-left: rem(15px);
+                                width: calc(100% - 170px);
+                                border-top-left-radius: 0;
+                                border-bottom-left-radius: 0;
+                            }
                             @include breakpoint(m) {
                                 font-size: rem(15px);
                             }
@@ -756,12 +836,21 @@ main {
                     flex-wrap: wrap;
                     position: relative;
                     transition: .3s;
+                    &.center {
+                        justify-content: center;
+                        width: auto;
+                    }
                 }
                 .obj-slider-thumb {
                     margin-right: 10px;
                     cursor: pointer;
                     width: rem(150px);
                     overflow: hidden;
+                    .thumb-img {
+                        &::selection {
+                            background: transparent;
+                        }
+                    }
                 }
                 .obj-slider-arrows {
                     position: absolute;
@@ -859,8 +948,9 @@ main {
                     }
                     i {
                         display: flex;
-                        width: 50%;
-                        flex-basis: 50%;
+                        width: 40%;
+                        flex-basis: 40%;
+                        margin-right: 5px;
                         justify-content: center;
                         align-items: center;
                         color: $primary;
@@ -872,6 +962,7 @@ main {
                             &.data-name {
                                 font-size: rem(14px);
                                 color: $grey;
+                                margin-bottom: 5px;
                             }
                             &.data-value {
                                 font-weight: 700;
@@ -900,10 +991,10 @@ main {
                 border-bottom: 4px solid $primary;
             }
             img {
-                width: 40%;
-                flex-basis: 40%;
-                height: auto;
-                border-radius: 25px;
+                width: rem(65px);
+                height: rem(65px);
+                border-radius: 50%;
+                object-fit: cover;
             }
             .userInitial {
                 background: $primary;
@@ -1093,17 +1184,23 @@ main {
             }
         }
     }
+    padding-bottom: rem(250px);
 }
 
 .footer-img {
     display: block;
     width: 100%;
     height: auto;
-    padding-top: rem(60px);
     opacity: .3;
     pointer-events: none;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: -1;
     @include breakpoint(m) {
-        padding-top: rem(100px);
+        width: 70%;
+        margin: 0 auto;
     }
 }
 

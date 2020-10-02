@@ -4,9 +4,13 @@
     right: 3%;
     z-index: 9999;
     background: $primary;
-    display: inline-block;
-    padding: 1rem;
-    border-radius: 15px;
+    display: flex;
+    border-radius: 50%;
+    justify-content: center;
+    align-items: center;
+    width: rem(60px);
+    height: rem(60px);
+    box-shadow: 0 0 10px rgba(0,0,0,0.15);
     @include breakpoint(m) {
     	display: none;
     }
@@ -15,8 +19,8 @@
     &:before, &:after, .middle {
     	display: block;
 		content: '';
-		width: rem(35px);
-		height: rem(4px);
+		width: rem(30px);
+		height: rem(2px);
 		background-color: $light;
 		transition: 0.4s;
     }
@@ -35,10 +39,10 @@
     }
     ~ .menuLabel label[for="menuToggle"], ~ * .menuLabel label[for="menuToggle"] {
       &:before {
-        transform: rotate(-45deg) translate(-8px, 7px);
+        transform: rotate(-45deg) translate(-8px, 6px);
       }
       &:after {
-        transform: rotate(45deg) translate(-6px, -7px);
+        transform: rotate(45deg) translate(-5px, -4px);
       }
       .middle {
       	opacity: 0;
@@ -98,6 +102,7 @@
                 top: 0;
                 left: 0;
                 padding: 1rem 0;
+                overflow-y: scroll;
             }
             @include breakpoint(m) {
                 display: flex;

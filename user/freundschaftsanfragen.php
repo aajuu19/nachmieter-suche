@@ -27,7 +27,7 @@
                             
                         } else {
                             $html_string .= '<div class="profilePic">';
-                            $html_string .= '<img src="'.get_upl_img($val['profilepic'], 'Profilbild von'.$val['name'], 'fluid').'">';
+                            $html_string .= $web->get_upl_img($val['profilepic'], 'Profilbild von'.$val['name'], 'fluid');
                             $html_string .= '</div>';
                         }
                         

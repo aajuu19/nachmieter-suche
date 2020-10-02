@@ -29,9 +29,12 @@
             ]
         );
         $db->close_connect();
-        echo "HAT WOHL GEKLAPPT";
+        $success_message = rawurlencode('Du hast die Freunschaftsanfrage angenommen.');
+        header('Location: '.$web->root.'/user/user.php?id='.$user_id['p_id'].'&bestaetigung='.$success_message);
+        die;
     } else {
-        echo "HAT WOHL Nicht GEKLAPPT";
-        echo false;
+        $error_message = rawurlencode('Du hast die Freundschaftsanfrage abgelehnt.');
+        header('Location: '.$web->root.'/user/user.php?id='.$user_id['p_id'].'&error='.$error_message);
+        die;
     }
         

@@ -125,12 +125,9 @@
                 box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
                 position: relative;
                 img {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
+                    object-fit: cover;
+                    height: 100%;
                     width: 100%;
-                    height: auto;
                 }
             }
             .name {
@@ -186,6 +183,54 @@
     }
     // User App
     .userInfoArea {
+        span.headline {
+            font-size: 17px;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 20px;
+            color: $primary;
+            text-transform: uppercase;
+        }
+        .data-box {
+            display: flex;
+            align-items: center;
+            padding: 2rem 1.5rem;
+            border-bottom: 4px solid $primary;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            border-radius: rem(15px);
+            background: $light;
+            &.secondary {
+                border-bottom: 4px solid $secondary;
+                i {
+                    color: $secondary;
+                }
+            }
+            i {
+                display: flex;
+                width: 40%;
+                flex-basis: 40%;
+                margin-right: rem(10px);
+                justify-content: center;
+                align-items: center;
+                color: $primary;
+                font-size: rem(40px);
+            }
+            .data-info {
+                span {
+                    display: block;
+                    &.data-name {
+                        font-size: rem(14px);
+                        color: $grey;
+                        margin-bottom: rem(5px);
+                    }
+                    &.data-value {
+                        font-weight: 700;
+                        font-size: rem(24px);
+                    }
+                }
+            }
+        }
         .whiteBox {
             margin-bottom: 2rem;
             .infoBox {
@@ -252,12 +297,9 @@
                         position: relative;
                         transition: .3s;
                         img {
-                            position: absolute;
-                            top: 50%;
-                            left: 50%;
-                            transform: translate(-50%, -50%);
+                            object-fit: cover;
                             width: 100%;
-                            height: auto;
+                            height: 100%;
                         }
                     }
                     &:hover {
@@ -347,10 +389,18 @@
 
 // User friend request page
 .friend-request-box {
+    @include breakpoint(m) {
+        display: flex;
+        justify-content: space-between;
+    }
     .friendBox {
         border-bottom: 4px solid $primary;
         transition: .3s;
         position: relative;
+        @include breakpoint(m) {
+            flex-basis: calc(50% - 10px);
+            width: calc(50% - 10px);
+        }
         &:hover {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.18) !important;
             a {
@@ -365,6 +415,21 @@
         a {
             display: flex;
             align-items: center;
+            flex-wrap: wrap;
+            flex-direction: column;
+            @include breakpoint(s) {
+                flex-direction: row;
+            }
+            .profilePic {
+                width: rem(95px);
+                height: rem(95px);
+                img {
+                    border-radius: 50%;
+                    object-fit: cover;
+                    height: 100%;
+                    width: 100%;
+                }
+            }
             .acronymProfilePic {
                 width: rem(95px);
                 height: rem(95px);
@@ -380,9 +445,15 @@
             }
             .name {
                 color: $dark;
-                padding-left: rem(18px);
                 font-size: rem(19px);
                 transition: .3s;
+                margin-top: 20px;
+                @include breakpoint(s) {
+                    margin-top: 0;
+                    flex-basis: 79%;
+                    padding-left: rem(18px);
+                    padding-right: rem(130px);
+                }
             }
         }
         .friend-request {
@@ -390,13 +461,19 @@
                 color: $light;
                 padding: 10px 20px;
                 border-radius: 20px;
-                position: absolute;
                 transition: .3s;
+                @include breakpoint(s) {
+                    position: absolute;
+                }
             }
             &-confirm {
                 background: $success;
                 top: rem(20px);
                 right: rem(20px);
+                margin-top: rem(20px);
+                @include breakpoint(s) {
+                    margin-top: 0;
+                }
                 &:hover {
                     background: darken($success, 10%);
                 }
@@ -405,6 +482,10 @@
                 background: $alert;
                 bottom: rem(18px);
                 right: rem(20px);
+                margin-top: rem(10px);
+                @include breakpoint(s) {
+                    margin-top: 0;
+                }
                 &:hover {
                     background: darken($alert, 10%);
                 }

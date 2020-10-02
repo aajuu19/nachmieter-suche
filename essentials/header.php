@@ -37,6 +37,7 @@
                                         <li>Mein Bereich <i class="fa fa-angle-down"></i>
                                             <ul class="sub-navi">
                                                 <li><a href="<?php echo $web->root; ?>/user/user.php?id=<?php echo $_SESSION['person']['p_id']; ?>" title="<?php echo $meta['user.php']['title'] ?>">Mein Profil</a></li>
+                                                <li><a href="<?php echo $web->root; ?>/user/neues-objekt.php" title="<?php echo $meta['neues-objekt.php']['title'] ?>">Neues Objekt einfügen</a></li>
                                                 <li><a href="<?php echo $web->root; ?>/user/nachrichten-center.php" title="<?php echo $meta['nachrichten-center.php']['title'] ?>">Nachrichtencenter</a></li>
                                                 <li><a href="<?php echo $web->root; ?>/user/freundschaftsanfragen.php" title="<?php echo $meta['freundschaftsanfragen.php']['title'] ?>">Freundschaftsanfragen</a></li>
                                                 <li><a href="<?php echo $web->root; ?>/user/settings.php" title="<?php echo $meta['settings.php']['title'] ?>">Einstellungen</a></li>

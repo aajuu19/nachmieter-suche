@@ -11,6 +11,50 @@
 
     $data = [];
 
+    if(isset($request_type['users'])) {
+
+        // build sql statement - be sure no sql injection can be made
+        $sql_stmt = 'SELECT * FROM `person` WHERE ';
+
+        $limit = $request_type['limit'];
+
+        $page_limit = $request_type['page'] * $limit - $limit;
+
+        $filter_list = [
+            'lf_quadratmeter',
+            'lf_zimmer',
+            'lf_kaltmiete',
+            'lf_warmmiete'
+        ];
+
+        $filter_values = [];
+        $prep_sql = null;
+        
+
+        foreach($request_type as $key => $value) {
+            foreach ($filter_list as $val) {
+                if($key == $val) {
+                    $prep_sql .= $key.' = :'.$key.' AND ';
+                    $filter_values[$key] = $value;
+                }
+            }
+        }
+        
+        if($prep_sql) {
+            $prep_sql = rtrim($prep_sql, " AND ");
+            $sql_stmt = 'SELECT person.p_id, person.name, person.email, person.beschreibung, person.job, person.lf_quadratmeter, person.lf_zimmer, person.lf_kaltmiete, person.lf_warmmiete, person.lookingfor, person.profilepic, person.lookingfrom, person.gender FROM `person` WHERE '.$prep_sql.' ORDER BY registration_date DESC LIMIT '.$page_limit.','.$limit;
+
+            $data = $db->prep_exec($sql_stmt, $filter_values, 'all');
+        } else {
+            $sql_stmt = 'SELECT person.p_id, person.name, person.email, person.beschreibung, person.job, person.lf_quadratmeter, person.lf_zimmer, person.lf_kaltmiete, person.lf_warmmiete, person.lookingfor, person.profilepic, person.lookingfrom, person.gender FROM `person` ORDER BY registration_date DESC LIMIT '.$page_limit.','.$limit;
+            
+            $data = $db->prep_exec($sql_stmt, $filter_values, 'all');
+        }
+
+        
+        
+    }
+
     if(isset($request_type['wohnungen'])) {
 
         // smaller or greater? returns operand and value without min or max string

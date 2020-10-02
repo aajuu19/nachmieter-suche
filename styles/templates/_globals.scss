@@ -144,6 +144,17 @@ form {
         }
         fieldset {
             border: none;
+            input {
+                &[type=text], &[type=password], &[type=mail], &[type=number], &[type=date], &[type=file] {
+                    @include breakpoint(s) {
+                        margin-left: rem(170px);
+                        width: calc(100% - 170px);
+                        padding-left: rem(15px);
+                        border-top-left-radius: 0;
+                        border-bottom-left-radius: 0;
+                    }
+                }
+            }
             &.optional, &.dropdown, .optional {
                 input, textarea {
                     padding-right: rem(90px);
@@ -183,11 +194,21 @@ form {
                 box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
                 width: 100%;
                 color: $dark;
+                @include breakpoint(s) {
+                    width: calc(100% - 170px);
+                    margin-left: rem(170px);
+                    padding-left: rem(15px);
+                    border-top-left-radius: 0;
+                    border-bottom-left-radius: 0;
+                }
                 &:required:invalid {
                     color: lighten($secondary, 20%);;
                 }
                 option {
                     color: $dark;
+                    &:disabled {
+                        color: lighten($secondary, 20%);;
+                    }
                 }
             }
                 label {
@@ -204,6 +225,22 @@ form {
                     display: flex;
                     justify-content: center;
                     align-items: center;
+                    span {
+                        display: none;
+                    }
+                    @include breakpoint(s) {
+                        justify-content: flex-start;
+                        width: rem(170px);
+                        border-top-left-radius: rem(25px);
+                        border-bottom-left-radius: rem(25px);
+                        i {
+                            margin-left: rem(15px);
+                        }
+                        span {
+                            display: inline-block;;
+                            padding-left: rem(13px);
+                        }
+                    }
                     &.opt-sec {
                         background: lighten($secondary, 15%);
                     }
@@ -232,6 +269,13 @@ form {
             display: block;
             background: $light;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+            @include breakpoint(s) {
+                width: calc(100% - 170px);
+                margin-left: rem(170px);
+                padding-left: rem(15px);
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
             &:focus {
                 box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
             }

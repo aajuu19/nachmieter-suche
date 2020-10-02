@@ -2,13 +2,233 @@ import './../styles/styles';
 import "regenerator-runtime/runtime";
 import Vue from './vue.js';
 
-const isDev = false;
+const isDev = true;
 const root = `${document.location.origin}/nachmieter-suche`;
+
+// index page
+
+(function() {
+    function parallaxFooterImg() {
+        let footer = document.querySelector('footer');
+        let footerImg = document.querySelector('.footer-img');
+        let footerImgHeight = footerImg.offsetHeight - 50;
+        let windowHeight = window.innerHeight;
+        let scrollPosBottom = window.scrollY + windowHeight;
+
+        if(scrollPosBottom >= footer.offsetTop - 400) {
+            let procentualFooterScroll = 100 / (footer.offsetHeight + 400) * -(footer.offsetTop - 400 - scrollPosBottom);
+            let footerImgUnit = footerImgHeight / 100;
+            
+            footerImg.style.top = 'calc(' + 100 +'% - ' + footerImgUnit * procentualFooterScroll + 'px)';
+        } 
+    }
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        parallaxFooterImg();
+        window.addEventListener('scroll', parallaxFooterImg);
+    });
+})();
+
+
+// mieter-finden page
+(function() { 
+    if (document.body.classList.contains('mieter-finden')) {
+
+        Vue.component('filter-box', {
+            props: ['ele'],
+            template: `
+                <div class="filter">
+                    <span class="heading">{{ ele.name }}</span>
+                    <select v-model="ele.selectedVal" :name="ele.name" :id="ele.name">
+                        <option value="" selected></option>
+                        <option v-for="filter in ele.values" :value="filter"> {{ filter }} </option>
+                    </select>
+                </div>
+            `,
+        });
+
+        Vue.component('user-item', {
+            props: ['user'],
+            data: function (){
+                return {
+                    maxWordLength: 150,
+                };
+            },
+            template: `
+                <div class="teaser">
+                    <div class="teaser-box">
+                        <div class="teaser-img">
+                            <img :src="imgLink" alt="Platzhalter">
+                        </div> 
+                        <div class="teaser-content">
+                            <span class="heading">{{ user.name }}</span>
+                            <span class="time" v-show="user.job">{{ user.job }}</span>
+                            <span class="desc">{{ shortenedDesc }}</span>
+                            <div class="infoBox" v-show="showUserInfos">
+                                <span v-show="user.lf_quadratmeter"><small>Quadratmeter</small> <span>{{ user.lf_quadratmeter }} m²</span></span>
+                                <span v-show="user.lf_zimmer"><small>Zimmer</small> <span>{{ user.lf_zimmer }}</span></span>
+                                <span v-show="user.lf_kalt"><small>Kaltmiete</small> <span>{{ user.lf_kalt }} €</span></span>
+                            </div>
+                            <a :href="objLinkPath" class="btn secondary">Mehr erfahren</a>
+                        </div>
+                    </div> 
+                </div> 
+            `,
+            computed: {
+                showUserInfos: function () {
+                    if (this.user.lf_quadratmeter || this.user.lf_zimmer || this.user.lf_kaltmiete) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                },
+                shortenedDesc: function () {
+                    if (this.user.beschreibung && this.user.beschreibung.length >= this.maxWordLength) {
+                        return `${this.user.beschreibung.slice(0, this.maxWordLength)}...`;
+                    }
+                    return this.user.beschreibung;
+                },
+                objLinkPath: function () {
+                    return `${document.location.origin}/nachmieter-suche/user/user.php?id=${this.user.p_id}`;
+                },
+                imgLink: function () {
+                    if(!this.user.profilepic) {
+                        return `${document.location.origin}/nachmieter-suche/uploads/placeholder.jpg`;
+                    }
+                    return `${document.location.origin}/nachmieter-suche/uploads/${this.user.profilepic}`;
+                },
+            },
+        });
+        const vm = new Vue({
+            el: '.all-users',
+            data: {
+                users: [],
+                filterList: {
+                    lf_quadratmeter: {
+                        id: 1,
+                        name: 'Quadratmeter',
+                        values: [
+                            '0 - 49',
+                            '50 - 99',
+                            '100 - 149',
+                            '150 - 250',
+                            'Über 250',
+                        ],
+                        selectedVal: null
+                    },
+                    lf_zimmer: {
+                        id: 2,
+                        name: 'Zimmer',
+                        values: [
+                            '1 - 2',
+                            '2 - 3',
+                            '3 - 4',
+                            '4 - 5',
+                            '5 - 6',
+                            '6 - 7',
+                            '7 - 10',
+                            'Über 10',
+                        ], 
+                        selectedVal: null
+                    },
+                    lf_kaltmiete: {
+                        id: 3,
+                        name: 'Kaltmiete',
+                        values: [
+                            '0 - 300',
+                            '300 - 500',
+                            '500 - 700',
+                            '700 - 1000',
+                            '1000 - 1500',
+                            '1500 - 3000',
+                            '3000 - 5000',
+                            'Über 5000',
+                        ],
+                        selectedVal: null
+                    },
+                    lf_warmmiete: {
+                        id: 4,
+                        name: 'Warmmiete',
+                        values: [
+                            '0 - 300',
+                            '300 - 500',
+                            '500 - 700',
+                            '700 - 1000',
+                            '1000 - 1500',
+                            '1500 - 3000',
+                            '3000 - 5000',
+                            'Über 5000',
+                        ], 
+                        selectedVal: null
+                    },
+                },
+                errorMsg: false,
+            },
+            created: function () {
+                const fetched = fetch('./essentials/dbs_json.php',
+                {
+                    method: 'POST',
+                    body: 'users&page=1&limit=50',
+                    headers:
+                    {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                }).then((data) => data.json());
+                fetched.then((data) => {
+                    console.log(data);
+                    this.users = data;
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+            },
+            methods: {
+                filterIt: function () {
+                    const fL = this.filterList;
+                    let paramStr = '';
+
+                    for (const i in fL) {
+                        if (Object.prototype.hasOwnProperty.call(fL, i)) {
+                            const filter = fL[i];
+                            console.log(filter);
+                            if (filter.selectedVal) {
+                                paramStr += `${i}=${filter.selectedVal}&`;
+                                console.log(paramStr);
+                            }
+                        }
+                    }
+
+                    const fetched = fetch('./essentials/dbs_json.php',
+                    {
+                        method: 'POST',
+                        body: `users&${paramStr}page=1&limit=50`,
+                        headers:
+                        {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                    }).then((data) => data.json());
+                    fetched.then((data) => {
+                        this.users = data;
+                        if (this.users.length === 0) {
+                            this.errorMsg = true;
+                        } else {
+                            this.errorMsg = false;
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+                },
+            },
+        });
+    }
+}());
+
 
 // objekte
 (function() { 
     if (document.body.classList.contains('objekte')) {
-        window.vm = new Vue({
+        const vm = new Vue({
             el: '.obj-slider-app',
             data: {
                 mainImgSrc: null,
@@ -49,9 +269,6 @@ const root = `${document.location.origin}/nachmieter-suche`;
                         if ((this.imageCount - this.scrolledThisTimes) < this.thumbsVisible) {
                             this.scrolledThisTimes--;
                         }
-                        //  if ((this.imageCount - this.scrolledThisTimes) == this.thumbsVisible) {
-                        //     this.scrolledThisTimes++;
-                        // }
                         return this.scrolledThisTimes * -(this.flatImages[0].offsetWidth + 10);
                     } else {
                         return 0;
@@ -60,7 +277,7 @@ const root = `${document.location.origin}/nachmieter-suche`;
             },
             methods: {
                 handleArrowVisibility: function() {
-                    if (this.imageCount >= this.thumbsVisible) {
+                    if (this.imageCount > this.thumbsVisible) {
                         this.showLeftArrow = true;
                         this.showRightArrow = true;
                     } else {
@@ -111,18 +328,11 @@ const root = `${document.location.origin}/nachmieter-suche`;
                     if (this.scrolledThisTimes >= 0) {
                         this.scrolledThisTimes--;
                     }
-                    console.log('So oft gescrollt '+this.scrolledThisTimes);
-                    console.log('imagecount '+this.imageCount);
-                    console.log('sichtbare thumbs '+this.thumbsVisible);
                 },
                 swipeRight: function() {
                     if (this.scrolledThisTimes <= this.imageCount - this.thumbsVisible) {
                         this.scrolledThisTimes++;
                     }
-                    console.log('So oft gescrollt '+this.scrolledThisTimes);
-                    console.log('imagecount '+this.imageCount);
-                    console.log('sichtbare thumbs davor '+this.thumbsVisibleBefore);
-                    console.log('sichtbare thumbs '+this.thumbsVisible);
                 },
             }
         });
@@ -155,7 +365,7 @@ const root = `${document.location.origin}/nachmieter-suche`;
                 },
                 description: function() {
                     if(this.userProfile.beschreibung) {
-                        return this.userProfile.beschreibung;
+                        return this.htmlDecode(this.userProfile.beschreibung);
                     } else {
                         return "";
                     }
@@ -163,6 +373,34 @@ const root = `${document.location.origin}/nachmieter-suche`;
                 job: function() {
                     if(this.userProfile.job) {
                         return this.userProfile.job;
+                    } else {
+                        return "";
+                    }
+                },
+                lfQuadratmeter: function() {
+                    if(this.userProfile.lf_quadratmeter) {
+                        return this.userProfile.lf_quadratmeter;
+                    } else {
+                        return "";
+                    }
+                },
+                lfZimmer: function() {
+                    if(this.userProfile.lf_zimmer) {
+                        return this.userProfile.lf_zimmer;
+                    } else {
+                        return "";
+                    }
+                },
+                lfKalt: function() {
+                    if(this.userProfile.lf_kaltmiete) {
+                        return this.userProfile.lf_kaltmiete;
+                    } else {
+                        return "";
+                    }
+                },
+                lfWarm: function() {
+                    if(this.userProfile.lf_warmmiete) {
+                        return this.userProfile.lf_warmmiete;
                     } else {
                         return "";
                     }
@@ -214,6 +452,10 @@ const root = `${document.location.origin}/nachmieter-suche`;
             methods: {
                 showFileDetails: function ($event) {
                     this.fileList = $event.target.files;
+                },
+                htmlDecode: function (input) {
+                    var doc = new DOMParser().parseFromString(input, "text/html");
+                    return doc.documentElement.textContent;
                 },
             }
         });
@@ -272,7 +514,7 @@ const root = `${document.location.origin}/nachmieter-suche`;
                             <span class="heading">{{ object.name }}</span>
                             <span class="time">{{ object.einstellungsdatum }} Uhr</span>
                             <span class="desc">{{ shortenedDesc }}</span>
-                            <div class="object-infos">
+                            <div class="infoBox">
                                 <span><small>Quadratmeter</small> <span>{{ object.quadratmeter }} m²</span></span>
                                 <span><small>Zimmer</small> <span>{{ object.zimmer }}</span></span>
                                 <span><small>Kaltmiete</small> <span>{{ object.kalt }} €</span></span>
@@ -372,6 +614,7 @@ const root = `${document.location.origin}/nachmieter-suche`;
                     for (const i in fL) {
                         if (Object.prototype.hasOwnProperty.call(fL, i)) {
                             const filter = fL[i];
+                            console.log(filter);
                             const getMaxMin = function (){
                                 if (filter.min === true) {
                                     return 'min';
@@ -634,8 +877,7 @@ if (document.body.classList.contains('nachrichten-center')) {
         `,
         computed: {
             imageUrl: function () {
-                // return `../uploads/${this.user.profilepic}`;
-                return '../uploads/placeholder.jpg';
+                return `../uploads/${this.user.profilepic}`;
             },
             isActive: function () {
                 if (this.user.p_id == this.activeuser) {

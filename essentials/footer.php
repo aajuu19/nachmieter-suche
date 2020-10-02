@@ -1,4 +1,4 @@
-        <img class="footer-img" src="<?php echo $web->root ?>/images/layout/footer-city.png" alt="Footer City">
+        <img class="footer-img" src="<?php echo $web->root ?>/images/layout/city-vector.png" alt="Footer City">
         </main>
         <footer>
 

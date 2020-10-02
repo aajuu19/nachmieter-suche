@@ -97,17 +97,20 @@
                 }
             ?>
             <div class="row">
-                <div class="col sm-6">
-                    <div class="whiteBox userDataBox morePad">
-                        <span class="dataTitle">Ich suche nach</span>
-                        <span class="dataValue"><?php echo $user['lookingfor']; ?></span>
+                <?php if ($user['lookingfor']) { ?>
+                    <div class="col sm-6">
+                        <div class="whiteBox userDataBox morePad">
+                            <span class="dataTitle">Ich suche nach</span>
+                            <span class="dataValue"><?php echo $user['lookingfor']; ?></span>
+                        </div>
                     </div>
-                </div>
-                <div class="col sm-6">
-                    <div class="whiteBox userDataBox morePad">
-                        <span class="dataTitle">Ab wann ich suche</span>
-                        <span class="dataValue">
-                            <?php 
+                <?php } ?>
+                <?php if ($user['lookingfrom']) { ?>
+                    <div class="col sm-6">
+                        <div class="whiteBox userDataBox morePad">
+                            <span class="dataTitle">Ab wann ich suche</span>
+                            <span class="dataValue">
+                                <?php 
                                 $current_date_time = time();
                                 $date_time_user = strtotime($user['lookingfrom']);
                                 $new_date = date('d.m.Y', $date_time_user);
@@ -116,17 +119,18 @@
                                 } else {
                                     echo $new_date;    
                                 }
-                            ?>
-                        </span>
+                                ?>
+                            </span>
+                        </div>
                     </div>
-                </div>
+                <?php } ?>
             </div>
             <div class="userInfoArea">
                 <?php if($user['beschreibung']) { ?>
                     <div class="whiteBox morePad">
                         <div class="infoBox">
                             <span class="greyTitle">Über mich</span>
-                            <p><?php echo $web->htmlchar($user['beschreibung']); ?></p>
+                            <p><?php echo $user['beschreibung']; ?></p>
                         </div>
                     </div>
                 <?php } ?>
@@ -137,7 +141,7 @@
                 ?> 
                 <div class="whiteBox morePad">
                     <div class="infoBox">
-                        <span class="greyTitle">Mietobjekte</span>
+                        <span class="greyTitle">Eingestellte Mietobjekte</span>
                         <div class="user-object-list">
                             <?php 
                                 if(!empty($user_objects)) {
@@ -160,7 +164,7 @@
                     </div>
                 </div>
                 <?php }?>
-
+                
                 <div class="whiteBox morePad">
                     <div class="infoBox">
                         <span class="greyTitle">Freunde</span>
@@ -198,6 +202,50 @@
                         ?>
                     </div>
                 </div>
+                <div class="row">
+                    <?php 
+                        $data_array = [
+                            'Quadratmeter' => [
+                                'value' => $user['lf_quadratmeter'],
+                                'icon' => 'cube'
+                            ],
+                            'Zimmer' => [
+                                'value' => $user['lf_zimmer'],
+                                'icon' => 'bed'
+                            ],
+                            'Kaltmiete' => [
+                                'value' => $user['lf_kaltmiete'],
+                                'icon' => 'euro-sign'
+                            ],
+                            'Warmmiete' => [
+                                'value' => $user['lf_warmmiete'],
+                                'icon' => 'euro-sign'
+                            ],
+                        ];
+
+                        if ($user['lf_quadratmeter'] || $user['lf_zimmer'] || $user['lf_kaltmiete'] || $user['lf_warmmiete']) {
+                            echo '<span class="col headline">Auf der Suche nach</span>';
+                        }
+
+                        foreach($data_array as $key => $val) {
+                            if($val['value'] != NULL) {
+                                $res = ($key === 'Warmmiete') ? 'secondary' : '';
+                                echo '
+                                    <div class="col s-6 xl-4">
+                                        <div class="data-box '.$res.'">
+                                            <i class="fa fa-'.$val['icon'].'"></i>
+                                            <div class="data-info">
+                                                <span class="data-name">'.$key.'</span>
+                                                <span class="data-value">'.$val['value'].'</span>
+                                            </div>
+                                        </div>            
+                                    </div>            
+                                ';
+                            }
+                        }
+                    ?>
+                </div>
+
             </div>
         </div>
         <?php } else { ?>

@@ -11,10 +11,11 @@
             'desc' => 'Dies ist die Beschreibung der Startseite',
             'include_nav'=> true
         ],
-        'nachmieter-finden.php' => [
-            'name' => 'Nachmieter finden',
+        'mieter-finden.php' => [
+            'name' => 'Mieter finden',
             'title' => 'Dies ist der Titel der Zweite',
             'desc' => 'Dies ist die Beschreibung der Zweite',
+            'claim' => 'Finde deinen neuen Nachmieter',
             'include_nav'=> true
         ],
         'wohnung-finden.php' => [
@@ -28,6 +29,7 @@
             'name' => 'FAQ',
             'title' => 'Dies ist die FAQ Seite',
             'desc' => 'Dies ist die Beschreibung der Zweite',
+            'claim' => 'FAQ',
             'include_nav'=> true
         ],
         'user.php' => [

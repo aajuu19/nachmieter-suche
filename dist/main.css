@@ -4836,9 +4836,13 @@
   right: 3%;
   z-index: 9999;
   background: #1c9ce5;
-  display: inline-block;
-  padding: 1rem;
-  border-radius: 15px; }
+  display: flex;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  width: 3.75rem;
+  height: 3.75rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); }
   @media (min-width: 1025px) {
     .menuLabel {
       display: none; } }
@@ -4847,8 +4851,8 @@
     .menuLabel label[for="menuToggle"]:before, .menuLabel label[for="menuToggle"]:after, .menuLabel label[for="menuToggle"] .middle {
       display: block;
       content: '';
-      width: 2.1875rem;
-      height: 0.25rem;
+      width: 1.875rem;
+      height: 0.125rem;
       background-color: #fff;
       transition: 0.4s; }
     .menuLabel label[for="menuToggle"] .middle {
@@ -4860,9 +4864,9 @@
   #menuToggle:checked ~ .navigation, #menuToggle:checked ~ * .navigation {
     transform: translateX(0); }
   #menuToggle:checked ~ .menuLabel label[for="menuToggle"]:before, #menuToggle:checked ~ * .menuLabel label[for="menuToggle"]:before {
-    transform: rotate(-45deg) translate(-8px, 7px); }
+    transform: rotate(-45deg) translate(-8px, 6px); }
   #menuToggle:checked ~ .menuLabel label[for="menuToggle"]:after, #menuToggle:checked ~ * .menuLabel label[for="menuToggle"]:after {
-    transform: rotate(45deg) translate(-6px, -7px); }
+    transform: rotate(45deg) translate(-5px, -4px); }
   #menuToggle:checked ~ .menuLabel label[for="menuToggle"] .middle, #menuToggle:checked ~ * .menuLabel label[for="menuToggle"] .middle {
     opacity: 0; }
 
@@ -4909,7 +4913,8 @@
           width: 18.75rem;
           top: 0;
           left: 0;
-          padding: 1rem 0; } }
+          padding: 1rem 0;
+          overflow-y: scroll; } }
       @media (min-width: 1025px) {
         .navi-ctn .head-ctn .navigation {
           display: flex;
@@ -5130,6 +5135,13 @@ form.default input {
 
 form.default fieldset {
   border: none; }
+  @media (min-width: 680px) {
+    form.default fieldset input[type=text], form.default fieldset input[type=password], form.default fieldset input[type=mail], form.default fieldset input[type=number], form.default fieldset input[type=date], form.default fieldset input[type=file] {
+      margin-left: 10.625rem;
+      width: calc(100% - 170px);
+      padding-left: 0.9375rem;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0; } }
   form.default fieldset.optional input, form.default fieldset.optional textarea, form.default fieldset.dropdown input, form.default fieldset.dropdown textarea, form.default fieldset .optional input, form.default fieldset .optional textarea {
     padding-right: 5.625rem; }
   form.default fieldset.optional:after, form.default fieldset.dropdown:after, form.default fieldset .optional:after {
@@ -5161,10 +5173,19 @@ form.default fieldset {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
     width: 100%;
     color: #312f2c; }
+    @media (min-width: 680px) {
+      form.default fieldset select {
+        width: calc(100% - 170px);
+        margin-left: 10.625rem;
+        padding-left: 0.9375rem;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0; } }
     form.default fieldset select:required:invalid {
       color: #fec561; }
     form.default fieldset select option {
       color: #312f2c; }
+      form.default fieldset select option:disabled {
+        color: #fec561; }
   form.default fieldset label {
     display: block;
     position: absolute;
@@ -5179,6 +5200,19 @@ form.default fieldset {
     display: flex;
     justify-content: center;
     align-items: center; }
+    form.default fieldset label span {
+      display: none; }
+    @media (min-width: 680px) {
+      form.default fieldset label {
+        justify-content: flex-start;
+        width: 10.625rem;
+        border-top-left-radius: 1.5625rem;
+        border-bottom-left-radius: 1.5625rem; }
+        form.default fieldset label i {
+          margin-left: 0.9375rem; }
+        form.default fieldset label span {
+          display: inline-block;
+          padding-left: 0.8125rem; } }
     form.default fieldset label.opt-sec {
       background: #febc48; }
     form.default fieldset label i {
@@ -5203,6 +5237,13 @@ form.default textarea {
   display: block;
   background: #fff;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.05); }
+  @media (min-width: 680px) {
+    form.default textarea {
+      width: calc(100% - 170px);
+      margin-left: 10.625rem;
+      padding-left: 0.9375rem;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0; } }
   form.default textarea:focus {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.15); }
   form.default textarea::placeholder {
@@ -5501,83 +5542,105 @@ header {
               padding: 1.2rem 3rem; } }
 
 main {
-  background: rgba(217, 230, 249, 0.1); }
-  main .object-teaser {
+  position: relative;
+  background: rgba(217, 230, 249, 0.1);
+  overflow-y: hidden;
+  padding-bottom: 15.625rem; }
+  main .object-teaser, main .user-teaser {
     background-image: url(images/top-objects-bg.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
     background-attachment: fixed; }
-    body:not(.index) main .object-teaser {
+    body:not(.index) main .object-teaser, body:not(.index) main .user-teaser {
       background: none; }
-      body:not(.index) main .object-teaser .teaser-box {
+      body:not(.index) main .object-teaser .teaser-box, body:not(.index) main .user-teaser .teaser-box {
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); }
-    main .object-teaser .teaser {
+    main .object-teaser .teaser, main .user-teaser .teaser {
       margin-bottom: 2rem; }
-    main .object-teaser .teaser-box {
+    main .object-teaser .teaser-box, main .user-teaser .teaser-box {
       background: #fff;
       border-radius: 15px;
       overflow: hidden;
       height: 100%; }
       @media (min-width: 1025px) {
-        main .object-teaser .teaser-box {
+        main .object-teaser .teaser-box, main .user-teaser .teaser-box {
           display: flex; } }
-      main .object-teaser .teaser-box .teaser-img img {
-        height: 18.75rem;
+      main .object-teaser .teaser-box .teaser-img img, main .user-teaser .teaser-box .teaser-img img {
+        height: 12.5rem;
         width: 100%;
         object-fit: cover; }
       @media (min-width: 1025px) {
-        main .object-teaser .teaser-box .teaser-img {
+        main .object-teaser .teaser-box .teaser-img, main .user-teaser .teaser-box .teaser-img {
           flex-basis: 30%;
-          width: 30%; }
-          main .object-teaser .teaser-box .teaser-img img {
+          width: 30%;
+          position: relative; }
+          main .object-teaser .teaser-box .teaser-img img, main .user-teaser .teaser-box .teaser-img img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             height: 100%; } }
       @media (min-width: 1400px) {
-        main .object-teaser .teaser-box .teaser-img {
+        main .object-teaser .teaser-box .teaser-img, main .user-teaser .teaser-box .teaser-img {
           flex-basis: 35%;
           width: 35%; } }
-      main .object-teaser .teaser-box .teaser-content {
+      main .object-teaser .teaser-box .teaser-content, main .user-teaser .teaser-box .teaser-content {
         padding: 1rem; }
         @media (min-width: 1025px) {
-          main .object-teaser .teaser-box .teaser-content {
+          main .object-teaser .teaser-box .teaser-content, main .user-teaser .teaser-box .teaser-content {
             flex-basis: 70%;
-            width: 70%; } }
+            width: 70%;
+            padding: 2rem; } }
         @media (min-width: 1400px) {
-          main .object-teaser .teaser-box .teaser-content {
+          main .object-teaser .teaser-box .teaser-content, main .user-teaser .teaser-box .teaser-content {
             padding: 3rem;
             flex-basis: 65%;
             width: 65%; } }
-        main .object-teaser .teaser-box .teaser-content span {
+        main .object-teaser .teaser-box .teaser-content span, main .user-teaser .teaser-box .teaser-content span {
           display: block; }
-          main .object-teaser .teaser-box .teaser-content span.heading {
+          main .object-teaser .teaser-box .teaser-content span.heading, main .user-teaser .teaser-box .teaser-content span.heading {
             color: #0074e1;
             font-size: 1.75rem;
-            font-weight: 700; }
-          main .object-teaser .teaser-box .teaser-content span.time {
+            font-weight: 700;
+            word-break: break-word; }
+          main .object-teaser .teaser-box .teaser-content span.time, main .user-teaser .teaser-box .teaser-content span.time {
             font-size: 0.9375rem;
             color: #b2afaa; }
-          main .object-teaser .teaser-box .teaser-content span.desc {
+          main .object-teaser .teaser-box .teaser-content span.desc, main .user-teaser .teaser-box .teaser-content span.desc {
             margin: 1.5rem 0; }
             @media (min-width: 1025px) {
-              main .object-teaser .teaser-box .teaser-content span.desc {
+              main .object-teaser .teaser-box .teaser-content span.desc, main .user-teaser .teaser-box .teaser-content span.desc {
                 margin: 2.3rem 0; } }
-        main .object-teaser .teaser-box .teaser-content .object-infos {
+        main .object-teaser .teaser-box .teaser-content .infoBox, main .user-teaser .teaser-box .teaser-content .infoBox {
           display: flex;
-          justify-content: space-between;
           margin-bottom: 1.5rem; }
-          main .object-teaser .teaser-box .teaser-content .object-infos > span {
-            width: 25%;
-            flex-basis: 25%; }
-            main .object-teaser .teaser-box .teaser-content .object-infos > span small {
+          main .object-teaser .teaser-box .teaser-content .infoBox > span, main .user-teaser .teaser-box .teaser-content .infoBox > span {
+            width: 40%;
+            flex-basis: 40%;
+            margin-right: 10%; }
+            main .object-teaser .teaser-box .teaser-content .infoBox > span:nth-child(2n + 2), main .user-teaser .teaser-box .teaser-content .infoBox > span:nth-child(2n + 2) {
+              margin-right: 0; }
+            @media (min-width: 1200px) {
+              main .object-teaser .teaser-box .teaser-content .infoBox > span, main .user-teaser .teaser-box .teaser-content .infoBox > span {
+                width: 25%;
+                flex-basis: 25%;
+                margin-right: 12.5%; }
+                main .object-teaser .teaser-box .teaser-content .infoBox > span:nth-child(2n + 2), main .user-teaser .teaser-box .teaser-content .infoBox > span:nth-child(2n + 2) {
+                  margin-right: auto; }
+                main .object-teaser .teaser-box .teaser-content .infoBox > span:last-child, main .user-teaser .teaser-box .teaser-content .infoBox > span:last-child {
+                  margin-right: 0; } }
+            main .object-teaser .teaser-box .teaser-content .infoBox > span small, main .user-teaser .teaser-box .teaser-content .infoBox > span small {
               display: block;
               color: #1c9ce5;
               border-bottom: 1px solid #a5d8f5;
               padding-bottom: 10px;
               margin-bottom: 10px; }
-            main .object-teaser .teaser-box .teaser-content .object-infos > span span {
+            main .object-teaser .teaser-box .teaser-content .infoBox > span span, main .user-teaser .teaser-box .teaser-content .infoBox > span span {
               font-weight: 700;
               font-size: 1.375rem; }
-        main .object-teaser .teaser-box .teaser-content .btn:before {
+        main .object-teaser .teaser-box .teaser-content .btn:before, main .user-teaser .teaser-box .teaser-content .btn:before {
           font-family: "Font Awesome 5 Free", sans-serif;
           position: relative;
           top: 1px;
@@ -5793,35 +5856,35 @@ main {
           order: 4; } }
       main .procedure .procedure-ctn .tab.sixth:after {
         display: none; }
-  main .all-objects .object-teaser aside.filter-ctn {
+  main .all-objects .object-teaser aside.filter-ctn, main .all-objects .user-teaser aside.filter-ctn, main .all-users .object-teaser aside.filter-ctn, main .all-users .user-teaser aside.filter-ctn {
     padding-left: 1.875rem; }
-    main .all-objects .object-teaser aside.filter-ctn .main-heading {
+    main .all-objects .object-teaser aside.filter-ctn .main-heading, main .all-objects .user-teaser aside.filter-ctn .main-heading, main .all-users .object-teaser aside.filter-ctn .main-heading, main .all-users .user-teaser aside.filter-ctn .main-heading {
       display: block;
       font-weight: 700;
       font-size: 1.375rem;
       margin-bottom: 2rem;
       color: #1c9ce5; }
-      main .all-objects .object-teaser aside.filter-ctn .main-heading i {
+      main .all-objects .object-teaser aside.filter-ctn .main-heading i, main .all-objects .user-teaser aside.filter-ctn .main-heading i, main .all-users .object-teaser aside.filter-ctn .main-heading i, main .all-users .user-teaser aside.filter-ctn .main-heading i {
         font-size: 1.1875rem; }
-      main .all-objects .object-teaser aside.filter-ctn .main-heading:after {
+      main .all-objects .object-teaser aside.filter-ctn .main-heading:after, main .all-objects .user-teaser aside.filter-ctn .main-heading:after, main .all-users .object-teaser aside.filter-ctn .main-heading:after, main .all-users .user-teaser aside.filter-ctn .main-heading:after {
         height: 1px;
         content: '';
         display: block;
         background: #bce2f7;
         width: 40%;
         margin-top: 20px; }
-    main .all-objects .object-teaser aside.filter-ctn .filter {
+    main .all-objects .object-teaser aside.filter-ctn .filter, main .all-objects .user-teaser aside.filter-ctn .filter, main .all-users .object-teaser aside.filter-ctn .filter, main .all-users .user-teaser aside.filter-ctn .filter {
       margin-bottom: 1.5625rem;
       display: flex;
       align-items: center;
       position: relative; }
-      main .all-objects .object-teaser aside.filter-ctn .filter span.heading {
+      main .all-objects .object-teaser aside.filter-ctn .filter span.heading, main .all-objects .user-teaser aside.filter-ctn .filter span.heading, main .all-users .object-teaser aside.filter-ctn .filter span.heading, main .all-users .user-teaser aside.filter-ctn .filter span.heading {
         font-weight: 700;
         flex-basis: 40%;
         width: 40%;
         font-size: 1rem;
         margin-bottom: 0; }
-      main .all-objects .object-teaser aside.filter-ctn .filter input {
+      main .all-objects .object-teaser aside.filter-ctn .filter input, main .all-objects .user-teaser aside.filter-ctn .filter input, main .all-users .object-teaser aside.filter-ctn .filter input, main .all-users .user-teaser aside.filter-ctn .filter input {
         flex-basis: 60%;
         width: 60%;
         padding: .7rem;
@@ -5829,13 +5892,13 @@ main {
         border: 1px solid #a5d8f5;
         border-radius: 15px;
         font-size: 14px; }
-      main .all-objects .object-teaser aside.filter-ctn .filter .min-max {
+      main .all-objects .object-teaser aside.filter-ctn .filter .min-max, main .all-objects .user-teaser aside.filter-ctn .filter .min-max, main .all-users .object-teaser aside.filter-ctn .filter .min-max, main .all-users .user-teaser aside.filter-ctn .filter .min-max {
         position: absolute;
         right: 0;
         top: 0;
         bottom: 0;
         display: flex; }
-        main .all-objects .object-teaser aside.filter-ctn .filter .min-max span {
+        main .all-objects .object-teaser aside.filter-ctn .filter .min-max span, main .all-objects .user-teaser aside.filter-ctn .filter .min-max span, main .all-users .object-teaser aside.filter-ctn .filter .min-max span, main .all-users .user-teaser aside.filter-ctn .filter .min-max span {
           color: #98d2f3;
           padding: 0 .4rem;
           display: flex;
@@ -5844,15 +5907,36 @@ main {
           height: 100%;
           transition: .3s;
           cursor: pointer; }
-          main .all-objects .object-teaser aside.filter-ctn .filter .min-max span:hover, main .all-objects .object-teaser aside.filter-ctn .filter .min-max span.active {
+          main .all-objects .object-teaser aside.filter-ctn .filter .min-max span:hover, main .all-objects .object-teaser aside.filter-ctn .filter .min-max span.active, main .all-objects .user-teaser aside.filter-ctn .filter .min-max span:hover, main .all-objects .user-teaser aside.filter-ctn .filter .min-max span.active, main .all-users .object-teaser aside.filter-ctn .filter .min-max span:hover, main .all-users .object-teaser aside.filter-ctn .filter .min-max span.active, main .all-users .user-teaser aside.filter-ctn .filter .min-max span:hover, main .all-users .user-teaser aside.filter-ctn .filter .min-max span.active {
             color: #fff;
             background: #78c4ef; }
-          main .all-objects .object-teaser aside.filter-ctn .filter .min-max span.min {
+          main .all-objects .object-teaser aside.filter-ctn .filter .min-max span.min, main .all-objects .user-teaser aside.filter-ctn .filter .min-max span.min, main .all-users .object-teaser aside.filter-ctn .filter .min-max span.min, main .all-users .user-teaser aside.filter-ctn .filter .min-max span.min {
             border-top-left-radius: 15px;
             border-bottom-left-radius: 15px; }
-          main .all-objects .object-teaser aside.filter-ctn .filter .min-max span.max {
+          main .all-objects .object-teaser aside.filter-ctn .filter .min-max span.max, main .all-objects .user-teaser aside.filter-ctn .filter .min-max span.max, main .all-users .object-teaser aside.filter-ctn .filter .min-max span.max, main .all-users .user-teaser aside.filter-ctn .filter .min-max span.max {
             border-top-right-radius: 15px;
             border-bottom-right-radius: 15px; }
+  main .all-users .user-teaser aside.filter-ctn .filter {
+    position: relative; }
+    main .all-users .user-teaser aside.filter-ctn .filter select {
+      flex-basis: 60%;
+      width: 60%;
+      padding: .7rem 1.3rem;
+      outline: none;
+      border: none;
+      border-radius: 15px;
+      font-size: 14px;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); }
+    main .all-users .user-teaser aside.filter-ctn .filter:after {
+      font-family: "Font Awesome 5 Free", sans-serif;
+      content: '\f13a';
+      color: #a5d8f5;
+      position: absolute;
+      right: 15px;
+      font-size: 13px; }
   main .big-tab {
     border-radius: 25px;
     display: block;
@@ -5906,121 +5990,141 @@ main {
           main .form-area form.default input[type=submit] {
             margin-top: 2rem; } }
     main .form-area .side-info {
-      border-bottom: 1px solid #a5d8f5;
       margin-top: 2rem;
       height: 100%;
       padding: 2rem 0; }
+      main .form-area .side-info.bd-right {
+        border-bottom: 1px solid #a5d8f5; }
+      main .form-area .side-info.bd-left {
+        border-top: 1px solid #a5d8f5; }
       @media (min-width: 850px) {
         main .form-area .side-info {
           padding: 2rem;
           margin-top: 0;
-          border-bottom: 0; }
+          padding-top: 0; }
           main .form-area .side-info.bd-right {
-            border-right: 1px solid #a5d8f5; }
+            border-right: 1px solid #a5d8f5;
+            border-bottom: 0; }
           main .form-area .side-info.bd-left {
-            border-left: 1px solid #a5d8f5; } }
+            border-left: 1px solid #a5d8f5;
+            border-top: 0; } }
   main .obj-ctn, main .edit-profile-app {
     color: black; }
-    main .obj-ctn form.default .image-ctn label, main .edit-profile-app form.default .image-ctn label {
-      background: transparent;
-      position: static;
-      width: auto;
-      cursor: pointer; }
-      main .obj-ctn form.default .image-ctn label .icon, main .edit-profile-app form.default .image-ctn label .icon {
-        position: absolute;
-        display: block;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 40px;
-        background: #febc48;
-        color: #fff;
-        border-bottom-left-radius: 25px;
-        border-top-left-radius: 25px;
-        display: flex;
-        justify-content: center;
-        align-items: center; }
-      main .obj-ctn form.default .image-ctn label span.img-placeholder, main .edit-profile-app form.default .image-ctn label span.img-placeholder {
-        border: none;
-        border-radius: 25px;
-        padding: .7rem;
-        color: #312f2c;
-        font-size: 0.875rem;
-        outline: none;
-        display: block;
-        border: 1px solid transparent;
-        background: #fff;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
-        width: 100%;
-        padding-left: 50px;
-        transition: .3s; }
-        @media (min-width: 1025px) {
-          main .obj-ctn form.default .image-ctn label span.img-placeholder, main .edit-profile-app form.default .image-ctn label span.img-placeholder {
-            font-size: 0.9375rem; } }
-        main .obj-ctn form.default .image-ctn label span.img-placeholder .opt, main .edit-profile-app form.default .image-ctn label span.img-placeholder .opt {
-          font-size: 0.875rem;
-          padding-left: 0.375rem;
-          color: #a5d8f5; }
-          @media (min-width: 1025px) {
-            main .obj-ctn form.default .image-ctn label span.img-placeholder .opt, main .edit-profile-app form.default .image-ctn label span.img-placeholder .opt {
-              font-size: 0.9375rem; } }
-        main .obj-ctn form.default .image-ctn label span.img-placeholder .img-btn, main .edit-profile-app form.default .image-ctn label span.img-placeholder .img-btn {
-          transition: .3s;
-          background: #fed894;
-          border-radius: 25px;
-          display: inline-block;
-          padding: .3rem 1rem;
-          color: #fff; }
-        main .obj-ctn form.default .image-ctn label span.img-placeholder i, main .edit-profile-app form.default .image-ctn label span.img-placeholder i {
-          color: #fff;
-          font-size: 0.75rem; }
-        main .obj-ctn form.default .image-ctn label span.img-placeholder .file-item, main .edit-profile-app form.default .image-ctn label span.img-placeholder .file-item {
+    main .obj-ctn form.default, main .edit-profile-app form.default {
+      margin-top: 0; }
+      main .obj-ctn form.default .image-ctn label, main .edit-profile-app form.default .image-ctn label {
+        background: transparent;
+        position: static;
+        width: auto;
+        cursor: pointer; }
+        main .obj-ctn form.default .image-ctn label .icon-ctn, main .edit-profile-app form.default .image-ctn label .icon-ctn {
+          position: absolute;
           display: block;
-          color: #78c4ef; }
-          main .obj-ctn form.default .image-ctn label span.img-placeholder .file-item:nth-child(2), main .edit-profile-app form.default .image-ctn label span.img-placeholder .file-item:nth-child(2) {
-            margin-top: .7rem; }
-          main .obj-ctn form.default .image-ctn label span.img-placeholder .file-item .fa-file-image, main .edit-profile-app form.default .image-ctn label span.img-placeholder .file-item .fa-file-image {
-            color: #1c9ce5;
-            padding-right: 5px; }
-      main .obj-ctn form.default .image-ctn label span:hover, main .edit-profile-app form.default .image-ctn label span:hover {
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.15); }
-        main .obj-ctn form.default .image-ctn label span:hover .img-btn, main .edit-profile-app form.default .image-ctn label span:hover .img-btn {
-          background: #fec561; }
-    main .obj-ctn form.default .image-ctn input[type="file"], main .edit-profile-app form.default .image-ctn input[type="file"] {
-      display: none; }
-    main .obj-ctn form.default .addressMenu, main .edit-profile-app form.default .addressMenu {
-      position: absolute;
-      border-radius: 1.5625rem;
-      top: 100%;
-      width: 100%;
-      background: #f2f2f2;
-      z-index: 99;
-      padding: 1rem; }
-      main .obj-ctn form.default .addressMenu > div, main .edit-profile-app form.default .addressMenu > div {
-        text-align: center; }
-        main .obj-ctn form.default .addressMenu > div i, main .edit-profile-app form.default .addressMenu > div i {
-          font-size: 1.875rem;
-          animation: spinIt 1s infinite;
-          animation-timing-function: linear; }
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 40px;
+          background: #febc48;
+          color: #fff;
+          border-bottom-left-radius: 25px;
+          border-top-left-radius: 25px;
+          display: flex;
+          justify-content: center;
+          align-items: center; }
+          main .obj-ctn form.default .image-ctn label .icon-ctn span:hover, main .edit-profile-app form.default .image-ctn label .icon-ctn span:hover {
+            box-shadow: none; }
+          @media (min-width: 680px) {
+            main .obj-ctn form.default .image-ctn label .icon-ctn, main .edit-profile-app form.default .image-ctn label .icon-ctn {
+              justify-content: flex-start;
+              width: 10.625rem; } }
+        main .obj-ctn form.default .image-ctn label span.img-placeholder, main .edit-profile-app form.default .image-ctn label span.img-placeholder {
+          border: none;
+          border-radius: 25px;
+          padding: .7rem;
+          color: #312f2c;
+          font-size: 0.875rem;
+          outline: none;
+          display: block;
+          border: 1px solid transparent;
+          background: #fff;
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+          width: 100%;
+          padding-left: 50px;
+          transition: .3s; }
+          @media (min-width: 680px) {
+            main .obj-ctn form.default .image-ctn label span.img-placeholder, main .edit-profile-app form.default .image-ctn label span.img-placeholder {
+              margin-left: 10.625rem;
+              padding-left: 0.9375rem;
+              width: calc(100% - 170px);
+              border-top-left-radius: 0;
+              border-bottom-left-radius: 0; } }
+          @media (min-width: 1025px) {
+            main .obj-ctn form.default .image-ctn label span.img-placeholder, main .edit-profile-app form.default .image-ctn label span.img-placeholder {
+              font-size: 0.9375rem; } }
+          main .obj-ctn form.default .image-ctn label span.img-placeholder .opt, main .edit-profile-app form.default .image-ctn label span.img-placeholder .opt {
+            font-size: 0.875rem;
+            padding-left: 0.375rem;
+            color: #a5d8f5; }
+            @media (min-width: 1025px) {
+              main .obj-ctn form.default .image-ctn label span.img-placeholder .opt, main .edit-profile-app form.default .image-ctn label span.img-placeholder .opt {
+                font-size: 0.9375rem; } }
+          main .obj-ctn form.default .image-ctn label span.img-placeholder .img-btn, main .edit-profile-app form.default .image-ctn label span.img-placeholder .img-btn {
+            transition: .3s;
+            background: #fed894;
+            border-radius: 25px;
+            display: inline-block;
+            padding: .3rem 1rem;
+            color: #fff; }
+          main .obj-ctn form.default .image-ctn label span.img-placeholder i, main .edit-profile-app form.default .image-ctn label span.img-placeholder i {
+            color: #fff;
+            font-size: 0.75rem; }
+          main .obj-ctn form.default .image-ctn label span.img-placeholder .file-item, main .edit-profile-app form.default .image-ctn label span.img-placeholder .file-item {
+            display: block;
+            color: #78c4ef; }
+            main .obj-ctn form.default .image-ctn label span.img-placeholder .file-item:nth-child(2), main .edit-profile-app form.default .image-ctn label span.img-placeholder .file-item:nth-child(2) {
+              margin-top: .7rem; }
+            main .obj-ctn form.default .image-ctn label span.img-placeholder .file-item .fa-file-image, main .edit-profile-app form.default .image-ctn label span.img-placeholder .file-item .fa-file-image {
+              color: #1c9ce5;
+              padding-right: 5px; }
+        main .obj-ctn form.default .image-ctn label span:hover, main .edit-profile-app form.default .image-ctn label span:hover {
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.15); }
+          main .obj-ctn form.default .image-ctn label span:hover .img-btn, main .edit-profile-app form.default .image-ctn label span:hover .img-btn {
+            background: #fec561; }
+      main .obj-ctn form.default .image-ctn input[type="file"], main .edit-profile-app form.default .image-ctn input[type="file"] {
+        display: none; }
+      main .obj-ctn form.default .addressMenu, main .edit-profile-app form.default .addressMenu {
+        position: absolute;
+        border-radius: 1.5625rem;
+        top: 100%;
+        width: 100%;
+        background: #f2f2f2;
+        z-index: 99;
+        padding: 1rem; }
+        main .obj-ctn form.default .addressMenu > div, main .edit-profile-app form.default .addressMenu > div {
+          text-align: center; }
+          main .obj-ctn form.default .addressMenu > div i, main .edit-profile-app form.default .addressMenu > div i {
+            font-size: 1.875rem;
+            animation: spinIt 1s infinite;
+            animation-timing-function: linear; }
 
 @keyframes spinIt {
   from {
     transform: rotate(0); }
   to {
     transform: rotate(360deg); } }
-      main .obj-ctn form.default .addressMenu a, main .edit-profile-app form.default .addressMenu a {
-        padding: .5rem .8rem;
-        border-radius: 1.5625rem;
-        display: block;
-        text-decoration: none;
-        color: #312f2c;
-        cursor: pointer; }
-        main .obj-ctn form.default .addressMenu a:first-child, main .edit-profile-app form.default .addressMenu a:first-child {
-          background: #1c9ce5;
-          color: #fff; }
-        main .obj-ctn form.default .addressMenu a:hover, main .edit-profile-app form.default .addressMenu a:hover {
-          background: #1c9ce5;
-          color: #fff; }
+        main .obj-ctn form.default .addressMenu a, main .edit-profile-app form.default .addressMenu a {
+          padding: .5rem .8rem;
+          border-radius: 1.5625rem;
+          display: block;
+          text-decoration: none;
+          color: #312f2c;
+          cursor: pointer; }
+          main .obj-ctn form.default .addressMenu a:first-child, main .edit-profile-app form.default .addressMenu a:first-child {
+            background: #1c9ce5;
+            color: #fff; }
+          main .obj-ctn form.default .addressMenu a:hover, main .edit-profile-app form.default .addressMenu a:hover {
+            background: #1c9ce5;
+            color: #fff; }
     main .obj-ctn button i, main .edit-profile-app button i {
       padding-right: 0.3125rem; }
   main .object-container .obj-slider-app {
@@ -6059,11 +6163,16 @@ main {
         flex-wrap: wrap;
         position: relative;
         transition: .3s; }
+        main .object-container .obj-slider-app .obj-slider-thumblist .obj-inner-ctn.center {
+          justify-content: center;
+          width: auto; }
       main .object-container .obj-slider-app .obj-slider-thumblist .obj-slider-thumb {
         margin-right: 10px;
         cursor: pointer;
         width: 9.375rem;
         overflow: hidden; }
+        main .object-container .obj-slider-app .obj-slider-thumblist .obj-slider-thumb .thumb-img::selection {
+          background: transparent; }
       main .object-container .obj-slider-app .obj-slider-thumblist .obj-slider-arrows {
         position: absolute;
         width: 100%;
@@ -6141,8 +6250,9 @@ main {
             color: #f79e02; }
         main .object-container .object-details .more-info .data-box i {
           display: flex;
-          width: 50%;
-          flex-basis: 50%;
+          width: 40%;
+          flex-basis: 40%;
+          margin-right: 5px;
           justify-content: center;
           align-items: center;
           color: #1c9ce5;
@@ -6151,7 +6261,8 @@ main {
           display: block; }
           main .object-container .object-details .more-info .data-box .data-info span.data-name {
             font-size: 0.875rem;
-            color: #b2afaa; }
+            color: #b2afaa;
+            margin-bottom: 5px; }
           main .object-container .object-details .more-info .data-box .data-info span.data-value {
             font-weight: 700;
             font-size: 1.5rem; }
@@ -6170,10 +6281,10 @@ main {
     main .message-ctn .user-preview.active, main .message-ctn .user-preview:hover {
       border-bottom: 4px solid #1c9ce5; }
     main .message-ctn .user-preview img {
-      width: 40%;
-      flex-basis: 40%;
-      height: auto;
-      border-radius: 25px; }
+      width: 4.0625rem;
+      height: 4.0625rem;
+      border-radius: 50%;
+      object-fit: cover; }
     main .message-ctn .user-preview .userInitial {
       background: #1c9ce5;
       width: 4.0625rem;
@@ -6328,12 +6439,17 @@ main {
   display: block;
   width: 100%;
   height: auto;
-  padding-top: 3.75rem;
   opacity: .3;
-  pointer-events: none; }
+  pointer-events: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: -1; }
   @media (min-width: 1025px) {
     .footer-img {
-      padding-top: 6.25rem; } }
+      width: 70%;
+      margin: 0 auto; } }
 
 footer {
   background: #0074e1;
@@ -6437,12 +6553,9 @@ footer {
       box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
       position: relative; }
       .user-datas aside.whiteBox .name-image .profilepic-img-ctn img {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 100%;
-        height: auto; }
+        object-fit: cover;
+        height: 100%;
+        width: 100%; }
     .user-datas aside.whiteBox .name-image .name {
       font-size: 1.375rem;
       font-weight: 600;
@@ -6481,6 +6594,46 @@ footer {
 
 .user-datas .big-tab .heading {
   margin-bottom: 0; }
+
+.user-datas .userInfoArea span.headline {
+  font-size: 17px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 20px;
+  color: #1c9ce5;
+  text-transform: uppercase; }
+
+.user-datas .userInfoArea .data-box {
+  display: flex;
+  align-items: center;
+  padding: 2rem 1.5rem;
+  border-bottom: 4px solid #1c9ce5;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+  border-radius: 0.9375rem;
+  background: #fff; }
+  .user-datas .userInfoArea .data-box.secondary {
+    border-bottom: 4px solid #f79e02; }
+    .user-datas .userInfoArea .data-box.secondary i {
+      color: #f79e02; }
+  .user-datas .userInfoArea .data-box i {
+    display: flex;
+    width: 40%;
+    flex-basis: 40%;
+    margin-right: 0.625rem;
+    justify-content: center;
+    align-items: center;
+    color: #1c9ce5;
+    font-size: 2.5rem; }
+  .user-datas .userInfoArea .data-box .data-info span {
+    display: block; }
+    .user-datas .userInfoArea .data-box .data-info span.data-name {
+      font-size: 0.875rem;
+      color: #b2afaa;
+      margin-bottom: 0.3125rem; }
+    .user-datas .userInfoArea .data-box .data-info span.data-value {
+      font-weight: 700;
+      font-size: 1.5rem; }
 
 .user-datas .userInfoArea .whiteBox {
   margin-bottom: 2rem; }
@@ -6541,12 +6694,9 @@ footer {
         position: relative;
         transition: .3s; }
         .user-datas .userInfoArea .whiteBox .friendArea .friendBox .profilePic img {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
+          object-fit: cover;
           width: 100%;
-          height: auto; }
+          height: 100%; }
       .user-datas .userInfoArea .whiteBox .friendArea .friendBox:hover .profilePic {
         transform: scale(1.1); }
       .user-datas .userInfoArea .whiteBox .friendArea .friendBox:hover span.name {
@@ -6610,10 +6760,19 @@ footer {
       .user-datas .userInfoArea .whiteBox .user-object-list .user-object a.object-link:hover {
         color: #a5d8f5; }
 
+@media (min-width: 1025px) {
+  .friend-request-box {
+    display: flex;
+    justify-content: space-between; } }
+
 .friend-request-box .friendBox {
   border-bottom: 4px solid #1c9ce5;
   transition: .3s;
   position: relative; }
+  @media (min-width: 1025px) {
+    .friend-request-box .friendBox {
+      flex-basis: calc(50% - 10px);
+      width: calc(50% - 10px); } }
   .friend-request-box .friendBox:hover {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.18) !important; }
     .friend-request-box .friendBox:hover a .acronymProfilePic {
@@ -6622,7 +6781,20 @@ footer {
       color: #1c9ce5; }
   .friend-request-box .friendBox a {
     display: flex;
-    align-items: center; }
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: column; }
+    @media (min-width: 680px) {
+      .friend-request-box .friendBox a {
+        flex-direction: row; } }
+    .friend-request-box .friendBox a .profilePic {
+      width: 5.9375rem;
+      height: 5.9375rem; }
+      .friend-request-box .friendBox a .profilePic img {
+        border-radius: 50%;
+        object-fit: cover;
+        height: 100%;
+        width: 100%; }
     .friend-request-box .friendBox a .acronymProfilePic {
       width: 5.9375rem;
       height: 5.9375rem;
@@ -6636,25 +6808,41 @@ footer {
         font-size: 2.375rem; }
     .friend-request-box .friendBox a .name {
       color: #312f2c;
-      padding-left: 1.125rem;
       font-size: 1.1875rem;
-      transition: .3s; }
+      transition: .3s;
+      margin-top: 20px; }
+      @media (min-width: 680px) {
+        .friend-request-box .friendBox a .name {
+          margin-top: 0;
+          flex-basis: 79%;
+          padding-left: 1.125rem;
+          padding-right: 8.125rem; } }
   .friend-request-box .friendBox .friend-request-btn {
     color: #fff;
     padding: 10px 20px;
     border-radius: 20px;
-    position: absolute;
     transition: .3s; }
+    @media (min-width: 680px) {
+      .friend-request-box .friendBox .friend-request-btn {
+        position: absolute; } }
   .friend-request-box .friendBox .friend-request-confirm {
     background: #6de481;
     top: 1.25rem;
-    right: 1.25rem; }
+    right: 1.25rem;
+    margin-top: 1.25rem; }
+    @media (min-width: 680px) {
+      .friend-request-box .friendBox .friend-request-confirm {
+        margin-top: 0; } }
     .friend-request-box .friendBox .friend-request-confirm:hover {
       background: #42dc5c; }
   .friend-request-box .friendBox .friend-request-decline {
     background: #ff4d4d;
     bottom: 1.125rem;
-    right: 1.25rem; }
+    right: 1.25rem;
+    margin-top: 0.625rem; }
+    @media (min-width: 680px) {
+      .friend-request-box .friendBox .friend-request-decline {
+        margin-top: 0; } }
     .friend-request-box .friendBox .friend-request-decline:hover {
       background: #ff1a1a; }
 
