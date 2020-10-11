@@ -154,6 +154,25 @@
                         margin-top: .7rem;
                     }
                 }
+                .sub-navi {
+                    li a.friends {
+                        display: flex;
+                        span.friend-request-amount {
+                            margin-left: 10px;
+                            border-radius: 50%;
+                            background: $light;
+                            width: 16px;
+                            height: 16px;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            padding: 10px;
+                            font-size: 13px;
+                            color: $primary;
+                            margin-top: 4px;
+                        }
+                    }
+                }
                 @include breakpoint(m) {
                     display: flex;
                     padding-top: 1.3rem;
@@ -184,6 +203,7 @@
                             max-height: 0;
                             transition: .3s;
                             overflow: hidden;
+                        
                         }
                     }
                 }
@@ -242,6 +262,36 @@
                             margin-right: 4rem;
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+.footer-nav {
+    display: flex;
+    justify-content: space-around;
+    li {
+        list-style: none;
+        a {
+            text-decoration: none;
+            color: $light;
+            position: relative;
+            &:after {
+                content: '';
+                display: inline-block;
+                position: absolute;
+                height: 1px;
+                background: $light;
+                width: 0;
+                left: 0;
+                transition: .3s;
+                bottom: -4px;
+            }
+            &:hover {
+                background: transparent;
+                &:after {
+                    width: 100%;
                 }
             }
         }

@@ -177,8 +177,47 @@
         }
     }
     .big-tab {
+        padding: 1rem 0.5rem;
+        @include breakpoint(xs) {
+            padding: 1rem 1rem;
+        }
+        @include breakpoint(xl) {
+            padding: 1rem 1.5rem;
+        }
+        &.friendship-already-sent {
+            background: $lightprimary;
+            border: $lightprimary;
+            margin-bottom: 10px;
+            &:hover {
+                cursor: default;
+                cursor: not-allowed;
+                .heading {
+                    color: $light;
+                }
+            }
+            .heading {
+                font-size: 16px;
+            }
+        }
         .heading {
+            display: flex;
+            align-items: center;
             margin-bottom: 0;
+            &:not(i) {
+                font-size: 14px;
+                @include breakpoint(xs) {
+                    font-size: 18px;
+                }
+                @include breakpoint(sm) {
+                    font-size: 15px;
+                }
+                @include breakpoint(xl) {
+                    font-size: 18px;
+                }
+            }
+            i {
+                padding-right: 10px;
+            }
         }
     }
     // User App

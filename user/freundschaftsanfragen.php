@@ -37,7 +37,7 @@
                         $html_string .= '</a>';
                         
                         $html_string .= '<a href="'.$web->root.'/actions/confirm-friendship.php?i_am_user='.$user['p_id'].'&confirm_user='.$val['p_id'].'" class="friend-request-btn friend-request-confirm">Bestätigen</a>';
-                        $html_string .= '<a href="'.$web->root.'/actions/user.php" class="friend-request-btn friend-request-decline">Ablehnen</a>';
+                        $html_string .= '<a href="'.$web->root.'/actions/confirm-friendship.php?decline-friendship&i_am_user='.$user['p_id'].'&confirm_user='.$val['p_id'].'" class="friend-request-btn friend-request-decline">Ablehnen</a>';
                         $html_string .= '</div>';
                         
                         echo $html_string;

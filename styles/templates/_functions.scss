@@ -107,6 +107,9 @@ $separator: rem-separator($values);
 	&.middle {
 		align-items: center;
 	}
+	&.between {
+		justify-content: space-between;
+	}
 	.col {
 		padding: 0 rem($base-gap);
 		width: 100%;

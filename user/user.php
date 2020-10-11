@@ -73,13 +73,37 @@
                             $user['p_id'],
                             $own_user['p_id'],
                         ], true);
+
+                        $sql = "SELECT person.name, person.p_id FROM person, friendship_request WHERE friendship_request.send_p_id = ? AND friendship_request.rec_p_id = ?";
+                        $request_already_sent_rec = $db->prep_exec($sql, [
+                            $user['p_id'],
+                            $own_user['p_id']
+                        ], true);
+
+                        $sql = "SELECT person.name, person.p_id FROM person, friendship_request WHERE friendship_request.send_p_id = ? AND friendship_request.rec_p_id = ?";
+                        $request_already_sent_sender = $db->prep_exec($sql, [
+                            $own_user['p_id'],
+                            $user['p_id']
+                        ], true);
                         
-                        if(!$is_befriended){
+                        if(!$is_befriended && !$request_already_sent_rec && !$request_already_sent_sender){
                     ?>
                         <a href="<?php echo $web->root; ?>/actions/add-as-friend.php?i_am_user=<?php echo $own_user['p_id']; ?>&send_to_user=<?php echo $user['p_id']; ?>" title="<?php echo $meta['dashboard.php']['title']; ?>" class="new-object big-tab add-as-friend">
                             <span class="heading"><i class="fa fa-user-friends"></i> Als Freund anfragen</span>
                         </a>
                     <?php 
+                        } else if ($request_already_sent_rec) {
+                    ?>
+                        <a href="<?php echo $web->root ?>/actions/confirm-friendship.php?i_am_user=<?php echo $own_user['p_id']; ?>&confirm_user=<?php echo $user['p_id']; ?>" class="new-object big-tab add-as-friend">
+                            <span class="heading"><i class="fa fa-user-friends"></i> Freunschaftsanfrage bestätigen</span>
+                        </a>
+                    <?php                            
+                        } else if ($request_already_sent_sender) {
+                    ?>
+                        <span href="<?php echo $web->root ?>/actions/confirm-friendship.php?i_am_user=<?php echo $own_user['p_id']; ?>&confirm_user=<?php echo $user['p_id']; ?>" class="big-tab friendship-already-sent">
+                            <span class="heading">Freundschaftsanfrage bereits versendet</span>
+                        </span>
+                    <?php
                         }
                     ?>
                     <a href="<?php echo $web->root; ?>/user/nachrichten-center.php?user_by_id=<?php echo $user['p_id']; ?>" class="new-object big-tab secondary-tab">
@@ -164,44 +188,7 @@
                     </div>
                 </div>
                 <?php }?>
-                
-                <div class="whiteBox morePad">
-                    <div class="infoBox">
-                        <span class="greyTitle">Freunde</span>
-                    </div>
-                    <div class="friendArea">
-                        <?php 
-                            $sql = 'SELECT person.name, person.profilepic, person.p_id,friendships.p1_id, friendships.p2_id FROM person INNER JOIN friendships ON person.p_id = friendships.p1_id OR person.p_id = friendships.p2_id WHERE p_id != '.$user['p_id'].' AND (friendships.p1_id = '.$user['p_id'].' OR friendships.p2_id = '.$user['p_id'].')';
-                            $friend_array = $db->get_this_all($sql);
 
-                            if ($friend_array) {
-                                foreach($friend_array as $key => $val) {
-                                    $html_string = '<a class="friendBox" title="Auf das Profil von '.$val['name'].' wechseln" href="'.$web->root.'/user/user.php?id='.$val['p_id'].'">';
-                                    
-                                    if(strlen($val['profilepic']) == 0) {
-                                        
-                                        $html_string .= '<div class="acronymProfilePic" style="background-color: '.$web->random_hex_color().'">';
-                                        $html_string .= '<span class="acronym">'.$web->create_acronym($val['name']).'</span>';
-                                        $html_string .= '</div>';
-                                        
-                                    } else {
-                                        $html_string .= '<div class="profilePic">';
-                                                $html_string .= $web->get_upl_img($val['profilepic'], $val['name'], 'profile-pic-img');
-                                        $html_string .= '</div>';
-                                    }
-                                    
-                                    $html_string .= '<span class="name">'.$val['name'].'</span>';
-                                    
-                                    $html_string .= '</a>';
-                                    
-                                    echo $html_string;
-                                }
-                            } else {
-                                echo '<span class="info">Der User hat bisher noch keine Freunde. </span>';
-                            }
-                        ?>
-                    </div>
-                </div>
                 <div class="row">
                     <?php 
                         $data_array = [
@@ -244,6 +231,44 @@
                             }
                         }
                     ?>
+                </div>
+                
+                <div class="whiteBox morePad">
+                    <div class="infoBox">
+                        <span class="greyTitle">Freunde</span>
+                    </div>
+                    <div class="friendArea">
+                        <?php 
+                            $sql = 'SELECT person.name, person.profilepic, person.p_id,friendships.p1_id, friendships.p2_id FROM person INNER JOIN friendships ON person.p_id = friendships.p1_id OR person.p_id = friendships.p2_id WHERE p_id != '.$user['p_id'].' AND (friendships.p1_id = '.$user['p_id'].' OR friendships.p2_id = '.$user['p_id'].')';
+                            $friend_array = $db->get_this_all($sql);
+
+                            if ($friend_array) {
+                                foreach($friend_array as $key => $val) {
+                                    $html_string = '<a class="friendBox" title="Auf das Profil von '.$val['name'].' wechseln" href="'.$web->root.'/user/user.php?id='.$val['p_id'].'">';
+                                    
+                                    if(strlen($val['profilepic']) == 0) {
+                                        
+                                        $html_string .= '<div class="acronymProfilePic" style="background-color: '.$web->random_hex_color().'">';
+                                        $html_string .= '<span class="acronym">'.$web->create_acronym($val['name']).'</span>';
+                                        $html_string .= '</div>';
+                                        
+                                    } else {
+                                        $html_string .= '<div class="profilePic">';
+                                                $html_string .= $web->get_upl_img($val['profilepic'], $val['name'], 'profile-pic-img');
+                                        $html_string .= '</div>';
+                                    }
+                                    
+                                    $html_string .= '<span class="name">'.$val['name'].'</span>';
+                                    
+                                    $html_string .= '</a>';
+                                    
+                                    echo $html_string;
+                                }
+                            } else {
+                                echo '<span class="info">Der User hat bisher noch keine Freunde. </span>';
+                            }
+                        ?>
+                    </div>
                 </div>
 
             </div>

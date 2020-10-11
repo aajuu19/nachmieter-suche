@@ -1208,4 +1208,23 @@ footer {
     background: $medium;
     padding: 5rem 0;
     position: relative;
+    .branding {
+        color: $light;
+        text-decoration: none;
+        font-weight: 900;
+        display: block;
+        font-size: rem(21px);
+        @include breakpoint(xs) {
+            font-size: rem(28px);
+        }
+        @include breakpoint(m) {
+            font-size: rem(30px);
+        }
+        .highlight {
+            color: $secondary;
+        }
+    }
+    .copyright {
+        color: $light;
+    }
 }

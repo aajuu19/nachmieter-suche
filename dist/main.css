@@ -11,6 +11,8 @@
     justify-content: center; }
   .row.middle {
     align-items: center; }
+  .row.between {
+    justify-content: space-between; }
   .row .col {
     padding: 0 1rem;
     width: 100%;
@@ -4953,6 +4955,21 @@
         .navi-ctn .head-ctn .navigation .user-panel .user-list > li {
           display: inline-block;
           margin-top: .7rem; }
+        .navi-ctn .head-ctn .navigation .user-panel .sub-navi li a.friends {
+          display: flex; }
+          .navi-ctn .head-ctn .navigation .user-panel .sub-navi li a.friends span.friend-request-amount {
+            margin-left: 10px;
+            border-radius: 50%;
+            background: #fff;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            font-size: 13px;
+            color: #1c9ce5;
+            margin-top: 4px; }
         @media (min-width: 1025px) {
           .navi-ctn .head-ctn .navigation .user-panel {
             display: flex;
@@ -5016,6 +5033,30 @@
       @media (min-width: 1400px) {
         .navi-ctn .head-ctn .navigation nav .navi li:not(:last-child) {
           margin-right: 4rem; } }
+
+.footer-nav {
+  display: flex;
+  justify-content: space-around; }
+  .footer-nav li {
+    list-style: none; }
+    .footer-nav li a {
+      text-decoration: none;
+      color: #fff;
+      position: relative; }
+      .footer-nav li a:after {
+        content: '';
+        display: inline-block;
+        position: absolute;
+        height: 1px;
+        background: #fff;
+        width: 0;
+        left: 0;
+        transition: .3s;
+        bottom: -4px; }
+      .footer-nav li a:hover {
+        background: transparent; }
+        .footer-nav li a:hover:after {
+          width: 100%; }
 
 * {
   padding: 0;
@@ -6455,6 +6496,22 @@ footer {
   background: #0074e1;
   padding: 5rem 0;
   position: relative; }
+  footer .branding {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 900;
+    display: block;
+    font-size: 1.3125rem; }
+    @media (min-width: 480px) {
+      footer .branding {
+        font-size: 1.75rem; } }
+    @media (min-width: 1025px) {
+      footer .branding {
+        font-size: 1.875rem; } }
+    footer .branding .highlight {
+      color: #f79e02; }
+  footer .copyright {
+    color: #fff; }
 
 .user-area .object-heading {
   margin-top: 2.5rem;
@@ -6592,8 +6649,42 @@ footer {
     font-weight: 600;
     font-size: 1.125rem; }
 
-.user-datas .big-tab .heading {
-  margin-bottom: 0; }
+.user-datas .big-tab {
+  padding: 1rem 0.5rem; }
+  @media (min-width: 480px) {
+    .user-datas .big-tab {
+      padding: 1rem 1rem; } }
+  @media (min-width: 1400px) {
+    .user-datas .big-tab {
+      padding: 1rem 1.5rem; } }
+  .user-datas .big-tab.friendship-already-sent {
+    background: #a5d8f5;
+    border: #a5d8f5;
+    margin-bottom: 10px; }
+    .user-datas .big-tab.friendship-already-sent:hover {
+      cursor: default;
+      cursor: not-allowed; }
+      .user-datas .big-tab.friendship-already-sent:hover .heading {
+        color: #fff; }
+    .user-datas .big-tab.friendship-already-sent .heading {
+      font-size: 16px; }
+  .user-datas .big-tab .heading {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0; }
+    .user-datas .big-tab .heading:not(i) {
+      font-size: 14px; }
+      @media (min-width: 480px) {
+        .user-datas .big-tab .heading:not(i) {
+          font-size: 18px; } }
+      @media (min-width: 850px) {
+        .user-datas .big-tab .heading:not(i) {
+          font-size: 15px; } }
+      @media (min-width: 1400px) {
+        .user-datas .big-tab .heading:not(i) {
+          font-size: 18px; } }
+    .user-datas .big-tab .heading i {
+      padding-right: 10px; }
 
 .user-datas .userInfoArea span.headline {
   font-size: 17px;

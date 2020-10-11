@@ -6,10 +6,12 @@
     // required entries
     $own_user = $_GET['i_am_user'];
     $foreign_user_id = $_GET['confirm_user'];
+    $decline_friendship = isset($_GET['decline-friendship']);
 
     $sql = "SELECT * FROM friendship_request WHERE send_p_id = ".$foreign_user_id;
     $is_request_sender = $db->get_this_one($sql);
-    if ($own_user == $user_id['p_id'] && $is_request_sender && $own_user != $foreign_user_id && isset($own_user) && isset($foreign_user_id)) {
+
+    if (!$decline_friendship && $own_user == $user_id['p_id'] && $is_request_sender && $own_user != $foreign_user_id && isset($own_user) && isset($foreign_user_id)) {
         
         $db->prep_exec(
             // sql statement here
@@ -32,9 +34,19 @@
         $success_message = rawurlencode('Du hast die Freunschaftsanfrage angenommen.');
         header('Location: '.$web->root.'/user/user.php?id='.$user_id['p_id'].'&bestaetigung='.$success_message);
         die;
+    } else if($decline_friendship && $own_user == $user_id['p_id'] && $is_request_sender && $own_user != $foreign_user_id && isset($own_user) && isset($foreign_user_id)) {
+        $db->prep_exec(
+            'DELETE FROM friendship_request WHERE send_p_id = ? AND rec_p_id = ?',
+            [
+                $foreign_user_id,
+                $own_user
+            ]
+        );
+        $success_message = rawurlencode('Du hast die Freundschaftsanfrage abgelehnt.');
+        header('Location: '.$web->root.'/user/user.php?id='.$user_id['p_id'].'&bestaetigung='.$success_message);
+        die;
     } else {
-        $error_message = rawurlencode('Du hast die Freundschaftsanfrage abgelehnt.');
+        $error_message = rawurlencode('Ups, etwas hat nicht funktioniert.');
         header('Location: '.$web->root.'/user/user.php?id='.$user_id['p_id'].'&error='.$error_message);
         die;
     }
-        

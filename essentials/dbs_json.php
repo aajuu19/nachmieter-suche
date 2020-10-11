@@ -196,6 +196,15 @@
         unset($data[0]['password']);
     }
 
+    if(isset($request_type['users_by_id'])) {
+        $s_p_ids = $request_type['users_by_id'];
+        $a_p_ids = explode("-", $s_p_ids);
+
+        foreach($a_p_ids as $val) {
+            $data[] = $db->prep_exec('SELECT person.name, person.profilepic, person.job, person.p_id, person.beschreibung FROM `person` WHERE p_id = ?', [$val], 'one');
+        }
+    }
+
     $db->close_connect();
 
     // create JSON from $data variable

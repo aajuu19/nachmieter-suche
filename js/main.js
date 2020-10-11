@@ -999,7 +999,8 @@ if (document.body.classList.contains('nachrichten-center')) {
             sentFromFlat: null,
             sentFromUser: null,
             sentParamsValid: false,
-            sentIsAlreadyinChats: false
+            sentIsAlreadyinChats: false,
+            activeUserIds: []
         },
         created: function () {
             // check if valid session exists
@@ -1154,8 +1155,9 @@ if (document.body.classList.contains('nachrichten-center')) {
                     },
                 })
                 .then((response) => response.json())
-                .then((data) => {
-                    this.chatList = Object.entries(data);
+                .then(async (data) => {
+
+                    this.activeUserIds = [];
 
                     //Comparing based on the property qty
                     function compare_time(a, b){
@@ -1171,27 +1173,54 @@ if (document.body.classList.contains('nachrichten-center')) {
                         }
                     }
 
-                    this.chatList.sort(compare_time);
+                    this.chatList = Object.entries(data).sort(compare_time);
 
-                    // sentUser muss hier geprüft werden ob bereits miteinander geschrieben wurde
-                    this.chatList.forEach(async (user) => {
-                        await fetch('./../essentials/dbs_json.php',
+                    // statt 4 Anfragen in einer foreach, in foreach alle p_ids speichern und in eine Anfrage zusammenfassen
+                    this.chatList.forEach((user) => {
+                        this.activeUserIds.push(user[0]);
+                    });
+
+                    console.log(this.activeUserIds);
+                    console.log(this.activeUserIds.join('-'));
+
+                    await fetch('./../essentials/dbs_json.php',
+                    {
+                        method: 'POST',
+                        body: `users_by_id=${this.activeUserIds.join('-')}`,
+                        headers:
                         {
-                            method: 'POST',
-                            body: `user_by_id=${user[0]}`,
-                            headers:
-                            {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                        })
-                        .then((response) => response.json())
-                        .then((data) => {
-                            if (this.firstChat || !this.userList.some(e => e.p_id == data[0].p_id)) {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                    })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log(data);
+                        data.forEach((user) => {
+                            if (this.firstChat || !this.userList.some(e => e.p_id == user.p_id)) {
                                 // hier sortieren
-                                this.userList.push(data[0]);
+                                this.userList.push(user);
                             }
                         });
                     });
+
+                    // this.chatList.forEach(async (user) => {
+                    //     await fetch('./../essentials/dbs_json.php',
+                    //     {
+                    //         method: 'POST',
+                    //         body: `user_by_id=${user[0]}`,
+                    //         headers:
+                    //         {
+                    //             'Content-Type': 'application/x-www-form-urlencoded',
+                    //         },
+                    //     })
+                    //     .then((response) => response.json())
+                    //     .then((data) => {
+                    //         if (this.firstChat || !this.userList.some(e => e.p_id == data[0].p_id)) {
+                    //             // hier sortieren
+                    //             this.userList.push(data[0]);
+                    //         }
+                    //     });
+                    // });
                     
                     if (this.firstChat && this.sentParamsValid) {
                         this.userList.push(this.sentFromUser);

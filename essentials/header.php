@@ -39,7 +39,14 @@
                                                 <li><a href="<?php echo $web->root; ?>/user/user.php?id=<?php echo $_SESSION['person']['p_id']; ?>" title="<?php echo $meta['user.php']['title'] ?>">Mein Profil</a></li>
                                                 <li><a href="<?php echo $web->root; ?>/user/neues-objekt.php" title="<?php echo $meta['neues-objekt.php']['title'] ?>">Neues Objekt einfügen</a></li>
                                                 <li><a href="<?php echo $web->root; ?>/user/nachrichten-center.php" title="<?php echo $meta['nachrichten-center.php']['title'] ?>">Nachrichtencenter</a></li>
-                                                <li><a href="<?php echo $web->root; ?>/user/freundschaftsanfragen.php" title="<?php echo $meta['freundschaftsanfragen.php']['title'] ?>">Freundschaftsanfragen</a></li>
+                                                <li><a class="friends" href="<?php echo $web->root; ?>/user/freundschaftsanfragen.php" title="<?php echo $meta['freundschaftsanfragen.php']['title'] ?>">Freundschaftsanfragen <?php 
+                                                        $sql = "SELECT COUNT(*) FROM person, friendship_request WHERE friendship_request.rec_p_id = ".$_SESSION['person']['p_id']." AND person.p_id = friendship_request.send_p_id";
+                                                        $friendship_request_amount = $db->get_this_one($sql);
+                                                        $friendship_request_amount = $friendship_request_amount['COUNT(*)'];
+                                                        if ($friendship_request_amount >= 1) {
+                                                            echo '<span class="friend-request-amount">'.$friendship_request_amount.'</span>';
+                                                        }
+                                                    ?></a></li>
                                                 <li><a href="<?php echo $web->root; ?>/user/settings.php" title="<?php echo $meta['settings.php']['title'] ?>">Einstellungen</a></li>
                                                 <li><a href="<?php echo $web->root; ?>/logout.php" title="<?php echo $meta['logout.php']['title'] ?>">Abmelden</a></li>
                                             </ul>
