@@ -1100,7 +1100,6 @@ if (document.body.classList.contains('nachrichten-center')) {
             },
             updateChat: async function (isFirst) {
                 if (this.getUrlParameters('user_by_id') && this.getUrlParameters('flat_by_id')) {
-                    console.log('first');
                     await fetch('./../essentials/dbs_json.php',
                     {
                         method: 'POST',
@@ -1125,7 +1124,6 @@ if (document.body.classList.contains('nachrichten-center')) {
                         
                     });
                 } else if (this.getUrlParameters('user_by_id')){
-                    console.log('second');
                     await fetch('./../essentials/dbs_json.php',
                     {
                         method: 'POST',
@@ -1147,7 +1145,6 @@ if (document.body.classList.contains('nachrichten-center')) {
                         
                     });
                 }
-                console.log('third');
                 // get relevant chats
                 await fetch('./../essentials/dbs_json.php',
                 {
