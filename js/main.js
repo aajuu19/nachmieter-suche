@@ -175,7 +175,6 @@ const root = `${document.location.origin}/nachmieter-suche`;
                     },
                 }).then((data) => data.json());
                 fetched.then((data) => {
-                    console.log(data);
                     this.users = data;
                 })
                 .catch((err) => {
@@ -190,10 +189,8 @@ const root = `${document.location.origin}/nachmieter-suche`;
                     for (const i in fL) {
                         if (Object.prototype.hasOwnProperty.call(fL, i)) {
                             const filter = fL[i];
-                            console.log(filter);
                             if (filter.selectedVal) {
                                 paramStr += `${i}=${filter.selectedVal}&`;
-                                console.log(paramStr);
                             }
                         }
                     }
@@ -614,7 +611,6 @@ const root = `${document.location.origin}/nachmieter-suche`;
                     for (const i in fL) {
                         if (Object.prototype.hasOwnProperty.call(fL, i)) {
                             const filter = fL[i];
-                            console.log(filter);
                             const getMaxMin = function (){
                                 if (filter.min === true) {
                                     return 'min';
@@ -999,7 +995,7 @@ if (document.body.classList.contains('nachrichten-center')) {
             sentFromFlat: null,
             sentFromUser: null,
             sentParamsValid: false,
-            sentIsAlreadyinChats: false,
+            sentIsAlreadyInChats: false,
             activeUserIds: []
         },
         created: function () {
@@ -1038,7 +1034,11 @@ if (document.body.classList.contains('nachrichten-center')) {
                 const res = this.chatList.find((ele) => {
                     return ele[0] == userId;
                 });
-                return res[1];
+                if(res) {
+                    return res[1];
+                } else {
+                    return [];
+                }
             },
             handleUserClick: function(userId) {
                 this.activeChatWithUser = userId;
@@ -1048,12 +1048,13 @@ if (document.body.classList.contains('nachrichten-center')) {
                 this.activeChatWithUser = userId;
                 let newChatList = [];
                 if(this.sentParamsValid && isFirstChat) {
-                    if(this.sentIsAlreadyinChats) {
+                    if(this.sentIsAlreadyInChats) {
                         newChatList = this.getChatsWithUserId(this.activeChatWithUser);
                     }
                 } else {
                     newChatList = this.getChatsWithUserId(this.activeChatWithUser);
                 }
+
                 let isSameChatList = this.isSameArray(this.activeChatList, newChatList);
 
                 if(!isFirstChat) {
@@ -1099,6 +1100,7 @@ if (document.body.classList.contains('nachrichten-center')) {
             },
             updateChat: async function (isFirst) {
                 if (this.getUrlParameters('user_by_id') && this.getUrlParameters('flat_by_id')) {
+                    console.log('first');
                     await fetch('./../essentials/dbs_json.php',
                     {
                         method: 'POST',
@@ -1123,6 +1125,7 @@ if (document.body.classList.contains('nachrichten-center')) {
                         
                     });
                 } else if (this.getUrlParameters('user_by_id')){
+                    console.log('second');
                     await fetch('./../essentials/dbs_json.php',
                     {
                         method: 'POST',
@@ -1144,6 +1147,7 @@ if (document.body.classList.contains('nachrichten-center')) {
                         
                     });
                 }
+                console.log('third');
                 // get relevant chats
                 await fetch('./../essentials/dbs_json.php',
                 {
@@ -1175,13 +1179,9 @@ if (document.body.classList.contains('nachrichten-center')) {
 
                     this.chatList = Object.entries(data).sort(compare_time);
 
-                    // statt 4 Anfragen in einer foreach, in foreach alle p_ids speichern und in eine Anfrage zusammenfassen
                     this.chatList.forEach((user) => {
                         this.activeUserIds.push(user[0]);
                     });
-
-                    console.log(this.activeUserIds);
-                    console.log(this.activeUserIds.join('-'));
 
                     await fetch('./../essentials/dbs_json.php',
                     {
@@ -1194,55 +1194,39 @@ if (document.body.classList.contains('nachrichten-center')) {
                     })
                     .then((response) => response.json())
                     .then((data) => {
-                        console.log(data);
                         data.forEach((user) => {
                             if (this.firstChat || !this.userList.some(e => e.p_id == user.p_id)) {
-                                // hier sortieren
                                 this.userList.push(user);
                             }
                         });
+
+                        if (this.firstChat && this.sentParamsValid) {
+                            if (this.chatList.some(e => e[0] == this.sentFromUser.p_id)) {
+                                this.sentIsAlreadyInChats = true;
+                            }
+                            if (!this.sentIsAlreadyInChats) {
+                                this.userList.unshift(this.sentFromUser);
+                            }
+                        }
+                        
+                        
+                        if (this.firstChat && this.sentParamsValid && !this.sentIsAlreadyInChats) {
+                            this.chatList.unshift([this.sentFromUser.p_id.toString(), []]);
+                        }
+
+                        if (this.chatList.length > 0 && this.firstChat) {
+                            // set first chat as initial
+                            if(this.sentParamsValid) {
+                                this.changeActiveChat(this.sentFromUser.p_id, this.firstChat);
+                            } else {   
+                                this.changeActiveChat(this.chatList[0][0], this.firstChat);
+                            }
+                        } else if (!this.sentIsAlreadyInChats && this.sentFromUser && this.activeChatWithUser == this.sentFromUser.p_id) {
+                            this.changeActiveChat(this.sentFromUser.p_id);
+                        } else {
+                            this.changeActiveChat(this.activeChatWithUser);
+                        }
                     });
-
-                    // this.chatList.forEach(async (user) => {
-                    //     await fetch('./../essentials/dbs_json.php',
-                    //     {
-                    //         method: 'POST',
-                    //         body: `user_by_id=${user[0]}`,
-                    //         headers:
-                    //         {
-                    //             'Content-Type': 'application/x-www-form-urlencoded',
-                    //         },
-                    //     })
-                    //     .then((response) => response.json())
-                    //     .then((data) => {
-                    //         if (this.firstChat || !this.userList.some(e => e.p_id == data[0].p_id)) {
-                    //             // hier sortieren
-                    //             this.userList.push(data[0]);
-                    //         }
-                    //     });
-                    // });
-                    
-                    if (this.firstChat && this.sentParamsValid) {
-                        this.userList.push(this.sentFromUser);
-                        if (this.chatList.some(e => e[0] == this.sentFromUser.p_id)) {
-                            this.sentIsAlreadyinChats = true;
-                        }
-                    }
-
-                    if (this.firstChat && this.sentParamsValid && !this.sentIsAlreadyinChats) {
-                        this.chatList.unshift([this.sentFromUser.p_id.toString(), []]);
-                    }
-                    
-                    if (this.chatList.length > 0 && this.firstChat) {
-                        // set first chat as initial
-                        if(this.sentParamsValid) {
-                            this.changeActiveChat(this.sentFromUser.p_id, this.firstChat);
-                        } else {   
-                            this.changeActiveChat(this.chatList[0][0], this.firstChat);
-                        }
-                    } else {
-                        this.changeActiveChat(this.activeChatWithUser);
-                    }
 
                 });
                 if(isFirst) {
@@ -1272,7 +1256,6 @@ if (document.body.classList.contains('nachrichten-center')) {
                     },
                 }).then(res=>res.text())
                 .then(data=>{
-                    console.log(data);
                     // if data true
                     if (data == 1) {
                         this.updateChat();
