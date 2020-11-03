@@ -58,7 +58,7 @@
 							<div class="addressMenu" v-show="objAddressMenu.visible">
 								<div v-show="showLoader"><i class="fa fa-spinner"></i></div>
 								<div v-show="noPlace">Bitte versuche es mit einer anderen Postleitzahl</div>
-								<a @mousedown="setAddress(place)" tabindex="0" v-for="place in placeList">{{ place.plz }} {{ place.ort }}</a>
+								<a @mousedown="setAddress(place)" tabindex="0" v-for="place in placeList"><span class="placePlz">{{ place.plz }} {{ place.std }}</span> - <span class="placeOrt"> {{ place.ort }}</span></a>
 							</div>
 						</fieldset>
 

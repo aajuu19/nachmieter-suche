@@ -22,7 +22,16 @@
     $p_id = $user_id['p_id'];
     $next_o_id = $db->get_this_one("SELECT * FROM objekt ORDER BY o_id DESC LIMIT 1")['o_id'] + 1;
     $link = $web->format_link($name).'-'.$uniq_id.'.php';
-    $address_obj = $web->get_from_url('https://public.opendatasoft.com/api/records/1.0/search/?dataset=postleitzahlen-deutschland&q='.rawurlencode($adresse));
+    
+    $address = explode(' ', $adresse);
+    var_dump($address);
+    $address_json = json_decode(file_get_contents("../js/src/plz-ort-min.json"));
+    foreach($address_json as $key => $val) {
+        if($address[0] == $val->plz) {
+            $addressIsValid = true;
+            break;
+        }
+    }
     
     $image_files = $_FILES['obj-images'];
     $img_names = $image_files['name'];
@@ -56,7 +65,7 @@
         $image_7 = null;
     }
 
-    if($address_obj->records) {
+    if($addressIsValid) {
         // if record was found
         $db->prep_exec(
             // sql statement here

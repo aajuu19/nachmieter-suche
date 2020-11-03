@@ -5897,6 +5897,27 @@ main {
           order: 4; } }
       main .procedure .procedure-ctn .tab.sixth:after {
         display: none; }
+  main .all-objects .object-teaser .address-container, main .all-objects .user-teaser .address-container, main .all-users .object-teaser .address-container, main .all-users .user-teaser .address-container {
+    position: relative;
+    margin-bottom: 1.5625rem; }
+    main .all-objects .object-teaser .address-container .address-field, main .all-objects .user-teaser .address-container .address-field, main .all-users .object-teaser .address-container .address-field, main .all-users .user-teaser .address-container .address-field {
+      display: block;
+      width: 100%;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      border: none;
+      padding: .9rem 2.3rem;
+      border-radius: 25px;
+      padding-right: 13.125rem;
+      outline: none; }
+    main .all-objects .object-teaser .address-container .change-address-btn, main .all-objects .user-teaser .address-container .change-address-btn, main .all-users .object-teaser .address-container .change-address-btn, main .all-users .user-teaser .address-container .change-address-btn {
+      position: absolute;
+      right: 0;
+      top: 0;
+      display: flex; }
+      main .all-objects .object-teaser .address-container .change-address-btn i, main .all-objects .user-teaser .address-container .change-address-btn i, main .all-users .object-teaser .address-container .change-address-btn i, main .all-users .user-teaser .address-container .change-address-btn i {
+        position: relative;
+        top: 2px;
+        margin-right: 6px; }
   main .all-objects .object-teaser aside.filter-ctn, main .all-objects .user-teaser aside.filter-ctn, main .all-users .object-teaser aside.filter-ctn, main .all-users .user-teaser aside.filter-ctn {
     padding-left: 1.875rem; }
     main .all-objects .object-teaser aside.filter-ctn .main-heading, main .all-objects .user-teaser aside.filter-ctn .main-heading, main .all-users .object-teaser aside.filter-ctn .main-heading, main .all-users .user-teaser aside.filter-ctn .main-heading {
@@ -6320,7 +6341,7 @@ main {
     transition: .3s;
     cursor: pointer; }
     main .message-ctn .user-preview.active, main .message-ctn .user-preview:hover {
-      border-bottom: 4px solid #1c9ce5; }
+      border-bottom: 4px solid #f79e02; }
     main .message-ctn .user-preview img {
       width: 4.0625rem;
       height: 4.0625rem;

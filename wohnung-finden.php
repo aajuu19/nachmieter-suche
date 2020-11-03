@@ -6,6 +6,10 @@
 				<div class="object-teaser row">
 					
 					<div class="col s-8">
+						<div class="address-container">
+							<input class="address-field" v-model="lfAddress" type="text" placeholder="Stadt oder Postleitzahl">
+							<button class="change-address-btn btn" @click="changeAddress"><i class="fa fa-filter"></i>Übernehmen</button>
+						</div>
 						<object-item v-for="object in objects" :key="object.o_id" :object="object"></object-item>
 						<span class="error" v-if="errorMsg">Keine passenden Objekte gefunden, probier's mal mit anderen Filtereinstellungen.</span>
 					</div>

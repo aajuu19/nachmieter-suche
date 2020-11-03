@@ -61,14 +61,14 @@
         function sm_or_gr($str) {  
             $arr = explode('-', $str);
             if($arr[0] == 'min') {
-                return '>='.$arr[1].' AND ';
+                return ' >= '.$arr[1].' AND ';
             } else if($arr[0] == 'max') {
-                return '<='.$arr[1].' AND ';
+                return ' <= '.$arr[1].' AND ';
             } 
         }
 
         // build sql statement - be sure no sql injection can be made
-        $sql_stmt = 'SELECT * FROM `objekt` WHERE ';
+        $sql_stmt = 'SELECT * FROM objekt WHERE ';
 
         
         foreach($request_type as $key => $val) {
@@ -78,6 +78,15 @@
                 case 'kalt':
                 case 'etage':
                     $sql_stmt .= $key.sm_or_gr($val);
+                    break;
+                case 'address':
+                    $search_str = $val;
+
+                    // if($val >= 10115 || $val >= 14199) {
+                    //     $search_str = 'Berlin'
+                    // }
+
+                    $sql_stmt .= " adresse LIKE '%".$search_str."%' AND ";
                     break;
                 // limit always on the end
                 case 'limit':
@@ -91,13 +100,12 @@
             }
         }
         
-
         // delete AND && WHERE statement when no parameter (except page and limit) is given
         $pos = strrpos($sql_stmt, 'AND');
 
         if($pos != 0) {
             $sql_stmt = substr_replace($sql_stmt, '', $pos, 3);
-        } else {
+        } else if (!isset($request_type['address'])) {
             $pos2 = strrpos($sql_stmt, 'WHERE');
             $sql_stmt = substr_replace($sql_stmt, '', $pos2, 5);
         }

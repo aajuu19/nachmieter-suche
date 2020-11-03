@@ -509,7 +509,7 @@ const root = `${document.location.origin}/nachmieter-suche`;
                         </div> 
                         <div class="teaser-content">
                             <span class="heading">{{ object.name }}</span>
-                            <span class="time">{{ object.einstellungsdatum }} Uhr</span>
+                            <span class="time">{{ object.adresse }} </span>
                             <span class="desc">{{ shortenedDesc }}</span>
                             <div class="infoBox">
                                 <span><small>Quadratmeter</small> <span>{{ object.quadratmeter }} m²</span></span>
@@ -582,6 +582,7 @@ const root = `${document.location.origin}/nachmieter-suche`;
                     },
                 },
                 errorMsg: false,
+                lfAddress: ''
             },
             created: function () {
                 const fetched = fetch('./essentials/dbs_json.php',
@@ -604,6 +605,9 @@ const root = `${document.location.origin}/nachmieter-suche`;
                 });
             },
             methods: {
+                changeAddress: function () {
+                    this.filterIt();
+                },
                 filterIt: function () {
                     const fL = this.filterList;
                     let paramStr = '';
@@ -625,6 +629,10 @@ const root = `${document.location.origin}/nachmieter-suche`;
                         }
                     }
 
+                    if(this.lfAddress) {
+                        paramStr = 'address=' + this.lfAddress + '&' + paramStr;
+                    }
+                    console.log(paramStr);
                     const fetched = fetch('./essentials/dbs_json.php',
                     {
                         method: 'POST',
@@ -744,6 +752,8 @@ const root = `${document.location.origin}/nachmieter-suche`;
                 maxFiles: 7,
                 fileList: [],
                 lastValidObj: null,
+                addressList: [],
+                limitAddressSuggestions: 10
             },
             watch: {
                 objAddress: function (search) {
@@ -757,48 +767,98 @@ const root = `${document.location.origin}/nachmieter-suche`;
                     }
                 },
             },
+            created: function() {
+                fetch('./../js/src/plz-ort-min.json',
+                {
+                    headers:
+                    {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                })
+                .then((res) => res.json())
+                .then((data) => {
+                    this.addressList = data;
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+            },
             methods: {
                 generateAddress: function (search) {
+
                     // reset array on new Search
                     this.placeList.length = 0;
-
-                    // set searchString and replace all whitespaces
-                    const searchStr = search.replace(/ /g, '%20');
-                    if (searchStr.length > 2) {
-                        const searchQuery = `https://public.opendatasoft.com/api/records/1.0/search/?dataset=postleitzahlen-deutschland&q=${searchStr}`;
-                        const fetched = fetch(searchQuery).then((res) => res.json());
+                    
+                    if (search.length > 2) {
+                        search = search.toLowerCase();
                         this.objAddressMenu.visible = true;
                         this.showLoader = true;
+                        
+                        for (let i = 0; i < this.addressList.length; i++) {
+                            if (this.placeList.length < this.limitAddressSuggestions) {
+                                let ele = this.addressList[i];
 
-                        fetched.then((data) => {
-                            const places = data.records;
-                            // check if results exist
-                            if (places.length >= 1) {
-                                places.forEach((e) => {
-                                    let ortData = e.fields.note;
-                                    let plzData = e.fields.plz;
-                                    ortData = ortData.replace('Ã¶', 'ö');
-                                    ortData = ortData.replace('Ã', 'Ö');
-                                    ortData = ortData.replace('Ã', 'Ü');
-                                    ortData = ortData.replace('Ã¼', 'ü');
-                                    ortData = ortData.replace('Ã¤', 'ä');
-                                    ortData = ortData.replace('Ã', 'ß');
+                                let validPostal = ele.plz.toLowerCase().includes(search);
+                                let validPlace = ele.ort.toLowerCase().includes(search);
+                                let validCity = false;
 
-                                    this.placeList.push({ ort: ortData, plz: plzData });
-                                });
-                                this.showLoader = false;
-                                this.noPlace = false;
-                                this.lastValidObj = this.placeList[0];
-                                // console.log(this.placeList);
+                                if(ele.std) {
+                                    validCity = ele.std.toLowerCase().includes(search);
+                                }
+
+                                if (validPostal || validPlace || validCity ) {
+                                    this.placeList.push(ele);
+                                }
                             } else {
-                                // do this if not
-
-                                // reset array if non result
-                                this.noPlace = true;
-                                this.showLoader = false;
-                                this.placeList.length = 0;
+                                break;
                             }
-                        });
+                        }
+                        this.showLoader = false;
+                        this.noPlace = false;
+                        this.lastValidObj = this.placeList[0];
+                        if(this.placeList.length == 0) {
+                            this.noPlace = true;
+                            this.showLoader = false;
+                            this.placeList.length = 0;
+                        }
+                    // set searchString and replace all whitespaces
+                    // const searchStr = search.replace(/ /g, '%20');
+                    // if (searchStr.length > 2) {
+                    //     const searchQuery = `https://public.opendatasoft.com/api/records/1.0/search/?dataset=georef-germany-postleitzahl&q=${searchStr}`;
+                    //     const fetched = fetch(searchQuery).then((res) => res.json());
+                    //     this.objAddressMenu.visible = true;
+                    //     this.showLoader = true;
+
+                    //     fetched.then((data) => {
+                    //         const places = data.records;
+                    //         // check if results exist
+                    //         if (places.length >= 1) {
+                    //             places.forEach((e) => {
+                    //                 let ortData = e.fields.plz_name;
+                    //                 let plzData = e.fields.plz_code;
+                    //                 ortData = ortData.replace('Ã¶', 'ö');
+                    //                 ortData = ortData.replace('Ã', 'Ö');
+                    //                 ortData = ortData.replace('Ã', 'Ü');
+                    //                 ortData = ortData.replace('Ã¼', 'ü');
+                    //                 ortData = ortData.replace('Ã¤', 'ä');
+                    //                 ortData = ortData.replace('Ã', 'ß');
+
+                    //                 this.placeList.push({ ort: ortData, plz: plzData });
+                    //             });
+                    //             this.showLoader = false;
+                    //             this.noPlace = false;
+                    //             this.lastValidObj = this.placeList[0];
+                    //             // console.log(this.placeList);
+                    //         } else {
+                    //             // do this if not
+
+                    //             // reset array if non result
+                    //             this.noPlace = true;
+                    //             this.showLoader = false;
+                    //             this.placeList.length = 0;
+                    //         }
+                    //     });
                     } else {
                         this.objAddressMenu.visible = false;
                         this.noPlace = false;
@@ -820,15 +880,27 @@ const root = `${document.location.origin}/nachmieter-suche`;
                         this.objAddress = '';
                     } else if (this.placeList.length === 0) {
                         if (this.lastValidObj) {
-                            this.objAddress = `${this.lastValidObj.plz} ${this.lastValidObj.ort}`;
+                            if(this.lastValidObj.std) {
+                                this.objAddress = `${this.lastValidObj.plz} ${this.lastValidObj.std} -  ${this.lastValidObj.ort}`;
+                            } else {
+                                this.objAddress = `${this.lastValidObj.plz} -  ${this.lastValidObj.ort}`;
+                            }
                         } else {
                             this.objAddress = '';
                         }
                     } else if (this.objAddress !== '' && this.objAddress.length >= 3 && this.placeList.length === 1){
                         const firstPlace = this.placeList[0];
-                        this.objAddress = `${firstPlace.plz} ${firstPlace.ort}`;
+                        if(firstPlace.std) {
+                            this.objAddress = `${firstPlace.plz} ${firstPlace.std} - ${firstPlace.ort}`;
+                        } else {
+                            this.objAddress = `${firstPlace.plz} - ${firstPlace.ort}`;
+                        }
                     } else if (this.placeList.length >= 2) {
-                        this.objAddress = `${this.lastValidObj.plz} ${this.lastValidObj.ort}`;
+                        if (this.lastValidObj && this.lastValidObj.std) {
+                            this.objAddress = `${this.lastValidObj.plz} ${this.lastValidObj.std} - ${this.lastValidObj.ort}`;
+                        } else {
+                            this.objAddress = `${this.lastValidObj.plz} - ${this.lastValidObj.ort}`;
+                        }
                     }
                 },
                 allowInput: function () {
