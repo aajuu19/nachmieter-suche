@@ -461,6 +461,28 @@ main {
                         margin-right: 6px;
                     }
                 }
+                .address-list {
+                    position: absolute;
+                    top: calc(100% + 2px);
+                    background: #fff;
+                    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+                    z-index: 1;
+                    padding: .5rem;
+                    border-radius: 20px;
+                    width: 100%;
+                    max-height: rem(520px);
+                    overflow-y: scroll;
+                    li {
+                        list-style: none;
+                        padding: .4rem 1rem;
+                        border-radius: 25px;
+                        &:hover {
+                            background: $primary;
+                            color: $light;
+                            cursor: pointer;
+                        }
+                    }
+                }
             }
             aside.filter-ctn {
                 padding-left: rem(30px);
@@ -817,6 +839,28 @@ main {
         button {
             i {
                 padding-right: rem(5px);
+            }
+        }
+        .address-list {
+            position: absolute;
+            top: calc(100% + 2px);
+            background: #fff;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            padding: .5rem;
+            border-radius: 20px;
+            width: 100%;
+            max-height: rem(520px);
+            overflow-y: scroll;
+            li {
+                list-style: none;
+                padding: .4rem 1rem;
+                border-radius: 25px;
+                &:hover {
+                    background: $primary;
+                    color: $light;
+                    cursor: pointer;
+                }
             }
         }
     }
@@ -1227,11 +1271,17 @@ main {
         width: 70%;
         margin: 0 auto;
     }
+    @include breakpoint(xxxl) {
+        width: 50%;
+    }
+    @include breakpoint(xxxxl) {
+        width: 40%;
+    }
 }
 
 footer {
     background: $medium;
-    padding: 5rem 0;
+    padding: 3rem 0;
     position: relative;
     .branding {
         color: $light;

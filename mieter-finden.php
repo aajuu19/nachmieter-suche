@@ -6,6 +6,13 @@
 				<div class="user-teaser row">
 					
 					<div class="col s-8">
+						<div class="address-container">
+							<input class="address-field" v-model="lfAddress" type="text" @blur="eraseSuggestions" placeholder="Stadt, Bezirk oder Postleitzahl angeben">
+							<button class="change-address-btn btn" @mousedown="changeAddress"><i class="fa fa-filter"></i>Übernehmen</button>
+							<ul class="address-list" v-show="showSuggestions">
+								<address-list-item @handle-address-click="handleAddressClick" :key="index" v-for="(place, index) in recentPlaceList" :place="place"></address-list-item>
+							</ul>
+						</div>
 						<user-item v-for="user in users" :key="user.o_id" :user="user"></user-item>
 						<span class="error" v-if="errorMsg">Keine passenden Objekte gefunden, probier's mal mit anderen Filtereinstellungen.</span>
 					</div>

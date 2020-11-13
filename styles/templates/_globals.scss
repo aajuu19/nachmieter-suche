@@ -194,6 +194,12 @@ form {
                 box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
                 width: 100%;
                 color: $dark;
+                &.change-select-color {
+                    color: lighten($secondary, 20%);
+                    &.filled {
+                        color: $dark;
+                    }
+                }
                 @include breakpoint(s) {
                     width: calc(100% - 170px);
                     margin-left: rem(170px);
@@ -202,12 +208,12 @@ form {
                     border-bottom-left-radius: 0;
                 }
                 &:required:invalid {
-                    color: lighten($secondary, 20%);;
+                    color: lighten($secondary, 20%);
                 }
                 option {
                     color: $dark;
                     &:disabled {
-                        color: lighten($secondary, 20%);;
+                        color: lighten($secondary, 20%);
                     }
                 }
             }

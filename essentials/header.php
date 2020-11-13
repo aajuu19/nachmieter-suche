@@ -75,7 +75,7 @@
                     $object = $db->get_this_one("SELECT * FROM `objekt` WHERE link='".$web->file_name."'");
                     echo '<h1 class="claim">'.$object['name'].'</h1>';
                 } else {
-                    echo '<span class="claim">Willst du den passenden Nachmieter finden?</span>
+                    echo '<span class="claim">Was guckst du so?</span>
                     <form class="default search-form" action="wohnung-finden.php">
                         <input type="text" placeholder="Geben Sie Ihren Standort an">
                         <input type="submit" value="Suche starten" class="btn secondary">

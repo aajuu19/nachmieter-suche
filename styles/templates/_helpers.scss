@@ -72,7 +72,7 @@
     display: block;
     width: 100%;
     &:before {
-        content: 'Fehler: ';
+        content: 'Ups: ';
         font-weight: 700;
         color: $alert;
     }

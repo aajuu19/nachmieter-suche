@@ -33,6 +33,26 @@ const root = `${document.location.origin}/nachmieter-suche`;
 // mieter-finden page
 (function() { 
     if (document.body.classList.contains('mieter-finden')) {
+        Vue.component('address-list-item', {
+            props: ['place'],
+            template: `
+                <li @mousedown="handleAddressClick(place);">{{ placeContent }}</li>
+            `,
+            computed: {
+                placeContent: function() {
+                    if(this.place.std) {
+                        return `${this.place.std} - ${this.place.ort}`;
+                    } else {
+                        return `${this.place.ort}`;
+                    }
+                },
+            },
+            methods: {
+                handleAddressClick: function(place){
+                    this.$emit('handle-address-click', place)
+                }
+            }
+        });
 
         Vue.component('filter-box', {
             props: ['ele'],
@@ -58,11 +78,11 @@ const root = `${document.location.origin}/nachmieter-suche`;
                 <div class="teaser">
                     <div class="teaser-box">
                         <div class="teaser-img">
-                            <img :src="imgLink" alt="Platzhalter">
+                            <img :src="imgLink">
                         </div> 
                         <div class="teaser-content">
                             <span class="heading">{{ user.name }}</span>
-                            <span class="time" v-show="user.job">{{ user.job }}</span>
+                            <span class="time" v-show="user.lf_adresse">{{ user.lf_adresse }}</span>
                             <span class="desc">{{ shortenedDesc }}</span>
                             <div class="infoBox" v-show="showUserInfos">
                                 <span v-show="user.lf_quadratmeter"><small>Quadratmeter</small> <span>{{ user.lf_quadratmeter }} m²</span></span>
@@ -98,6 +118,9 @@ const root = `${document.location.origin}/nachmieter-suche`;
                     return `${document.location.origin}/nachmieter-suche/uploads/${this.user.profilepic}`;
                 },
             },
+            mounted: function(){
+                console.log(this.user);
+            }
         });
         const vm = new Vue({
             el: '.all-users',
@@ -162,9 +185,42 @@ const root = `${document.location.origin}/nachmieter-suche`;
                         selectedVal: null
                     },
                 },
+                lfAddress: null,
                 errorMsg: false,
+                placeList: [],
+                recentPlaceList: []
+            },
+            computed: {
+                showSuggestions: function() {
+                    if (this.recentPlaceList.length == 0) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+            },
+            watch: {
+                lfAddress: function() {
+                    this.refreshPlaceList();
+                }
             },
             created: function () {
+                fetch('./js/json/orte.json',
+                {
+                    headers:
+                    {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                })
+                .then((res) => res.json())
+                .then((data) => {
+                    this.placeList = data;
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+
                 const fetched = fetch('./essentials/dbs_json.php',
                 {
                     method: 'POST',
@@ -182,6 +238,42 @@ const root = `${document.location.origin}/nachmieter-suche`;
                 });
             },
             methods: {
+                eraseSuggestions: function() {
+                    this.recentPlaceList = [];
+                },
+                handleAddressClick: function(place) {
+                    if (place.std) {
+                        this.lfAddress = place.std + ' - ' + place.ort;
+                    } else {
+                        this.lfAddress = place.ort;
+                    }
+                    this.filterIt();
+                },
+                refreshPlaceList: function(){
+                    if (this.lfAddress.length >= 2) {
+                        let searchAddress = this.lfAddress.toLowerCase().trim();
+                        
+                        this.recentPlaceList = this.placeList.filter(ele => {
+                            if (ele.std) {
+                                let searchCombi1 = ele.std.toLowerCase() + ' ' + ele.ort.toLowerCase();
+                                let searchCombi2 = ele.ort.toLowerCase() + ' ' + ele.std.toLowerCase();
+                                let searchCombi3 = ele.std.toLowerCase() + ' - ' + ele.ort.toLowerCase();
+                                return ele.ort.toLowerCase().includes(searchAddress) || ele.std.toLowerCase().includes(searchAddress) || searchCombi1.includes(searchAddress) || searchCombi2.includes(searchAddress) || searchCombi3.includes(searchAddress);
+                            } else {
+                                return ele.ort.toLowerCase().includes(searchAddress);
+                            }
+                        });
+
+                        if (this.recentPlaceList.length >= this.maxAllowedSuggestions) {
+                            this.recentPlaceList = this.recentPlaceList.slice(0, this.maxAllowedSuggestions);
+                        }
+                    } else {
+                        this.recentPlaceList = [];
+                    }
+                },
+                changeAddress: function () {
+                    this.filterIt();
+                },
                 filterIt: function () {
                     const fL = this.filterList;
                     let paramStr = '';
@@ -193,6 +285,10 @@ const root = `${document.location.origin}/nachmieter-suche`;
                                 paramStr += `${i}=${filter.selectedVal}&`;
                             }
                         }
+                    }
+
+                    if(this.lfAddress) {
+                        paramStr = 'address=' + this.lfAddress.trim() + '&' + paramStr;
                     }
 
                     const fetched = fetch('./essentials/dbs_json.php',
@@ -339,83 +435,68 @@ const root = `${document.location.origin}/nachmieter-suche`;
 // user js
 (function() { 
     if (document.body.classList.contains('profil-bearbeiten')) {
+        Vue.component('address-list-item', {
+            props: ['place'],
+            template: `
+                <li @mousedown="handleAddressClick(place);">{{ placeContent }}</li>
+            `,
+            computed: {
+                placeContent: function() {
+                    if(this.place.std) {
+                        return `${this.place.std} - ${this.place.ort}`;
+                    } else {
+                        return `${this.place.ort}`;
+                    }
+                },
+            },
+            methods: {
+                handleAddressClick: function(place){
+                    this.$emit('handle-address-click', place)
+                }
+            }
+        });
+
         const vm = new Vue({
             el: '.edit-profile-app',
             data: {
                 userProfile: {},
                 fileList: [],
+                objIsSet: false,
+                objAddressMenu: {
+                    visible: false,
+                },
+                noPlace: false,
+                lastValidObj: {},
+                addressList: [],
+                maxAllowedSuggestions: 10,
+                recentPlaceList: [],
+                lfAddress: '',
+                name: null,
+                gender: null,
+                description: null,
+                job: null,
+                lfQuadratmeter: "",
+                lfZimmer: "",
+                lfKalt: "",
+                lfWarm: "",
+                lookingfrom: null,
+                birthdate: null,
+            },
+            watch: {
+                lfAddress: function (search) {
+                    if (!this.objIsSet) {
+                        this.generateAddress(search);
+                    }
+                },
             },
             computed: {
-                name: function() {
-                    if(this.userProfile.name) {
-                        return this.userProfile.name;
+                placeContent: function() {
+                    if(this.place.std) {
+                        return `${this.place.std} - ${this.place.ort}`;
                     } else {
-                        return "";
+                        return `${this.place.ort}`;
                     }
                 },
-                gender: function() {
-                    if(this.userProfile.gender) {
-                        return this.userProfile.gender;
-                    } else {
-                        return "";
-                    }
-                },
-                description: function() {
-                    if(this.userProfile.beschreibung) {
-                        return this.htmlDecode(this.userProfile.beschreibung);
-                    } else {
-                        return "";
-                    }
-                },
-                job: function() {
-                    if(this.userProfile.job) {
-                        return this.userProfile.job;
-                    } else {
-                        return "";
-                    }
-                },
-                lfQuadratmeter: function() {
-                    if(this.userProfile.lf_quadratmeter) {
-                        return this.userProfile.lf_quadratmeter;
-                    } else {
-                        return "";
-                    }
-                },
-                lfZimmer: function() {
-                    if(this.userProfile.lf_zimmer) {
-                        return this.userProfile.lf_zimmer;
-                    } else {
-                        return "";
-                    }
-                },
-                lfKalt: function() {
-                    if(this.userProfile.lf_kaltmiete) {
-                        return this.userProfile.lf_kaltmiete;
-                    } else {
-                        return "";
-                    }
-                },
-                lfWarm: function() {
-                    if(this.userProfile.lf_warmmiete) {
-                        return this.userProfile.lf_warmmiete;
-                    } else {
-                        return "";
-                    }
-                },
-                lookingfrom: function() {
-                    if(this.userProfile.lookingfrom) {
-                        return this.userProfile.lookingfrom;
-                    } else {
-                        return "";
-                    }
-                },
-                birthdate: function() {
-                    if(this.userProfile.birthdate) {
-                        return this.userProfile.birthdate;
-                    } else {
-                        return "";
-                    }
-                }
             },
             created: function () {
                 fetch('./../essentials/get-session.php')
@@ -435,15 +516,72 @@ const root = `${document.location.origin}/nachmieter-suche`;
                     .then((data) => data.json())
                     .then((data) => {
                         this.userProfile = data[0];
+
+                        if (this.userProfile.lf_adresse) {
+                            this.lfAddress = this.userProfile.lf_adresse;
+                            this.objIsSet = true;
+                            this.objAddressMenu.visible = false;
+                            this.lastValidObj.ort = this.lfAddress;
+                        }
+
+                        if(this.userProfile.name) {
+                            this.name = this.userProfile.name;
+                        }
+                        if(this.userProfile.gender) {
+                            this.gender = this.userProfile.gender;
+                        }
+                        if(this.userProfile.beschreibung) {
+                            this.description = this.htmlDecode(this.userProfile.beschreibung);
+                        }
+                        if(this.userProfile.job) {
+                            this.job = this.userProfile.job;
+                        }
+                        if(this.userProfile.lf_quadratmeter) {
+                            this.lfQuadratmeter = this.userProfile.lf_quadratmeter;
+                        }
+                        if(this.userProfile.lf_zimmer) {
+                            this.lfZimmer = this.userProfile.lf_zimmer;
+                        }
+                        if(this.userProfile.lf_kaltmiete) {
+                            this.lfKalt = this.userProfile.lf_kaltmiete;
+                        }
+                        if(this.userProfile.lf_warmmiete) {
+                            this.lfWarm = this.userProfile.lf_warmmiete;
+                        }
+                        if(this.userProfile.lookingfrom) {
+                            this.lookingfrom = this.userProfile.lookingfrom;
+                        } 
+                        if(this.userProfile.birthdate) {
+                            this.birthdate = this.userProfile.birthdate;
+                        }
+
                     })
                     .catch((err) => {
-                        console.log(err);
+                        if (isDev) {
+                            console.log(err);
+                        }
                     });
                 })
                 .catch((err) => {
                     if (isDev) {
                         console.log(err);
                     }
+                });
+
+                fetch('./../js/json/orte.json',
+                {
+                    headers:
+                    {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                })
+                .then((res) => res.json())
+                .then((data) => {
+                    this.placeList = data;
+                })
+                .catch((err) => {
+                    console.log(err);
                 });
             },
             methods: {
@@ -453,6 +591,83 @@ const root = `${document.location.origin}/nachmieter-suche`;
                 htmlDecode: function (input) {
                     var doc = new DOMParser().parseFromString(input, "text/html");
                     return doc.documentElement.textContent;
+                },
+                generateAddress: function (search) {
+                    if (this.lfAddress.length >= 2) {
+                        let searchAddress = this.lfAddress.toLowerCase().trim();
+                        
+                        this.recentPlaceList = this.placeList.filter(ele => {
+                            if (ele.std) {
+                                let searchCombi1 = ele.std.toLowerCase() + ' ' + ele.ort.toLowerCase();
+                                let searchCombi2 = ele.ort.toLowerCase() + ' ' + ele.std.toLowerCase();
+                                let searchCombi3 = ele.std.toLowerCase() + ' - ' + ele.ort.toLowerCase();
+                                return ele.ort.toLowerCase().includes(searchAddress) || ele.std.toLowerCase().includes(searchAddress) || searchCombi1.includes(searchAddress) || searchCombi2.includes(searchAddress) || searchCombi3.includes(searchAddress);
+                            } else {
+                                return ele.ort.toLowerCase().includes(searchAddress);
+                            }
+                        });
+
+                        if (this.recentPlaceList.length >= this.maxAllowedSuggestions) {
+                            this.recentPlaceList = this.recentPlaceList.slice(0, this.maxAllowedSuggestions);
+                        }
+                        this.objAddressMenu.visible = true;
+                    } else {
+                        this.recentPlaceList = [];
+                    }
+                },
+                setAddress: function (place) {
+                    this.objAddressMenu.visible = false;
+                    this.objIsSet = true;
+                    this.lastValidObj = place;
+                },
+                setFirstAddress: function () {
+                    this.objAddressMenu.visible = false;
+                    this.objIsSet = true;
+
+                    if (this.lfAddress.length < 2) {
+                        this.lfAddress = '';
+                        this.lastValidObj = {};
+                        this.recentPlaceList = [];
+                    } else if (this.recentPlaceList.length === 0) {
+                        if (!this.objIsEmpty(this.lastValidObj)) {
+                            if(this.lastValidObj.std) {
+                                this.lfAddress = `${this.lastValidObj.std} -  ${this.lastValidObj.ort}`;
+                            } else {
+                                this.lfAddress = this.lastValidObj.ort;
+                            }
+                        } else {
+                            this.lfAddress = '';
+                            this.lastValidObj = {};
+                            this.recentPlaceList = [];
+                        }
+                    } else if (this.lfAddress !== '' && this.lfAddress.length >= 3 && this.recentPlaceList.length === 1){
+                        const firstPlace = this.recentPlaceList[0];
+                        if(firstPlace.std) {
+                            this.lfAddress = `${firstPlace.std} - ${firstPlace.ort}`;
+                        } else {
+                            this.lfAddress = `${firstPlace.ort}`;
+                        }
+                    } else if (this.recentPlaceList.length >= 2) {
+                        if (!this.objIsEmpty(this.lastValidObj) && this.lastValidObj.std) {
+                            this.lfAddress = `${this.lastValidObj.std} - ${this.lastValidObj.ort}`;
+                        } else if(!this.objIsEmpty(this.lastValidObj)) {
+                            this.lfAddress = `${this.lastValidObj.ort}`;
+                        } else {
+                            this.lfAddress = '';
+                            this.lastValidObj = {};
+                            this.recentPlaceList = [];
+                        }
+                    }
+                },
+                objIsEmpty: function(obj) {
+                    if(obj) {
+                        return (Object.keys(obj).length === 0 && obj.constructor === Object);
+                    } else {
+                        return true;
+                    }
+                },
+                allowInput: function () {
+                    this.objIsSet = false;
                 },
             }
         });
@@ -536,6 +751,28 @@ const root = `${document.location.origin}/nachmieter-suche`;
                 },
             },
         });
+
+        Vue.component('address-list-item', {
+            props: ['place'],
+            template: `
+                <li @mousedown="handleAddressClick(place);">{{ placeContent }}</li>
+            `,
+            computed: {
+                placeContent: function() {
+                    if(this.place.std) {
+                        return `${this.place.std} - ${this.place.ort}`;
+                    } else {
+                        return `${this.place.ort}`;
+                    }
+                },
+            },
+            methods: {
+                handleAddressClick: function(place){
+                    this.$emit('handle-address-click', place)
+                }
+            }
+        });
+
         const vm = new Vue({
             el: '.all-objects',
             data: {
@@ -582,9 +819,42 @@ const root = `${document.location.origin}/nachmieter-suche`;
                     },
                 },
                 errorMsg: false,
-                lfAddress: ''
+                lfAddress: '',
+                placeList: [],
+                recentPlaceList: [],
+                maxAllowedSuggestions: 24
+            },
+            watch: {
+                lfAddress: function() {
+                    this.refreshPlaceList();
+                }
+            },
+            computed: {
+                showSuggestions: function() {
+                    if (this.recentPlaceList.length == 0) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
             },
             created: function () {
+                fetch('./js/json/orte.json',
+                {
+                    headers:
+                    {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                })
+                .then((res) => res.json())
+                .then((data) => {
+                    this.placeList = data;
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+
                 const fetched = fetch('./essentials/dbs_json.php',
                 {
                     method: 'POST',
@@ -605,6 +875,39 @@ const root = `${document.location.origin}/nachmieter-suche`;
                 });
             },
             methods: {
+                eraseSuggestions: function() {
+                    this.recentPlaceList = [];
+                },
+                handleAddressClick: function(place) {
+                    if (place.std) {
+                        this.lfAddress = place.std + ' - ' + place.ort;
+                    } else {
+                        this.lfAddress = place.ort;
+                    }
+                    this.filterIt();
+                },
+                refreshPlaceList: function(){
+                    if (this.lfAddress.length >= 2) {
+                        let searchAddress = this.lfAddress.toLowerCase().trim();
+                        
+                        this.recentPlaceList = this.placeList.filter(ele => {
+                            if (ele.std) {
+                                let searchCombi1 = ele.std.toLowerCase() + ' ' + ele.ort.toLowerCase();
+                                let searchCombi2 = ele.ort.toLowerCase() + ' ' + ele.std.toLowerCase();
+                                let searchCombi3 = ele.std.toLowerCase() + ' - ' + ele.ort.toLowerCase();
+                                return ele.ort.toLowerCase().includes(searchAddress) || ele.std.toLowerCase().includes(searchAddress) || searchCombi1.includes(searchAddress) || searchCombi2.includes(searchAddress) || searchCombi3.includes(searchAddress);
+                            } else {
+                                return ele.ort.toLowerCase().includes(searchAddress);
+                            }
+                        });
+
+                        if (this.recentPlaceList.length >= this.maxAllowedSuggestions) {
+                            this.recentPlaceList = this.recentPlaceList.slice(0, this.maxAllowedSuggestions);
+                        }
+                    } else {
+                        this.recentPlaceList = [];
+                    }
+                },
                 changeAddress: function () {
                     this.filterIt();
                 },
@@ -632,7 +935,7 @@ const root = `${document.location.origin}/nachmieter-suche`;
                     if(this.lfAddress) {
                         paramStr = 'address=' + this.lfAddress + '&' + paramStr;
                     }
-                    console.log(paramStr);
+
                     const fetched = fetch('./essentials/dbs_json.php',
                     {
                         method: 'POST',
@@ -649,6 +952,7 @@ const root = `${document.location.origin}/nachmieter-suche`;
                         } else {
                             this.errorMsg = false;
                         }
+                        this.recentPlaceList = [];
                     })
                     .catch((err) => {
                         console.log(err);
@@ -736,7 +1040,6 @@ const root = `${document.location.origin}/nachmieter-suche`;
 // new object page
 (function (){
     if (document.body.classList.contains('neues-objekt')) {
-        let timeOut;
         const vm = new Vue({
             el: '.obj-ctn',
             data: {
@@ -758,17 +1061,12 @@ const root = `${document.location.origin}/nachmieter-suche`;
             watch: {
                 objAddress: function (search) {
                     if (!this.objIsSet) {
-                        if (timeOut) {
-                            clearTimeout(timeOut);
-                        }
-                        timeOut = setTimeout(() => {
-                            this.generateAddress(search);
-                        }, this.waitForTypedSpeed);
+                        this.generateAddress(search);
                     }
                 },
             },
             created: function() {
-                fetch('./../js/src/plz-ort-min.json',
+                fetch('./../js/json/plz-ort-min.json',
                 {
                     headers:
                     {
@@ -822,43 +1120,6 @@ const root = `${document.location.origin}/nachmieter-suche`;
                             this.showLoader = false;
                             this.placeList.length = 0;
                         }
-                    // set searchString and replace all whitespaces
-                    // const searchStr = search.replace(/ /g, '%20');
-                    // if (searchStr.length > 2) {
-                    //     const searchQuery = `https://public.opendatasoft.com/api/records/1.0/search/?dataset=georef-germany-postleitzahl&q=${searchStr}`;
-                    //     const fetched = fetch(searchQuery).then((res) => res.json());
-                    //     this.objAddressMenu.visible = true;
-                    //     this.showLoader = true;
-
-                    //     fetched.then((data) => {
-                    //         const places = data.records;
-                    //         // check if results exist
-                    //         if (places.length >= 1) {
-                    //             places.forEach((e) => {
-                    //                 let ortData = e.fields.plz_name;
-                    //                 let plzData = e.fields.plz_code;
-                    //                 ortData = ortData.replace('Ã¶', 'ö');
-                    //                 ortData = ortData.replace('Ã', 'Ö');
-                    //                 ortData = ortData.replace('Ã', 'Ü');
-                    //                 ortData = ortData.replace('Ã¼', 'ü');
-                    //                 ortData = ortData.replace('Ã¤', 'ä');
-                    //                 ortData = ortData.replace('Ã', 'ß');
-
-                    //                 this.placeList.push({ ort: ortData, plz: plzData });
-                    //             });
-                    //             this.showLoader = false;
-                    //             this.noPlace = false;
-                    //             this.lastValidObj = this.placeList[0];
-                    //             // console.log(this.placeList);
-                    //         } else {
-                    //             // do this if not
-
-                    //             // reset array if non result
-                    //             this.noPlace = true;
-                    //             this.showLoader = false;
-                    //             this.placeList.length = 0;
-                    //         }
-                    //     });
                     } else {
                         this.objAddressMenu.visible = false;
                         this.noPlace = false;
@@ -866,13 +1127,11 @@ const root = `${document.location.origin}/nachmieter-suche`;
                     }
                 },
                 setAddress: function (place) {
-                    clearTimeout(timeOut);
                     this.objAddressMenu.visible = false;
                     this.objIsSet = true;
                     this.lastValidObj = place;
                 },
                 setFirstAddress: function () {
-                    clearTimeout(timeOut);
                     this.objAddressMenu.visible = false;
                     this.objIsSet = true;
 

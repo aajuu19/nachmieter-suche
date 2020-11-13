@@ -58,6 +58,16 @@
 							<textarea v-model="description" name="pers-desc" id="pers-desc" cols="30" maxlength="1500" rows="10" placeholder="Deine Profilbeschreibung" oninvalid="this.setCustomValidity('Bitte gib eine kurze Profilbeschreibung ein (max. 1500 Zeichen)')" oninput="setCustomValidity('')"></textarea>
                         </fieldset>
 
+                        <fieldset class="dropdown optional">
+							<label  class="opt-sec" for="pers-address"><i class="fa fa-map-marker-alt"></i> <span>Wunschort</span></label>
+							<input v-model="lfAddress" @focus="allowInput" @blur="setFirstAddress" name="pers-address" autocomplete="off" id="pers-address" type="text" placeholder="Bitte gib einen Ort oder Bezirk an">
+							<div class="address-list" v-show="objAddressMenu.visible">
+                                <div v-show="noPlace">Bitte versuche es mit einem anderen Ort oder Bezirk</div>
+                                <address-list-item @handle-address-click="setAddress" :key="index" v-for="(place, index) in recentPlaceList" :place="place"></address-list-item>
+								<!-- <a @mousedown="setAddress(place)" tabindex="0" v-for="place in recentPlaceList">{{ placeContent }}</a> -->
+							</div>
+						</fieldset>
+
 						<fieldset class="optional">
 							<label class="opt-sec" for="pers-job"><i class="fa fa-briefcase"></i> <span>Job</span></label>
 							<input v-model="job" name="pers-job" id="pers-job" type="text" placeholder="Bitte gib deinen Job an">
@@ -65,7 +75,7 @@
 						
 						<fieldset class="dropdown optional">
                             <label class="opt-sec" for="pers-lf-quadratmeter"><i class="fa fa-cube"></i> <span>Quadratmeter</span></label>
-                            <select v-model="lfQuadratmeter" placeholder="Test" name="pers-lf-quadratmeter" id="pers-lf-quadratmeter">
+                            <select v-model="lfQuadratmeter" :class="{ filled: lfQuadratmeter}" placeholder="Test" class="change-select-color" name="pers-lf-quadratmeter" id="pers-lf-quadratmeter">
 								<option value="" selected disabled>Wie viel Quadratmeter brauchst du?</option>
 								<option value="">Keine Angabe</option>
                                 <option value="0 - 49">0 - 49</option>
@@ -78,7 +88,7 @@
 						
 						<fieldset class="dropdown optional">
                             <label class="opt-sec" for="pers-lf-zimmer"><i class="fa fa-bed"></i> <span>Zimmer</span></label>
-                            <select v-model="lfZimmer" placeholder="Test" name="pers-lf-zimmer" id="pers-lf-zimmer">
+                            <select v-model="lfZimmer" :class="{ filled: lfZimmer}" @change="changeSelectColor" class="change-select-color" placeholder="Test" name="pers-lf-zimmer" id="pers-lf-zimmer">
 								<option value="" selected disabled>Wie viele Zimmer suchst du?</option>
 								<option value="">Keine Angabe</option>
                                 <option value="1 - 2">1 - 2</option>
@@ -94,7 +104,7 @@
 						
 						<fieldset class="dropdown optional">
                             <label class="opt-sec" for="pers-lf-kalt"><i class="fa fa-euro-sign"></i> <span>Kaltmiete</span></label>
-                            <select v-model="lfKalt" placeholder="Test" name="pers-lf-kalt" id="pers-lf-kalt">
+                            <select v-model="lfKalt" :class="{ filled: lfKalt}" placeholder="Test" @change="changeSelectColor" class="change-select-color" name="pers-lf-kalt" id="pers-lf-kalt">
 								<option value="" selected disabled>Wie viel Kaltmiete möchtest du maximal zahlen?</option>
 								<option value="">Keine Angabe</option>
                                 <option value="0 - 300">0 - 300</option>
@@ -110,7 +120,7 @@
 						
 						<fieldset class="dropdown optional">
                             <label class="opt-sec" for="pers-lf-warm"><i class="fa fa-euro-sign"></i> <span>Warmmiete</span></label>
-                            <select v-model="lfWarm" placeholder="Test" name="pers-lf-warm" id="pers-lf-warm">
+                            <select v-model="lfWarm" :class="{ filled: lfWarm}" @change="changeSelectColor" class="change-select-color" placeholder="Test" name="pers-lf-warm" id="pers-lf-warm">
                                 <option value="" selected disabled>Wie viel Warmmiete möchtest du maximal zahlen?</option>
                                 <option value="">Keine Angabe</option>
                                 <option value="0 - 300">0 - 300</option>

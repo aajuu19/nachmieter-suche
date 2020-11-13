@@ -5,7 +5,7 @@
   flex-direction: row;
   justify-content: flex-start;
   width: 100%;
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto; }
   .row.center {
     justify-content: center; }
@@ -402,6 +402,102 @@
         flex-basis: 91.66666%; } }
     @media (min-width: 1600px) {
       .row .col.xxl-12 {
+        width: 100.0%;
+        flex-basis: 100.0%; } }
+    @media (min-width: 2000px) {
+      .row .col.xxxl-1 {
+        width: 8.33333%;
+        flex-basis: 8.33333%; } }
+    @media (min-width: 2000px) {
+      .row .col.xxxl-2 {
+        width: 16.66667%;
+        flex-basis: 16.66667%; } }
+    @media (min-width: 2000px) {
+      .row .col.xxxl-3 {
+        width: 25.0%;
+        flex-basis: 25.0%; } }
+    @media (min-width: 2000px) {
+      .row .col.xxxl-4 {
+        width: 33.33333%;
+        flex-basis: 33.33333%; } }
+    @media (min-width: 2000px) {
+      .row .col.xxxl-5 {
+        width: 41.66666%;
+        flex-basis: 41.66666%; } }
+    @media (min-width: 2000px) {
+      .row .col.xxxl-6 {
+        width: 50.0%;
+        flex-basis: 50.0%; } }
+    @media (min-width: 2000px) {
+      .row .col.xxxl-7 {
+        width: 58.33333%;
+        flex-basis: 58.33333%; } }
+    @media (min-width: 2000px) {
+      .row .col.xxxl-8 {
+        width: 66.66666%;
+        flex-basis: 66.66666%; } }
+    @media (min-width: 2000px) {
+      .row .col.xxxl-9 {
+        width: 75.0%;
+        flex-basis: 75.0%; } }
+    @media (min-width: 2000px) {
+      .row .col.xxxl-10 {
+        width: 83.33333%;
+        flex-basis: 83.33333%; } }
+    @media (min-width: 2000px) {
+      .row .col.xxxl-11 {
+        width: 91.66666%;
+        flex-basis: 91.66666%; } }
+    @media (min-width: 2000px) {
+      .row .col.xxxl-12 {
+        width: 100.0%;
+        flex-basis: 100.0%; } }
+    @media (min-width: 2750px) {
+      .row .col.xxxxl-1 {
+        width: 8.33333%;
+        flex-basis: 8.33333%; } }
+    @media (min-width: 2750px) {
+      .row .col.xxxxl-2 {
+        width: 16.66667%;
+        flex-basis: 16.66667%; } }
+    @media (min-width: 2750px) {
+      .row .col.xxxxl-3 {
+        width: 25.0%;
+        flex-basis: 25.0%; } }
+    @media (min-width: 2750px) {
+      .row .col.xxxxl-4 {
+        width: 33.33333%;
+        flex-basis: 33.33333%; } }
+    @media (min-width: 2750px) {
+      .row .col.xxxxl-5 {
+        width: 41.66666%;
+        flex-basis: 41.66666%; } }
+    @media (min-width: 2750px) {
+      .row .col.xxxxl-6 {
+        width: 50.0%;
+        flex-basis: 50.0%; } }
+    @media (min-width: 2750px) {
+      .row .col.xxxxl-7 {
+        width: 58.33333%;
+        flex-basis: 58.33333%; } }
+    @media (min-width: 2750px) {
+      .row .col.xxxxl-8 {
+        width: 66.66666%;
+        flex-basis: 66.66666%; } }
+    @media (min-width: 2750px) {
+      .row .col.xxxxl-9 {
+        width: 75.0%;
+        flex-basis: 75.0%; } }
+    @media (min-width: 2750px) {
+      .row .col.xxxxl-10 {
+        width: 83.33333%;
+        flex-basis: 83.33333%; } }
+    @media (min-width: 2750px) {
+      .row .col.xxxxl-11 {
+        width: 91.66666%;
+        flex-basis: 91.66666%; } }
+    @media (min-width: 2750px) {
+      .row .col.xxxxl-12 {
         width: 100.0%;
         flex-basis: 100.0%; } }
 
@@ -5214,6 +5310,10 @@ form.default fieldset {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
     width: 100%;
     color: #312f2c; }
+    form.default fieldset select.change-select-color {
+      color: #fec561; }
+      form.default fieldset select.change-select-color.filled {
+        color: #312f2c; }
     @media (min-width: 680px) {
       form.default fieldset select {
         width: calc(100% - 170px);
@@ -5397,7 +5497,7 @@ textarea {
   display: block;
   width: 100%; }
   .error:before, .success:before, .info:before {
-    content: 'Fehler: ';
+    content: 'Ups: ';
     font-weight: 700;
     color: #ff4d4d; }
 
@@ -5918,6 +6018,25 @@ main {
         position: relative;
         top: 2px;
         margin-right: 6px; }
+    main .all-objects .object-teaser .address-container .address-list, main .all-objects .user-teaser .address-container .address-list, main .all-users .object-teaser .address-container .address-list, main .all-users .user-teaser .address-container .address-list {
+      position: absolute;
+      top: calc(100% + 2px);
+      background: #fff;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      z-index: 1;
+      padding: .5rem;
+      border-radius: 20px;
+      width: 100%;
+      max-height: 32.5rem;
+      overflow-y: scroll; }
+      main .all-objects .object-teaser .address-container .address-list li, main .all-objects .user-teaser .address-container .address-list li, main .all-users .object-teaser .address-container .address-list li, main .all-users .user-teaser .address-container .address-list li {
+        list-style: none;
+        padding: .4rem 1rem;
+        border-radius: 25px; }
+        main .all-objects .object-teaser .address-container .address-list li:hover, main .all-objects .user-teaser .address-container .address-list li:hover, main .all-users .object-teaser .address-container .address-list li:hover, main .all-users .user-teaser .address-container .address-list li:hover {
+          background: #1c9ce5;
+          color: #fff;
+          cursor: pointer; }
   main .all-objects .object-teaser aside.filter-ctn, main .all-objects .user-teaser aside.filter-ctn, main .all-users .object-teaser aside.filter-ctn, main .all-users .user-teaser aside.filter-ctn {
     padding-left: 1.875rem; }
     main .all-objects .object-teaser aside.filter-ctn .main-heading, main .all-objects .user-teaser aside.filter-ctn .main-heading, main .all-users .object-teaser aside.filter-ctn .main-heading, main .all-users .user-teaser aside.filter-ctn .main-heading {
@@ -6189,6 +6308,25 @@ main {
             color: #fff; }
     main .obj-ctn button i, main .edit-profile-app button i {
       padding-right: 0.3125rem; }
+    main .obj-ctn .address-list, main .edit-profile-app .address-list {
+      position: absolute;
+      top: calc(100% + 2px);
+      background: #fff;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      z-index: 1;
+      padding: .5rem;
+      border-radius: 20px;
+      width: 100%;
+      max-height: 32.5rem;
+      overflow-y: scroll; }
+      main .obj-ctn .address-list li, main .edit-profile-app .address-list li {
+        list-style: none;
+        padding: .4rem 1rem;
+        border-radius: 25px; }
+        main .obj-ctn .address-list li:hover, main .edit-profile-app .address-list li:hover {
+          background: #1c9ce5;
+          color: #fff;
+          cursor: pointer; }
   main .object-container .obj-slider-app {
     position: relative; }
     main .object-container .obj-slider-app .obj-slider-main-img {
@@ -6512,10 +6650,16 @@ main {
     .footer-img {
       width: 70%;
       margin: 0 auto; } }
+  @media (min-width: 2000px) {
+    .footer-img {
+      width: 50%; } }
+  @media (min-width: 2750px) {
+    .footer-img {
+      width: 40%; } }
 
 footer {
   background: #0074e1;
-  padding: 5rem 0;
+  padding: 3rem 0;
   position: relative; }
   footer .branding {
     color: #fff;

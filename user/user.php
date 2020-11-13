@@ -55,6 +55,24 @@
                     </div>
                 <?php } ?>
 
+                <?php if ($user['lookingfrom']) { ?>
+                    <div class="smDataBox">
+                        <span class="greyTitle">Ich suche ab</span>
+                        <span class="userDef">
+                            <?php 
+                            $current_date_time = time();
+                            $date_time_user = strtotime($user['lookingfrom']);
+                            $new_date = date('d.m.Y', $date_time_user);
+                            if($current_date_time > $date_time_user) {
+                                echo 'sofort';
+                            } else {
+                                echo $new_date;    
+                            }
+                            ?>
+                        </span>
+                    </div>
+                <?php } ?>
+
                 <?php if ($is_own_user) { ?>
                     <div class="hr"></div>
                     <a href="<?php echo $web->root;?>/user/neues-objekt.php" title="<?php echo $meta['dashboard.php']['title']; ?>" class="new-object big-tab">
@@ -122,29 +140,18 @@
             ?>
             <div class="row">
                 <?php if ($user['lookingfor']) { ?>
-                    <div class="col sm-6">
+                    <div class="col sm-4">
                         <div class="whiteBox userDataBox morePad">
                             <span class="dataTitle">Ich suche nach</span>
                             <span class="dataValue"><?php echo $user['lookingfor']; ?></span>
                         </div>
                     </div>
                 <?php } ?>
-                <?php if ($user['lookingfrom']) { ?>
-                    <div class="col sm-6">
+                <?php if ($user['lf_adresse']) { ?>
+                    <div class="col sm-8">
                         <div class="whiteBox userDataBox morePad">
-                            <span class="dataTitle">Ab wann ich suche</span>
-                            <span class="dataValue">
-                                <?php 
-                                $current_date_time = time();
-                                $date_time_user = strtotime($user['lookingfrom']);
-                                $new_date = date('d.m.Y', $date_time_user);
-                                if($current_date_time > $date_time_user) {
-                                    echo 'ab sofort';
-                                } else {
-                                    echo $new_date;    
-                                }
-                                ?>
-                            </span>
+                            <span class="dataTitle">Ich suche hier</span>
+                            <span class="dataValue"><?php echo $user['lf_adresse']; ?></span>
                         </div>
                     </div>
                 <?php } ?>
@@ -181,7 +188,7 @@
                                         echo $object;
                                     } 
                                 } else {
-                                    echo '<p class="empty">Derzeit hast du keine Mietobjekte eingestellt. Willst du ändern? <a href="LINKEINFÜGE">HIERLINKEINFÜGEN</a> kannst du neue Objekte einstellen.</p>';
+                                    echo '<p class="empty">Derzeit hast du keine Mietobjekte eingestellt. Wenn du ein neues Objekt einfügen möchtest, kannst du <a href="'.$web->root.'/user/neues-objekt.php" title="'.$meta['dashboard.php']['title'].'">hier</a> neue Objekte einstellen.</p>';
                                 } 
                             ?>  
                         </div>

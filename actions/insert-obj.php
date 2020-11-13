@@ -24,8 +24,7 @@
     $link = $web->format_link($name).'-'.$uniq_id.'.php';
     
     $address = explode(' ', $adresse);
-    var_dump($address);
-    $address_json = json_decode(file_get_contents("../js/src/plz-ort-min.json"));
+    $address_json = json_decode(file_get_contents("../js/json/plz-ort-min.json"));
     foreach($address_json as $key => $val) {
         if($address[0] == $val->plz) {
             $addressIsValid = true;

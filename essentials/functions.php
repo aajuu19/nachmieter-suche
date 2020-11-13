@@ -77,7 +77,7 @@
 
         public function format_date($date) {
             $time = DateTime::createFromFormat ("Y-m-d H:i:s", $date);
-            return $time->format('d.m.y, H:i:s');
+            return $time->format('d.m.y - H:i');
         }
 
         public function shorten_str($str, $len) {

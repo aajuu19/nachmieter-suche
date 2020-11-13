@@ -13,7 +13,7 @@ $bodybg: #fcfcff;
 $lightborder: 1px solid $lightprimary;
 
 $base-gap: 16px;
-$row-max-width: 1400px;
+$row-max-width: 1600px;
 $main-font: "Barlow", sans-serif;
 $icon-font: "Font Awesome 5 Free", sans-serif;
 
@@ -39,4 +39,6 @@ $breakpoints: (
   'l':   1200px,
   'xl':  1400px,
   'xxl':  1600px,
+  'xxxl':  2000px,
+  'xxxxl':  2750px,
 );
