@@ -5237,6 +5237,9 @@ a {
 main p {
   margin-bottom: 1.25rem; }
 
+.lazyImg {
+  background: rgba(28, 156, 229, 0.35); }
+
 form.default input {
   font-family: "Barlow", sans-serif;
   border: none;
@@ -5434,6 +5437,9 @@ table {
 textarea {
   resize: none;
   font-family: "Barlow", sans-serif; }
+
+[v-cloak] {
+  display: none !important; }
 
 .light {
   color: #fff; }
@@ -5655,32 +5661,102 @@ header {
           font-size: 3.25rem;
           line-height: 3.875rem;
           margin-bottom: 2.5rem; } }
+    header .header-ctn__tabs {
+      width: 60%;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-end;
+      max-width: 33.125rem; }
+      header .header-ctn__tabs__tab {
+        display: block;
+        width: 50%;
+        flex-basis: 50%;
+        color: #fff;
+        padding: 0.625rem 0;
+        font-weight: 600;
+        box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.22);
+        transition: .3s; }
+        header .header-ctn__tabs__tab:hover, header .header-ctn__tabs__tab.active {
+          padding: 0.9375rem 0;
+          margin-top: -10px; }
+        header .header-ctn__tabs__tab--primary {
+          background-color: #1c9ce5;
+          border-top-right-radius: 15px;
+          border-top-left-radius: 15px;
+          margin-right: 5px; }
+          header .header-ctn__tabs__tab--primary:hover {
+            background-color: #1993d9; }
+        header .header-ctn__tabs__tab--secondary {
+          margin-left: 5px;
+          border-top-left-radius: 15px;
+          border-top-right-radius: 15px;
+          background-color: #f79e02; }
+          header .header-ctn__tabs__tab--secondary:hover {
+            background-color: #e89402; }
     header .header-ctn .search-form {
-      position: relative; }
-      header .header-ctn .search-form input {
+      position: relative;
+      margin: 0 auto;
+      width: 100%;
+      max-width: 40.625rem; }
+      header .header-ctn .search-form .address-list {
+        text-align: left;
+        position: absolute;
+        top: calc(100% + 2px);
+        background: #fff;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+        padding: .5rem;
+        border-radius: 20px;
+        width: 100%;
+        max-height: 32.5rem;
+        overflow-y: scroll;
+        color: #312f2c; }
+        header .header-ctn .search-form .address-list li {
+          list-style: none;
+          padding: .4rem 1rem;
+          border-radius: 25px; }
+          header .header-ctn .search-form .address-list li:hover {
+            background: #1c9ce5;
+            color: #fff;
+            cursor: pointer; }
+      header .header-ctn .search-form.primary input[type="text"] {
+        border: 3px solid #1c9ce5; }
+        header .header-ctn .search-form.primary input[type="text"]::placeholder {
+          color: #1c9ce5; }
+      header .header-ctn .search-form.secondary input[type="text"] {
+        border: 3px solid #f79e02; }
+        header .header-ctn .search-form.secondary input[type="text"]::placeholder {
+          color: #f79e02; }
+      header .header-ctn .search-form input, header .header-ctn .search-form button {
         padding: 1rem; }
         @media (min-width: 1025px) {
-          header .header-ctn .search-form input {
+          header .header-ctn .search-form input, header .header-ctn .search-form button {
             font-size: 1.125rem; } }
         @media (min-width: 1025px) {
-          header .header-ctn .search-form input {
+          header .header-ctn .search-form input, header .header-ctn .search-form button {
             padding: 1.2rem 1rem;
             border-radius: 35px;
             padding-left: 2rem; } }
-        header .header-ctn .search-form input[type=text] {
+        header .header-ctn .search-form input[type=text], header .header-ctn .search-form button[type=text] {
+          transition: .3s;
           width: 100%;
-          padding-right: 8.4375rem; }
-          @media (min-width: 1025px) {
-            header .header-ctn .search-form input[type=text] {
-              padding-right: 14.375rem; } }
-        header .header-ctn .search-form input[type=submit] {
+          padding: 1rem;
+          padding-right: 5rem;
+          padding-left: 1.5625rem;
+          font-size: 16px; }
+        header .header-ctn .search-form input[type=submit], header .header-ctn .search-form button[type=submit] {
           color: #fff;
           position: absolute;
           top: 0;
-          right: 0; }
+          right: 0;
+          bottom: 0; }
+          header .header-ctn .search-form input[type=submit].primary, header .header-ctn .search-form button[type=submit].primary {
+            background: #1c9ce5; }
+            header .header-ctn .search-form input[type=submit].primary:hover, header .header-ctn .search-form button[type=submit].primary:hover {
+              background: #1993d9; }
           @media (min-width: 1025px) {
-            header .header-ctn .search-form input[type=submit] {
-              padding: 1.2rem 3rem; } }
+            header .header-ctn .search-form input[type=submit], header .header-ctn .search-form button[type=submit] {
+              padding: 1.2rem 1.4rem; } }
 
 main {
   position: relative;
@@ -6003,12 +6079,15 @@ main {
     main .all-objects .object-teaser .address-container .address-field, main .all-objects .user-teaser .address-container .address-field, main .all-users .object-teaser .address-container .address-field, main .all-users .user-teaser .address-container .address-field {
       display: block;
       width: 100%;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
       border: none;
       padding: .9rem 2.3rem;
       border-radius: 25px;
       padding-right: 13.125rem;
-      outline: none; }
+      outline: none;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      transition: .3s; }
+      main .all-objects .object-teaser .address-container .address-field:focus, main .all-objects .user-teaser .address-container .address-field:focus, main .all-users .object-teaser .address-container .address-field:focus, main .all-users .user-teaser .address-container .address-field:focus {
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.23); }
     main .all-objects .object-teaser .address-container .change-address-btn, main .all-objects .user-teaser .address-container .change-address-btn, main .all-users .object-teaser .address-container .change-address-btn, main .all-users .user-teaser .address-container .change-address-btn {
       position: absolute;
       right: 0;
@@ -6070,9 +6149,13 @@ main {
         width: 60%;
         padding: .7rem;
         outline: none;
-        border: 1px solid #a5d8f5;
+        border: none;
         border-radius: 15px;
-        font-size: 14px; }
+        font-size: 14px;
+        transition: .3s;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); }
+        main .all-objects .object-teaser aside.filter-ctn .filter input:focus, main .all-objects .user-teaser aside.filter-ctn .filter input:focus, main .all-users .object-teaser aside.filter-ctn .filter input:focus, main .all-users .user-teaser aside.filter-ctn .filter input:focus {
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.23); }
       main .all-objects .object-teaser aside.filter-ctn .filter .min-max, main .all-objects .user-teaser aside.filter-ctn .filter .min-max, main .all-users .object-teaser aside.filter-ctn .filter .min-max, main .all-users .user-teaser aside.filter-ctn .filter .min-max {
         position: absolute;
         right: 0;
@@ -6578,7 +6661,7 @@ main {
       display: flex;
       flex-direction: column;
       height: 37.5rem;
-      overflow: scroll; }
+      overflow-y: scroll; }
     main .message-ctn .message-box .chat-bubble {
       box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
       border-radius: 15px;

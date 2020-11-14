@@ -5,28 +5,184 @@ import Vue from './vue.js';
 const isDev = true;
 const root = `${document.location.origin}/nachmieter-suche`;
 
-// index page
-
+// general page js
 (function() {
-    function parallaxFooterImg() {
-        let footer = document.querySelector('footer');
-        let footerImg = document.querySelector('.footer-img');
-        let footerImgHeight = footerImg.offsetHeight - 50;
-        let windowHeight = window.innerHeight;
-        let scrollPosBottom = window.scrollY + windowHeight;
+    class Website {
+        constructor() {}
 
-        if(scrollPosBottom >= footer.offsetTop - 400) {
-            let procentualFooterScroll = 100 / (footer.offsetHeight + 400) * -(footer.offsetTop - 400 - scrollPosBottom);
-            let footerImgUnit = footerImgHeight / 100;
-            
-            footerImg.style.top = 'calc(' + 100 +'% - ' + footerImgUnit * procentualFooterScroll + 'px)';
-        } 
-    }
+        parallaxFooterImg() {
+            let footer = document.querySelector('footer');
+            let footerImg = document.querySelector('.footer-img');
+            let footerImgHeight = footerImg.offsetHeight - 50;
+            let windowHeight = window.innerHeight;
+            let scrollPosBottom = window.scrollY + windowHeight;
     
-    document.addEventListener("DOMContentLoaded", function() {
-        parallaxFooterImg();
-        window.addEventListener('scroll', parallaxFooterImg);
-    });
+            if(scrollPosBottom >= footer.offsetTop - 400) {
+                let procentualFooterScroll = 100 / (footer.offsetHeight + 400) * -(footer.offsetTop - 400 - scrollPosBottom);
+                let footerImgUnit = footerImgHeight / 100;
+                
+                footerImg.style.top = 'calc(' + 100 +'% - ' + footerImgUnit * procentualFooterScroll + 'px)';
+            }
+        }
+
+        lazyLoadImg() {
+            const allLazyImages = document.querySelectorAll('.lazyImg');
+            allLazyImages.forEach(e=>{
+                e.src = e.dataset.src;
+            });
+        }
+        
+        initWebpage() {
+            const me = this;
+            document.addEventListener("DOMContentLoaded", function() {
+                me.parallaxFooterImg();
+                me.lazyLoadImg();
+                me.scrollEvents();
+            });
+        }
+
+        scrollEvents() {
+            const me = this;
+            window.addEventListener('scroll', function() {
+                me.parallaxFooterImg();
+            });
+        }
+
+    }
+
+    const web = new Website();
+    web.initWebpage();
+
+})();
+
+const helperFunctions = {
+    methods: {
+        getUrlParameters: function(getName) {
+            var url = new URL(window.location.href);
+            var param = url.searchParams.get(getName);
+            return param;
+        },
+    }
+};
+
+// index page
+(function() {
+    if (document.body.classList.contains('index')) {
+        Vue.component('address-list-item', {
+            props: ['place'],
+            template: `
+                <li @mousedown="handleAddressClick(place);">{{ placeContent }}</li>
+            `,
+            computed: {
+                placeContent: function() {
+                    if(this.place.std) {
+                        return `${this.place.std} - ${this.place.ort}`;
+                    } else {
+                        return `${this.place.ort}`;
+                    }
+                },
+            },
+            methods: {
+                handleAddressClick: function(place){
+                    this.$emit('handle-address-click', place)
+                }
+            }
+        });
+
+        const vm = new Vue({
+            el: '.header-ctn',
+            data: {
+                activeClass: 'primary',
+                flatIsActive: true,
+                mieterIsActive: false,
+                lfAddress: '',
+                placeList: [],
+                recentPlaceList: [],
+                maxAllowedSuggestions: 30,
+            },
+            computed: {
+                showSuggestions: function() {
+                    if (this.recentPlaceList.length == 0) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+            },
+            watch: {
+                lfAddress: function() {
+                    this.refreshPlaceList();
+                }
+            },
+            created: function () {
+                fetch('./js/json/orte.json',
+                {
+                    headers:
+                    {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                })
+                .then((res) => res.json())
+                .then((data) => {
+                    this.placeList = data;
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+                this.changeSearchType('primary');
+
+            },
+            methods: {
+                eraseSuggestions: function() {
+                    this.recentPlaceList = [];
+                },
+                changeSearchType: function(searchType) {
+                    this.activeClass = searchType;
+                    
+                    if (searchType === 'primary') {
+                        this.flatIsActive = true;
+                        this.mieterIsActive = false;
+                        document.headerSearchForm.action = `${root}/wohnung-finden.php`;
+                    } else if (searchType === 'secondary') {
+                        this.flatIsActive = false;
+                        this.mieterIsActive = true;
+                        document.headerSearchForm.action = `${root}/mieter-finden.php`;
+                    }
+                },
+                handleAddressClick: function(place) {
+                    if (place.std) {
+                        this.lfAddress = place.std + ' - ' + place.ort;
+                    } else {
+                        this.lfAddress = place.ort;
+                    }
+                    this.recentPlaceList = [];
+                },
+                refreshPlaceList: function(){
+                    if (this.lfAddress.length > 2) {
+                        let searchAddress = this.lfAddress.toLowerCase().trim();
+                        
+                        this.recentPlaceList = this.placeList.filter(ele => {
+                            if (ele.std) {
+                                let searchCombi1 = ele.std.toLowerCase() + ' ' + ele.ort.toLowerCase();
+                                let searchCombi2 = ele.ort.toLowerCase() + ' ' + ele.std.toLowerCase();
+                                let searchCombi3 = ele.std.toLowerCase() + ' - ' + ele.ort.toLowerCase();
+                                return ele.ort.toLowerCase().includes(searchAddress) || ele.std.toLowerCase().includes(searchAddress) || searchCombi1.includes(searchAddress) || searchCombi2.includes(searchAddress) || searchCombi3.includes(searchAddress);
+                            } else {
+                                return ele.ort.toLowerCase().includes(searchAddress);
+                            }
+                        });
+
+                        if (this.recentPlaceList.length >= this.maxAllowedSuggestions) {
+                            this.recentPlaceList = this.recentPlaceList.slice(0, this.maxAllowedSuggestions);
+                        }
+                    } else {
+                        this.recentPlaceList = [];
+                    }
+                },
+            },
+        });
+    }
 })();
 
 
@@ -188,8 +344,10 @@ const root = `${document.location.origin}/nachmieter-suche`;
                 lfAddress: null,
                 errorMsg: false,
                 placeList: [],
-                recentPlaceList: []
+                recentPlaceList: [],
+                maxAllowedSuggestions: 30,
             },
+            mixins: [helperFunctions],
             computed: {
                 showSuggestions: function() {
                     if (this.recentPlaceList.length == 0) {
@@ -221,10 +379,19 @@ const root = `${document.location.origin}/nachmieter-suche`;
                     console.log(err);
                 });
 
+                let requestStr = '';
+                const createdAddress = this.getUrlParameters('lf_address');
+                if(createdAddress) {
+                    requestStr = `users&address=${createdAddress}&page=1&limit=50`
+                    this.lfAddress = createdAddress;
+                } else {
+                    requestStr = `users&page=1&limit=50`;
+                }
+
                 const fetched = fetch('./essentials/dbs_json.php',
                 {
                     method: 'POST',
-                    body: 'users&page=1&limit=50',
+                    body: requestStr,
                     headers:
                     {
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -468,7 +635,7 @@ const root = `${document.location.origin}/nachmieter-suche`;
                 noPlace: false,
                 lastValidObj: {},
                 addressList: [],
-                maxAllowedSuggestions: 10,
+                maxAllowedSuggestions: 20,
                 recentPlaceList: [],
                 lfAddress: '',
                 name: null,
@@ -824,6 +991,7 @@ const root = `${document.location.origin}/nachmieter-suche`;
                 recentPlaceList: [],
                 maxAllowedSuggestions: 24
             },
+            mixins: [helperFunctions],
             watch: {
                 lfAddress: function() {
                     this.refreshPlaceList();
@@ -855,10 +1023,19 @@ const root = `${document.location.origin}/nachmieter-suche`;
                     console.log(err);
                 });
 
+                let requestStr = '';
+                const createdAddress = this.getUrlParameters('lf_address');
+                if(createdAddress) {
+                    requestStr = `wohnungen&address=${createdAddress}&page=1&limit=50`
+                    this.lfAddress = createdAddress;
+                } else {
+                    requestStr = `wohnungen&page=1&limit=50`;
+                }
+
                 const fetched = fetch('./essentials/dbs_json.php',
                 {
                     method: 'POST',
-                    body: 'wohnungen&page=1&limit=50',
+                    body: requestStr,
                     headers:
                     {
                         'Content-Type': 'application/x-www-form-urlencoded',

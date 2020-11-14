@@ -64,9 +64,95 @@ header {
                 margin-bottom: 2.5rem;
             }
         }
+
+        &__tabs {
+            width: 60%;
+            margin: 0 auto;
+            display: flex;
+            align-items: flex-end;
+            max-width: rem(530px);
+            &__tab {
+                display: block;
+                width: 50%;
+                flex-basis: 50%;
+                color: $light;
+                padding: rem(10px) 0;
+                font-weight: 600;
+                box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.22);
+                transition: .3s;
+
+                &:hover, &.active {
+                    padding: rem(15px) 0;
+                    margin-top: -10px;
+                }
+
+                &--primary {
+                    background-color: $primary;
+                    border-top-right-radius: 15px;
+                    border-top-left-radius: 15px;
+                    margin-right: 5px;
+                    &:hover {
+                        background-color: darken($primary, 3%);
+                    }
+                }
+                &--secondary {
+                    margin-left: 5px;
+                    border-top-left-radius: 15px;
+                    border-top-right-radius: 15px;
+                    background-color: $secondary;
+                    &:hover {
+                        background-color: darken($secondary, 3%);
+                    }
+                }
+            }
+        }
+
         .search-form {
             position: relative;
-            input {
+            margin: 0 auto;
+            width: 100%;
+            max-width: rem(650px);
+            .address-list {
+                text-align: left;
+                position: absolute;
+                top: calc(100% + 2px);
+                background: #fff;
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+                z-index: 1;
+                padding: .5rem;
+                border-radius: 20px;
+                width: 100%;
+                max-height: rem(520px);
+                overflow-y: scroll;
+                color: $dark;
+                li {
+                    list-style: none;
+                    padding: .4rem 1rem;
+                    border-radius: 25px;
+                    &:hover {
+                        background: $primary;
+                        color: $light;
+                        cursor: pointer;
+                    }
+                }
+            }
+            &.primary {
+                input[type="text"] {
+                    border: 3px solid $primary;
+                    &::placeholder {
+                        color: $primary;
+                    }
+                }
+            }
+            &.secondary {
+                input[type="text"] {
+                    border: 3px solid $secondary;
+                    &::placeholder {
+                        color: $secondary;
+                    }
+                }
+            }
+            input, button {
                 padding: 1rem;
                 @include breakpoint(m) {
                     font-size: rem(18px);
@@ -78,19 +164,27 @@ header {
                     padding-left: 2rem;
                 }
                 &[type=text] {
+                    transition: .3s;
                     width: 100%;
-                    padding-right: rem(135px);
-                    @include breakpoint(m) {
-                        padding-right: rem(230px);
-                    }
+                    padding: 1rem;
+                    padding-right: rem(80px);
+                    padding-left: rem(25px);
+                    font-size: 16px;
                 }
                 &[type=submit] {
                     color: $light;
                     position: absolute;
                     top: 0;
                     right: 0;
+                    bottom: 0;
+                    &.primary {
+                        background: $primary;
+                        &:hover {
+                            background: darken($primary, 3%);
+                        }
+                    }
                     @include breakpoint(m) {
-                        padding: 1.2rem 3rem;
+                        padding: 1.2rem 1.4rem;
                     } 
                 }
             }
@@ -443,12 +537,16 @@ main {
                 .address-field {
                     display: block;
                     width: 100%;
-                    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
                     border: none;
                     padding: .9rem 2.3rem;
                     border-radius: 25px;
                     padding-right: rem(210px);
                     outline: none;
+                    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+                    transition: .3s;
+                    &:focus {
+                        box-shadow: 0 0 5px rgba(0, 0, 0, 0.23);
+                    }
                 }
                 .change-address-btn {
                     position: absolute;
@@ -523,9 +621,14 @@ main {
                         width: 60%;
                         padding: .7rem;
                         outline: none;
-                        border: $lightborder;
+                        border: none;
                         border-radius: 15px;
                         font-size: 14px;
+                        transition: .3s;
+                        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+                        &:focus {
+                            box-shadow: 0 0 5px rgba(0, 0, 0, 0.23);
+                        }
                     }
                     .min-max {
                         position: absolute;
@@ -1182,7 +1285,7 @@ main {
                 display: flex;
                 flex-direction: column;
                 height: rem(600px);
-                overflow: scroll;
+                overflow-y: scroll;
             }
             .chat-bubble {
                 &:first-child {

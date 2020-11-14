@@ -75,11 +75,20 @@
                     $object = $db->get_this_one("SELECT * FROM `objekt` WHERE link='".$web->file_name."'");
                     echo '<h1 class="claim">'.$object['name'].'</h1>';
                 } else {
-                    echo '<span class="claim">Was guckst du so?</span>
-                    <form class="default search-form" action="wohnung-finden.php">
-                        <input type="text" placeholder="Geben Sie Ihren Standort an">
-                        <input type="submit" value="Suche starten" class="btn secondary">
-                    </form>';
+                    echo 
+                    <<<EOL
+                        <span class="claim">Was guckst du so?</span>
+                        <div class="header-ctn__tabs">
+                        <button @click="changeSearchType('primary');" class="header-ctn__tabs__tab header-ctn__tabs__tab--primary" :class="{active : flatIsActive}">Wohnung</button>
+                        <button @click="changeSearchType('secondary');" class="header-ctn__tabs__tab header-ctn__tabs__tab--secondary" :class="{active : mieterIsActive}">Mieter</button>
+                        </div>
+                        <form type="get" name="headerSearchForm" class="default search-form" :class="activeClass">
+                            <input id="lf_address" name="lf_address" type="hidden" v-model="lfAddress">
+                            <input v-model="lfAddress" @blur="eraseSuggestions" type="text" placeholder="Stadt oder Bezirk eingeben ...">
+                            <button type="submit" class="btn" :class="activeClass"><i class="fa fa-search"></i></button>
+                            <ul v-cloak class="address-list" v-show="showSuggestions"><address-list-item @handle-address-click="handleAddressClick" :key="index" v-for="(place, index) in recentPlaceList" :place="place"></address-list-item></ul>
+                        </form> 
+                    EOL;
                 } 
             ?>
         </div>

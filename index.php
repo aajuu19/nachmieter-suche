@@ -29,7 +29,7 @@
                 echo '<div class="col s-6 teaser">
                     <div class="teaser-box">
                         <div class="teaser-img">
-                            <img src="'.$web->root.'/uploads/'.$val['image_1'].'" alt="Mietwohnung | Wohnung | Haus | Immobilie">
+                            <img class="lazyImg" src="//:0" data-src="'.$web->root.'/uploads/'.$val['image_1'].'" alt="Mietwohnung | Wohnung | Haus | Immobilie">
                         </div> 
                         <div class="teaser-content">
                             <span class="heading">'.$val['name'].'</span>

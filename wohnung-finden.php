@@ -8,12 +8,12 @@
 						<div class="address-container">
 							<input class="address-field" v-model="lfAddress" type="text" @blur="eraseSuggestions" placeholder="Stadt, Bezirk oder Postleitzahl angeben">
 							<button class="change-address-btn btn" @mousedown="changeAddress"><i class="fa fa-filter"></i>Übernehmen</button>
-							<ul class="address-list" v-show="showSuggestions">
+							<ul v-cloak class="address-list" v-show="showSuggestions">
 								<address-list-item @handle-address-click="handleAddressClick" :key="index" v-for="(place, index) in recentPlaceList" :place="place"></address-list-item>
 							</ul>
 						</div>
 						<object-item v-for="object in objects" :key="object.o_id" :object="object"></object-item>
-						<span class="error" v-if="errorMsg">Keine passenden Objekte gefunden, probier's mal mit anderen Filtereinstellungen.</span>
+						<span class="error" v-if="errorMsg" v-cloak>Keine passenden Objekte gefunden, probier's mal mit anderen Filtereinstellungen.</span>
 					</div>
 
 					<aside class="col s-4 filter-ctn">

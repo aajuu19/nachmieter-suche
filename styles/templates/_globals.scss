@@ -96,6 +96,13 @@ main {
     }
 }
 
+.lazyImg {
+    background: rgba($primary, 0.35);
+    &.loaded {
+
+    }
+}
+
 form {
     &.default {
         input {

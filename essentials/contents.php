@@ -32,6 +32,13 @@
             'claim' => 'FAQ',
             'include_nav'=> true
         ],
+        'kontakt.php' => [
+            'name' => 'Kontakt',
+            'title' => 'Dies ist die Kontakt Seite',
+            'desc' => 'Dies ist die Beschreibung der Kontaktseite',
+            'claim' => 'Kontakt',
+            'include_nav'=> false
+        ],
         'user.php' => [
             'name' => 'User',
             'title' => 'Dies ist die User Seite',
