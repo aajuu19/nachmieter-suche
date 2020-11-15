@@ -1,7 +1,7 @@
 <?php
 
     $config = [];
-    $config['mail'] = 'info@aaron-jung.com';
+    $config['mail'] = 'aaronjung19@gmail.com';
     $config['phone'] = '0162 / 634 81 75';
 
     $meta = [
@@ -106,5 +106,11 @@
             'desc' => 'Dies ist die Beschreibung des Abmeldebereiches',
             'include_nav'=> false,
             'login_required' => true
+        ],
+        'datenschutzerklaerung.php' => [
+            'name' => 'Datenschutzerklärung',
+            'title' => 'Dies ist die Datenschutzerklärung',
+            'desc' => 'Dies ist die Beschreibung des Datenschutzerklärung',
+            'include_nav'=> false,
         ]
     ];

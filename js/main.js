@@ -10,6 +10,15 @@ const root = `${document.location.origin}/nachmieter-suche`;
     class Website {
         constructor() {}
 
+        minMainHeight() {
+            const headerHeight = document.querySelector('header').offsetHeight;
+            const footerHeight = document.querySelector('footer').offsetHeight;
+            const windowHeight = window.innerHeight;
+
+            const main = document.querySelector('main');
+            main.style.minHeight = windowHeight - footerHeight - headerHeight + 'px';
+        }
+
         parallaxFooterImg() {
             let footer = document.querySelector('footer');
             let footerImg = document.querySelector('.footer-img');
@@ -35,6 +44,7 @@ const root = `${document.location.origin}/nachmieter-suche`;
         initWebpage() {
             const me = this;
             document.addEventListener("DOMContentLoaded", function() {
+                me.minMainHeight();
                 me.parallaxFooterImg();
                 me.lazyLoadImg();
                 me.scrollEvents();
@@ -497,7 +507,8 @@ const helperFunctions = {
                 showRightArrow: false,
                 scrolledThisTimes: 0,
                 thumbsVisible: 3,
-                thumbsVisibleBefore: null
+                thumbsVisibleBefore: null,
+                sliderVisible: true,
             },
             created: function() {
                 this.handleResponsive();
@@ -518,7 +529,8 @@ const helperFunctions = {
                         this.showLeftArrow = true;
                         this.showRightArrow = true;
                     }
-                }
+                },
+                
             },
             computed: {
                 imageCount: function() {
@@ -537,6 +549,11 @@ const helperFunctions = {
             },
             methods: {
                 handleArrowVisibility: function() {
+                    if(this.imageCount <= 1) {
+                        this.sliderVisible = false;
+                    } else {
+                        this.sliderVisible = true;
+                    }
                     if (this.imageCount > this.thumbsVisible) {
                         this.showLeftArrow = true;
                         this.showRightArrow = true;

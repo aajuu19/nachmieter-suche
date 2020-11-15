@@ -98,9 +98,6 @@ main {
 
 .lazyImg {
     background: rgba($primary, 0.35);
-    &.loaded {
-
-    }
 }
 
 form {
@@ -151,6 +148,7 @@ form {
         }
         fieldset {
             border: none;
+            position: relative;
             input {
                 &[type=text], &[type=password], &[type=mail], &[type=number], &[type=date], &[type=file] {
                     @include breakpoint(s) {

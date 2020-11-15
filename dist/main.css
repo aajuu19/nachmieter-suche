@@ -5274,7 +5274,8 @@ form.default input {
     color: #fff; }
 
 form.default fieldset {
-  border: none; }
+  border: none;
+  position: relative; }
   @media (min-width: 680px) {
     form.default fieldset input[type=text], form.default fieldset input[type=password], form.default fieldset input[type=mail], form.default fieldset input[type=number], form.default fieldset input[type=date], form.default fieldset input[type=file] {
       margin-left: 10.625rem;
@@ -5676,6 +5677,8 @@ header {
         font-weight: 600;
         box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.22);
         transition: .3s; }
+        header .header-ctn__tabs__tab i {
+          padding-right: 5px; }
         header .header-ctn__tabs__tab:hover, header .header-ctn__tabs__tab.active {
           padding: 0.9375rem 0;
           margin-top: -10px; }
@@ -6076,6 +6079,19 @@ main {
   main .all-objects .object-teaser .address-container, main .all-objects .user-teaser .address-container, main .all-users .object-teaser .address-container, main .all-users .user-teaser .address-container {
     position: relative;
     margin-bottom: 1.5625rem; }
+    main .all-objects .object-teaser .address-container .address-field-label, main .all-objects .user-teaser .address-container .address-field-label, main .all-users .object-teaser .address-container .address-field-label, main .all-users .user-teaser .address-container .address-field-label {
+      position: absolute;
+      background: #0074e1;
+      top: 0;
+      left: 0;
+      padding: 0.75rem 0.625rem;
+      border-top-left-radius: 1.5625rem;
+      border-bottom-left-radius: 1.5625rem;
+      color: #fff; }
+      main .all-objects .object-teaser .address-container .address-field-label i, main .all-objects .user-teaser .address-container .address-field-label i, main .all-users .object-teaser .address-container .address-field-label i, main .all-users .user-teaser .address-container .address-field-label i {
+        font-size: 1.25rem;
+        position: relative;
+        left: 2px; }
     main .all-objects .object-teaser .address-container .address-field, main .all-objects .user-teaser .address-container .address-field, main .all-users .object-teaser .address-container .address-field, main .all-users .user-teaser .address-container .address-field {
       display: block;
       width: 100%;
@@ -6083,6 +6099,7 @@ main {
       padding: .9rem 2.3rem;
       border-radius: 25px;
       padding-right: 13.125rem;
+      padding-left: 3.125rem;
       outline: none;
       box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
       transition: .3s; }
@@ -6717,6 +6734,93 @@ main {
       transition: .3s; }
       main .message-ctn .send-form .submit-button:hover {
         background: #1c9ce5; }
+  body.kontakt main .row .contact-form {
+    margin-top: 3.125rem; }
+    body.kontakt main .row .contact-form__heading {
+      display: block;
+      font-size: 60px;
+      font-weight: 700; }
+    body.kontakt main .row .contact-form__description {
+      display: block;
+      position: relative;
+      padding-bottom: 2.1875rem;
+      margin-top: 0.9375rem;
+      margin-bottom: 2.8125rem; }
+      body.kontakt main .row .contact-form__description:after {
+        content: '';
+        display: block;
+        height: 0.25rem;
+        width: 10rem;
+        background: #f79e02;
+        position: absolute;
+        bottom: 0; }
+    body.kontakt main .row .contact-form__same-height-flex {
+      display: flex;
+      flex-direction: column; }
+    body.kontakt main .row .contact-form__fieldset {
+      display: block; }
+      body.kontakt main .row .contact-form__fieldset:not(:last-child) {
+        margin-bottom: 1.875rem; }
+      body.kontakt main .row .contact-form__fieldset--full-height {
+        height: 100%; }
+      body.kontakt main .row .contact-form__fieldset__checkbox-label {
+        background: transparent;
+        color: #312f2c;
+        width: 100%;
+        display: flex;
+        position: static; }
+        body.kontakt main .row .contact-form__fieldset__checkbox-label a {
+          color: #1c9ce5; }
+        body.kontakt main .row .contact-form__fieldset__checkbox-label:before {
+          content: '';
+          background: #f79e02;
+          border-radius: 25px;
+          width: 3.75rem;
+          height: 2.1875rem;
+          display: inline-block;
+          opacity: .8; }
+        body.kontakt main .row .contact-form__fieldset__checkbox-label:after {
+          content: '';
+          position: absolute;
+          left: 5px;
+          top: 6px;
+          background: rgba(255, 255, 255, 0.4);
+          width: 27px;
+          height: 27px;
+          border-radius: 50%;
+          transition: .3s; }
+        body.kontakt main .row .contact-form__fieldset__checkbox-label:hover:after {
+          background: rgba(255, 255, 255, 0.6);
+          left: 20px; }
+      body.kontakt main .row .contact-form__fieldset__checkbox {
+        position: absolute;
+        top: 23px;
+        left: 20px;
+        opacity: 0; }
+        body.kontakt main .row .contact-form__fieldset__checkbox:checked ~ .contact-form__fieldset__checkbox-label:before {
+          opacity: 1; }
+        body.kontakt main .row .contact-form__fieldset__checkbox:checked ~ .contact-form__fieldset__checkbox-label:after {
+          background: rgba(255, 255, 255, 0.9);
+          left: 20px; }
+  main .form-legend {
+    margin-top: 2.5rem; }
+    main .form-legend__info {
+      display: flex; }
+      main .form-legend__info:not(:last-child) {
+        margin-bottom: 15px; }
+      main .form-legend__info:before {
+        border-top-left-radius: 15px;
+        border-bottom-left-radius: 15px;
+        margin-right: 8px;
+        height: 20px;
+        width: 40px;
+        background: #312f2c;
+        content: '';
+        display: block; }
+      main .form-legend__info--required:before {
+        background: #f79e02; }
+      main .form-legend__info--optional:before {
+        background: #fec561; }
 
 .footer-img {
   display: block;

@@ -30,6 +30,11 @@
             return $this->current_dir . ' ' . basename($this->file_name, '.php');
         }
 
+        public function is_valid_email($email) {
+            return filter_var($email, FILTER_VALIDATE_EMAIL) 
+                && preg_match('/@.+\./', $email);
+        }
+
         public function build_nav() {
             $nav = '<nav><ul class="navi">';
 
@@ -126,7 +131,7 @@
         }
 
         public function get_upl_img($src, $alt, $class = "fluid") {
-            return '<img src="'.$this->root.'/uploads/'.$src.'" alt="'.$alt.'" class="'.$class.'">';
+            return '<img src="//:0" data-src="'.$this->root.'/uploads/'.$src.'" alt="'.$alt.'" class="lazyImg '.$class.'">';
         }
 
         // Prevent XSS (cross-site-scripting)

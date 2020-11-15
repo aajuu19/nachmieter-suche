@@ -81,6 +81,10 @@ header {
                 box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.22);
                 transition: .3s;
 
+                i {
+                    padding-right: 5px;
+                }
+
                 &:hover, &.active {
                     padding: rem(15px) 0;
                     margin-top: -10px;
@@ -534,6 +538,21 @@ main {
             .address-container {
                 position: relative;
                 margin-bottom: rem(25px);
+                .address-field-label {
+                    position: absolute;
+                    background: $medium;
+                    top: 0;
+                    left: 0;
+                    padding: rem(12px) rem(10px);
+                    border-top-left-radius: rem(25px);
+                    border-bottom-left-radius: rem(25px);
+                    color: $light;
+                    i {
+                        font-size: rem(20px);
+                        position: relative;
+                        left: 2px;
+                    }
+                }
                 .address-field {
                     display: block;
                     width: 100%;
@@ -541,6 +560,7 @@ main {
                     padding: .9rem 2.3rem;
                     border-radius: 25px;
                     padding-right: rem(210px);
+                    padding-left: rem(50px);
                     outline: none;
                     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
                     transition: .3s;
@@ -1357,6 +1377,133 @@ main {
         }
     }
     padding-bottom: rem(250px);
+
+    // contact page
+    body.kontakt & {
+        .row .contact-form {
+            margin-top: rem(50px);
+            &__heading {
+                display: block;
+                font-size: 60px;
+                font-weight: 700;
+                
+            }
+            
+            &__description {
+                display: block;
+                position: relative;
+                padding-bottom: rem(35px);
+                margin-top: rem(15px);
+                margin-bottom: rem(45px);
+                &:after {
+                    content: '';
+                    display: block;
+                    height: rem(4px);
+                    width: rem(160px);
+                    background: $secondary;
+                    position: absolute;
+                    bottom: 0;
+                }
+            }
+
+            &__same-height-flex {
+                display: flex;
+                flex-direction: column;
+            }
+            &__fieldset {
+                display: block;
+                &:not(:last-child) {
+                    margin-bottom: rem(30px);
+                }
+                &--full-height {
+                    height: 100%;
+                }
+                &__checkbox-label {
+                    background: transparent;
+                    color: $dark;
+                    width: 100%;
+                    display: flex;
+                    position: static;
+                    a {
+                        color: $primary;
+                    }
+                    &:before {
+                        content: '';
+                        background: $secondary;
+                        border-radius: 25px;
+                        width: rem(60px);
+                        height: rem(35px);
+                        display: inline-block;
+                        opacity: .8;
+                    }
+                    &:after {
+                        content: '';
+                        position: absolute;
+                        left: 5px;
+                        top: 6px;
+                        background: rgba($light, 0.4);
+                        width: 27px;
+                        height: 27px;
+                        border-radius: 50%;
+                        transition: .3s;
+                    }
+                    &:hover {
+                        &:after {
+                            background: rgba($light, 0.6);
+                            left: 20px;
+                        }
+                    }
+                }
+                &__checkbox {
+                    position: absolute;
+                    top: 23px;
+                    left: 20px;
+                    opacity: 0;
+                    &:checked {
+                        ~ .contact-form__fieldset__checkbox-label {
+                            &:before {
+                                opacity: 1;
+                            }
+                            &:after {
+                                background: rgba($light, 0.9);
+                                left: 20px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    .form-legend {
+        margin-top: rem(40px);
+        &__info {
+            display: flex;
+            &:not(:last-child) {
+                margin-bottom: 15px;
+            }
+            &:before {
+                border-top-left-radius: 15px;
+                border-bottom-left-radius: 15px;
+                margin-right: 8px;
+                height: 20px;
+                width: 40px;
+                background: $dark;
+                content: '';
+                display: block;
+            }
+            &--required {
+                &:before {
+                    background: $secondary;
+                }
+            }
+            &--optional {
+                &:before {
+                    background: lighten($secondary, 20%);
+                }
+            }
+        }
+    }
 }
 
 .footer-img {

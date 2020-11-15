@@ -25,7 +25,7 @@
                     </label>
                 </div>
                 <div class="head-ctn">
-                    <a href="<?php echo $web->root; ?>/index.php"  class="branding" title="zur Nachmieter-Suche Startseite"><span class="highlight">nachmieter</span>-suche.de</a>
+                    <a href="<?php echo $web->root; ?>/index.php"  class="branding" title="zur womisu Startseite"><span class="highlight">womi</span>su.de</a>
                     <div class="user-data">
                         <div class="navigation">
                             <?php $web->build_nav(); ?>
@@ -43,9 +43,7 @@
                                                         $sql = "SELECT COUNT(*) FROM person, friendship_request WHERE friendship_request.rec_p_id = ".$_SESSION['person']['p_id']." AND person.p_id = friendship_request.send_p_id";
                                                         $friendship_request_amount = $db->get_this_one($sql);
                                                         $friendship_request_amount = $friendship_request_amount['COUNT(*)'];
-                                                        if ($friendship_request_amount >= 1) {
-                                                            echo '<span class="friend-request-amount">'.$friendship_request_amount.'</span>';
-                                                        }
+                                                        echo '<span class="friend-request-amount">'.$friendship_request_amount.'</span>';
                                                     ?></a></li>
                                                 <li><a href="<?php echo $web->root; ?>/user/settings.php" title="<?php echo $meta['settings.php']['title'] ?>">Einstellungen</a></li>
                                                 <li><a href="<?php echo $web->root; ?>/logout.php" title="<?php echo $meta['logout.php']['title'] ?>">Abmelden</a></li>
@@ -79,8 +77,8 @@
                     <<<EOL
                         <span class="claim">Was guckst du so?</span>
                         <div class="header-ctn__tabs">
-                        <button @click="changeSearchType('primary');" class="header-ctn__tabs__tab header-ctn__tabs__tab--primary" :class="{active : flatIsActive}">Wohnung</button>
-                        <button @click="changeSearchType('secondary');" class="header-ctn__tabs__tab header-ctn__tabs__tab--secondary" :class="{active : mieterIsActive}">Mieter</button>
+                        <button @click="changeSearchType('primary');" class="header-ctn__tabs__tab header-ctn__tabs__tab--primary" :class="{active : flatIsActive}"><i class="fa fa-home"></i> Wohnung</button>
+                        <button @click="changeSearchType('secondary');" class="header-ctn__tabs__tab header-ctn__tabs__tab--secondary" :class="{active : mieterIsActive}"><i class="fa fa-user"></i> Mieter</button>
                         </div>
                         <form type="get" name="headerSearchForm" class="default search-form" :class="activeClass">
                             <input id="lf_address" name="lf_address" type="hidden" v-model="lfAddress">

@@ -111,6 +111,11 @@
 					<p>Einige der Angaben sind zwar optional, wir würden dir dennoch raten diese anzugeben.</p>
 					<p>Je mehr Angaben du machst, desto besser wirst du über die "Wohnung finden"-Suche gefunden.</p>
 					<p>Gibt jemand einen Suchfilter mit einer Mindest- oder Höchstetage an und du hast keine angegeben, wirst du nicht angezeigt.</p>
+
+					<div class="form-legend">
+						<span class="form-legend__info form-legend__info--required"> Pflichtfeld</span>
+						<span class="form-legend__info form-legend__info--optional"> Optional</span>
+					</div>
 				</aside>
 			</div>
 		</div>

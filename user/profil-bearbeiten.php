@@ -145,7 +145,7 @@
 							<input v-model="birthdate" placeholder="Ihr Geburtsdatum (DD.MM.YYYY)" name="pers-birthdate" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="pers-birthdate" />
                         </fieldset>
 
-						<button type="submit" class="btn wide"><i class="fa fa-plus-circle"></i>Profil speichern</button>
+						<button type="submit" class="btn wide"><i class="fa fa-plus-circle"></i> Profil speichern</button>
 					</form>
 				</div>
 			</div>
@@ -153,7 +153,12 @@
 				<aside class="side-info bd-left">
 					<h3 class="align-left">Info:</h3>
 					<p>Alle Angaben die du hier tätigst sind komplett freiwillig und dienen nur dazu, dein eigenes Profil besser zu bewerben und für andere Benutzer nachvollziehbarer zu machen.</p>
-					<p>Die Informationen sind nur für Benutzer dieser Webseite sichtbar und werden nicht von uns an Dritte weitergegeben.</p>
+                    <p>Die Informationen sind nur für Benutzer dieser Webseite sichtbar und werden nicht von uns an Dritte weitergegeben.</p>
+                    
+                    <div class="form-legend">
+						<span class="form-legend__info form-legend__info--required"> Pflichtfeld</span>
+						<span class="form-legend__info form-legend__info--optional"> Optional</span>
+					</div>
 				</aside>
 			</div>
 		</div>

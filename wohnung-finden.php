@@ -6,6 +6,9 @@
 				<div class="object-teaser row">
 					<div class="col s-8">
 						<div class="address-container">
+							<span class="address-field-label">
+								<i class="fa fa-map-marker-alt"></i>
+							</span>
 							<input class="address-field" v-model="lfAddress" type="text" @blur="eraseSuggestions" placeholder="Stadt, Bezirk oder Postleitzahl angeben">
 							<button class="change-address-btn btn" @mousedown="changeAddress"><i class="fa fa-filter"></i>Übernehmen</button>
 							<ul v-cloak class="address-list" v-show="showSuggestions">

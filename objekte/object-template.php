@@ -9,7 +9,7 @@
             <div class="obj-slider-main-img">
                 <img :src="mainImgSrc ||'<?php echo $web->root; ?>/uploads/<?php echo $obj['image_1']; ?>'" alt="<?php $obj['name'] ?>" class="cover main-img">
             </div>
-            <div class="obj-slider-thumblist">
+            <div class="obj-slider-thumblist" v-if="sliderVisible">
                 <div class="obj-overflow-ctn">
                     <div :class="{center : imageCount < thumbsVisible}" class="obj-inner-ctn" :style="{ left: sliderPosition + 'px'}">
                         <?php
