@@ -10,6 +10,22 @@ const root = `${document.location.origin}/nachmieter-suche`;
     class Website {
         constructor() {}
 
+        debounce(func, wait) {
+            let timeout;
+            
+            return function() {
+                let context = this, args = arguments;
+          
+                let later = function() {
+                    timeout = null;
+                    func.apply(context, args);
+                };
+            
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
         minMainHeight() {
             const headerHeight = document.querySelector('header').offsetHeight;
             const footerHeight = document.querySelector('footer').offsetHeight;
@@ -19,25 +35,12 @@ const root = `${document.location.origin}/nachmieter-suche`;
             main.style.minHeight = windowHeight - footerHeight - headerHeight + 'px';
         }
 
-        parallaxFooterImg() {
-            let footer = document.querySelector('footer');
-            let footerImg = document.querySelector('.footer-img');
-            let footerImgHeight = footerImg.offsetHeight - 50;
-            let windowHeight = window.innerHeight;
-            let scrollPosBottom = window.scrollY + windowHeight;
-    
-            if(scrollPosBottom >= footer.offsetTop - 400) {
-                let procentualFooterScroll = 100 / (footer.offsetHeight + 400) * -(footer.offsetTop - 400 - scrollPosBottom);
-                let footerImgUnit = footerImgHeight / 100;
-                
-                footerImg.style.top = 'calc(' + 100 +'% - ' + footerImgUnit * procentualFooterScroll + 'px)';
-            }
-        }
-
         lazyLoadImg() {
             const allLazyImages = document.querySelectorAll('.lazyImg');
             allLazyImages.forEach(e=>{
                 e.src = e.dataset.src;
+                e.classList.remove('lazyImg');
+                e.classList.add('lazyLoaded');
             });
         }
         
@@ -45,16 +48,7 @@ const root = `${document.location.origin}/nachmieter-suche`;
             const me = this;
             document.addEventListener("DOMContentLoaded", function() {
                 me.minMainHeight();
-                me.parallaxFooterImg();
                 me.lazyLoadImg();
-                me.scrollEvents();
-            });
-        }
-
-        scrollEvents() {
-            const me = this;
-            window.addEventListener('scroll', function() {
-                me.parallaxFooterImg();
             });
         }
 
@@ -63,6 +57,58 @@ const root = `${document.location.origin}/nachmieter-suche`;
     const web = new Website();
     web.initWebpage();
 
+    function debounce(func, wait = 100) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+            func.apply(this, args);
+            }, wait);
+        };
+    }
+
+    const footerFunc = function parallaxFooterImg() {
+        let footer = document.querySelector('footer');
+        let footerImg = document.querySelector('.footer-img');
+        let footerImgHeight = footerImg.offsetHeight - 50;
+        let windowHeight = window.innerHeight;
+        let scrollPosBottom = window.scrollY + windowHeight;
+
+        if(scrollPosBottom >= footer.offsetTop - 400) {
+            let procentualFooterScroll = 100 / (footer.offsetHeight + 400) * -(footer.offsetTop - 400 - scrollPosBottom);
+            let footerImgUnit = footerImgHeight / 100;
+            
+            footerImg.style.top = 'calc(' + 100 +'% - ' + footerImgUnit * procentualFooterScroll + 'px)';
+        }
+    }
+
+    const debounced = debounce(footerFunc, 100);
+
+    window.addEventListener('scroll', debounced);
+
+    if (document.body.classList.contains('objekte')) {
+        const editBtn = document.querySelector('.edit-flat-btn');
+
+        const deleteBtn = document.querySelector('.delete-flat-btn');
+        const deleteWindow = document.querySelector('.info-up-window__delete');
+        
+        if(editBtn && deleteBtn) {
+            const closeDelete = deleteWindow.querySelector('.info-up-window__close');
+            const abortBtn = deleteWindow.querySelector('.info-up-window__buttons .abort');
+            
+            deleteBtn.addEventListener('click', function(){
+                deleteWindow.classList.add('active');
+            });
+            
+            closeDelete.addEventListener('click', function(){
+                deleteWindow.classList.remove('active');
+            });
+
+            abortBtn.addEventListener('click', function(){
+                deleteWindow.classList.remove('active');
+            });
+        }
+    }
 })();
 
 const helperFunctions = {
@@ -72,6 +118,9 @@ const helperFunctions = {
             var param = url.searchParams.get(getName);
             return param;
         },
+        randomId: function() {
+            return '_' + Math.random().toString(36).substr(2, 9);
+        }
     }
 };
 
@@ -356,6 +405,9 @@ const helperFunctions = {
                 placeList: [],
                 recentPlaceList: [],
                 maxAllowedSuggestions: 30,
+                newPageAvailable: true,
+                nextPage: 2,
+                pageLimitation: 20
             },
             mixins: [helperFunctions],
             computed: {
@@ -392,10 +444,10 @@ const helperFunctions = {
                 let requestStr = '';
                 const createdAddress = this.getUrlParameters('lf_address');
                 if(createdAddress) {
-                    requestStr = `users&address=${createdAddress}&page=1&limit=50`
+                    requestStr = `users&address=${createdAddress}&page=1&limit=${this.pageLimitation}`
                     this.lfAddress = createdAddress;
                 } else {
-                    requestStr = `users&page=1&limit=50`;
+                    requestStr = `users&page=1&limit=${this.pageLimitation}`;
                 }
 
                 const fetched = fetch('./essentials/dbs_json.php',
@@ -414,7 +466,21 @@ const helperFunctions = {
                     console.log(err);
                 });
             },
+            mounted: function() {
+                window.addEventListener('scroll', this.getNewPage);
+            },
             methods: {
+                getNewPage: function() {
+                    
+                    let bodyHeight = document.body.scrollHeight;
+                    let scrollBottom = window.scrollY + window.innerHeight;
+                    
+                    if (this.newPageAvailable && scrollBottom >= bodyHeight - 200) {
+                       this.newPageAvailable = false;
+                       this.filterIt(this.nextPage, this.pageLimitation, true)
+                    }
+
+                },
                 eraseSuggestions: function() {
                     this.recentPlaceList = [];
                 },
@@ -424,7 +490,7 @@ const helperFunctions = {
                     } else {
                         this.lfAddress = place.ort;
                     }
-                    this.filterIt();
+                    this.filterIt(1, this.pageLimitation);
                 },
                 refreshPlaceList: function(){
                     if (this.lfAddress.length >= 2) {
@@ -448,10 +514,13 @@ const helperFunctions = {
                         this.recentPlaceList = [];
                     }
                 },
-                changeAddress: function () {
-                    this.filterIt();
+                handleFilterClick: function () {
+                    this.filterIt(1, this.pageLimitation);
                 },
-                filterIt: function () {
+                changeAddress: function () {
+                    this.filterIt(1, this.pageLimitation);
+                },
+                filterIt: function (pageVal, limit, isAnotherPage = false) {
                     const fL = this.filterList;
                     let paramStr = '';
 
@@ -471,18 +540,30 @@ const helperFunctions = {
                     const fetched = fetch('./essentials/dbs_json.php',
                     {
                         method: 'POST',
-                        body: `users&${paramStr}page=1&limit=50`,
+                        body: `users&${paramStr}page=${pageVal}&limit=${limit}`,
                         headers:
                         {
                             'Content-Type': 'application/x-www-form-urlencoded',
                         },
                     }).then((data) => data.json());
                     fetched.then((data) => {
-                        this.users = data;
-                        if (this.users.length === 0) {
-                            this.errorMsg = true;
-                        } else {
+                        if(data.length >= 1) {
                             this.errorMsg = false;
+                            if(isAnotherPage) {
+                                data.forEach(e=>{
+                                    this.users.push(e);
+                                });
+                                this.nextPage++;
+                                this.newPageAvailable = true;
+                            } else {
+                                this.nextPage = 2;
+                                this.users = data;
+                            }
+                        } else {
+                            if(!isAnotherPage) {
+                                this.errorMsg = true;
+                                this.users = [];
+                            }
                         }
                     })
                     .catch((err) => {
@@ -523,8 +604,10 @@ const helperFunctions = {
                 scrolledThisTimes: function() {
                     if (this.scrolledThisTimes === 0) {
                         this.showLeftArrow = false;
+                        this.showRightArrow = true;
                     } else if (this.scrolledThisTimes == this.imageCount - this.thumbsVisible) {
                         this.showRightArrow = false;
+                        this.showLeftArrow = true;
                     } else {
                         this.showLeftArrow = true;
                         this.showRightArrow = true;
@@ -1006,7 +1089,10 @@ const helperFunctions = {
                 lfAddress: '',
                 placeList: [],
                 recentPlaceList: [],
-                maxAllowedSuggestions: 24
+                maxAllowedSuggestions: 24,
+                newPageAvailable: true,
+                nextPage: 2,
+                pageLimitation: 20
             },
             mixins: [helperFunctions],
             watch: {
@@ -1043,10 +1129,10 @@ const helperFunctions = {
                 let requestStr = '';
                 const createdAddress = this.getUrlParameters('lf_address');
                 if(createdAddress) {
-                    requestStr = `wohnungen&address=${createdAddress}&page=1&limit=50`
+                    requestStr = `wohnungen&address=${createdAddress}&page=1&limit=${this.pageLimitation}`
                     this.lfAddress = createdAddress;
                 } else {
-                    requestStr = `wohnungen&page=1&limit=50`;
+                    requestStr = `wohnungen&page=1&limit=${this.pageLimitation}`;
                 }
 
                 const fetched = fetch('./essentials/dbs_json.php',
@@ -1068,7 +1154,22 @@ const helperFunctions = {
                     console.log(err);
                 });
             },
+            mounted: function() {
+                window.addEventListener('scroll', this.getNewPage);
+            },
             methods: {
+                getNewPage: function() {
+                    
+                    let bodyHeight = document.body.scrollHeight;
+                    let scrollBottom = window.scrollY + window.innerHeight;
+                    
+                    if (this.newPageAvailable && scrollBottom >= bodyHeight - 200) {
+                       this.newPageAvailable = false;
+                       console.log(this.pageLimitation);
+                       this.filterIt(this.nextPage, this.pageLimitation, true)
+                    }
+
+                },
                 eraseSuggestions: function() {
                     this.recentPlaceList = [];
                 },
@@ -1078,7 +1179,7 @@ const helperFunctions = {
                     } else {
                         this.lfAddress = place.ort;
                     }
-                    this.filterIt();
+                    this.filterIt(1, this.pageLimitation);
                 },
                 refreshPlaceList: function(){
                     if (this.lfAddress.length >= 2) {
@@ -1102,10 +1203,13 @@ const helperFunctions = {
                         this.recentPlaceList = [];
                     }
                 },
-                changeAddress: function () {
-                    this.filterIt();
+                handleFilterClick: function() {
+                    this.filterIt(1, this.pageLimitation);
                 },
-                filterIt: function () {
+                changeAddress: function () {
+                    this.filterIt(1, this.pageLimitation);
+                },
+                filterIt: function (pageVal, limit, isAnotherPage = false) {
                     const fL = this.filterList;
                     let paramStr = '';
 
@@ -1133,19 +1237,33 @@ const helperFunctions = {
                     const fetched = fetch('./essentials/dbs_json.php',
                     {
                         method: 'POST',
-                        body: `wohnungen&${paramStr}page=1&limit=50`,
+                        body: `wohnungen&${paramStr}page=${pageVal}&limit=${limit}`,
                         headers:
                         {
                             'Content-Type': 'application/x-www-form-urlencoded',
                         },
                     }).then((data) => data.json());
                     fetched.then((data) => {
-                        this.objects = data;
-                        if (this.objects.length === 0) {
-                            this.errorMsg = true;
-                        } else {
+
+                        if(data.length >= 1) {
                             this.errorMsg = false;
+                            if(isAnotherPage) {
+                                data.forEach(e=>{
+                                    this.objects.push(e);
+                                });
+                                this.nextPage++;
+                                this.newPageAvailable = true;
+                            } else {
+                                this.nextPage = 2;
+                                this.objects = data;
+                            }
+                        } else {
+                            if(!isAnotherPage) {
+                                this.errorMsg = true;
+                                this.objects = [];
+                            }
                         }
+
                         this.recentPlaceList = [];
                     })
                     .catch((err) => {
@@ -1234,7 +1352,81 @@ const helperFunctions = {
 // new object page
 (function (){
     if (document.body.classList.contains('neues-objekt')) {
-        const vm = new Vue({
+        Vue.component('flat-image', {
+            props: ['file', 'fId', 'edit-mode'],
+            data: function() {
+                return {
+                    imgSrc: null,
+                    fileName: null,
+                    removeIsVisible: null,
+                    copiedFile: null
+                }
+            },
+            template: `
+                <fieldset class="image-ctn">
+                    <label class="opt-sec" :for="'obj-image-' + fId">
+                        <div class="icon-ctn">
+                            <i class="icon fa fa-images"></i>
+                            <span>Objektbild {{ fId }}</span>
+                        </div>
+                        
+                        <span class="img-placeholder optional">
+                            <span v-show="fileName" class="file-item"><img :src="imgSrc" alt="Bild" class="obj-image__preview"> {{ fileName }}</span>
+                            <span class="img-btn" v-show="!fileName">
+                                Bild hochladen <i class="fa fa-plus"></i> 
+                            </span>
+                        </span>
+                    </label>
+                    <div v-show="removeIsVisible" @click="removeFile" class="removeBtn"><i class="fa fa-times"></i></div>
+                    <input type="file" @click="copyFile" @change="showPreview" :name="'obj-image-' + fId" :id="'obj-image-' + fId" accept="image/*">
+                </fieldset>
+            `,
+            mounted: function() {
+                if(this.file.fileName) {
+                    this.imgSrc = root + '/uploads/' + this.file.fileName;
+                    this.fileName = this.file.fileName;
+                    this.removeIsVisible = true;
+                }
+            },
+            methods: {
+                isDataURL: function(s) {
+                    let regex = /^\s*data:([a-z]+\/[a-z]+(;[a-z\-]+\=[a-z\-]+)?)?(;base64)?,[a-z0-9\!\$\&\'\,\(\)\*\+\,\;\=\-\.\_\~\:\@\/\?\%\s]*\s*$/i;
+                    return !!s.match(regex);
+                },
+                copyFile: function(event) {
+                    this.copiedFile = event.target.files;
+                },
+                removeFile: function(){
+                    this.$emit('delete-from-file-list', (this.fId - 1));
+                },
+                showPreview: function(event) {
+                    if (event.target.value) {
+                        let imgFile = event.target.files[0];
+
+                        this.readUrl(imgFile);
+                        this.fileName = imgFile.name;
+                        this.removeIsVisible = true;
+                        
+                        this.$emit('show-add-img', imgFile, this.fId - 1);
+                    } else {
+                        event.target.files = this.copiedFile;
+                    }
+                },
+                readUrl: function (input) {
+                    if (input.size && input.size > 1) {
+                        let me = this;
+                        let reader = new FileReader();
+
+                        reader.onload = function(e) {
+                            me.imgSrc = e.target.result;
+                        }
+                        
+                        reader.readAsDataURL(input); // convert to base64 string
+                    }
+                }
+            },
+        });
+        window.vm = new Vue({
             el: '.obj-ctn',
             data: {
                 objIsSet: false,
@@ -1247,11 +1439,27 @@ const helperFunctions = {
                 showLoader: true,
                 noPlace: false,
                 maxFiles: 7,
-                fileList: [],
                 lastValidObj: null,
                 addressList: [],
-                limitAddressSuggestions: 10
+                limitAddressSuggestions: 10,
+                flatDetails: {
+                    name: null,
+                    quadratmeter: null,
+                    zimmer: null,
+                    bad: null,
+                    kalt: null,
+                    warm: null,
+                    typ: null,
+                    etage: null,
+                    einzug: null,
+                    adresse: null,
+                    beschreibung: null
+                },
+                imageFileList: [],
+                addImageIsVisible: false,
+                isEditMode: false
             },
+            mixins: [helperFunctions],
             watch: {
                 objAddress: function (search) {
                     if (!this.objIsSet) {
@@ -1260,6 +1468,145 @@ const helperFunctions = {
                 },
             },
             created: function() {
+                fetch('./../essentials/get-session.php')
+                .then((json) => json.json())
+                .then((sessionId) => {
+                    let isUser = sessionId.person.p_id; 
+                    let lfFlat = this.getUrlParameters('flat_id');
+                    
+                    if(lfFlat){
+                        this.isEditMode = true;
+                        fetch('./../essentials/dbs_json.php',
+                        {
+                            method: 'POST',
+                            body: 'flat_by_id=' + lfFlat,
+                            headers:
+                            {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                        })
+                        .then((data) => data.json())
+                        .then((data) => {
+                            let flatData = data[0];
+
+                            if (flatData.p_id == isUser) {
+                                if (flatData.name) {
+                                    this.flatDetails.name = flatData.name;
+                                }
+                                if (flatData.quadratmeter) {
+                                    this.flatDetails.quadratmeter = flatData.quadratmeter;
+                                }
+                                if (flatData.zimmer) {
+                                    this.flatDetails.zimmer = flatData.zimmer;
+                                }
+                                if (flatData.bad) {
+                                    this.flatDetails.bad = flatData.bad;
+                                }
+                                if (flatData.kalt) {
+                                    this.flatDetails.kalt = flatData.kalt;
+                                }
+                                if (flatData.warm) {
+                                    this.flatDetails.warm = flatData.warm;
+                                }
+                                if (flatData.typ) {
+                                    this.flatDetails.typ = flatData.typ;
+                                }
+                                if (flatData.etage) {
+                                    this.flatDetails.etage = flatData.etage;
+                                }
+                                if (flatData.einzug) {
+                                    this.flatDetails.einzug = flatData.einzug;
+                                }
+                                if (flatData.adresse) {
+                                    this.objAddress = flatData.adresse;
+
+                                    const flatArr = flatData.adresse.split(' - ');
+                                    const betweenArr = flatArr[0].split(' ');
+                                    let flatObj = {};
+
+                                    if (betweenArr.length >= 2) {
+                                        flatObj.plz = betweenArr[0];
+                                        flatObj.std = betweenArr[1];
+                                        flatObj.ort = flatArr[1];
+                                    } else {
+                                        flatObj.plz = flatArr[0];
+                                        flatObj.ort = flatArr[1];
+                                    } 
+
+                                    this.setAddress(flatObj);
+                                }
+                                if (flatData.beschreibung) {
+                                    this.flatDetails.beschreibung = flatData.beschreibung
+                                }
+                            }
+
+                            if(flatData['image_1'] !== 'placeholder.png') {
+                                this.imageFileList.push({
+                                    fileName: flatData['image_1'],
+                                    id: this.randomId()
+                                });
+                            }
+                            if (flatData['image_2']) {
+                                this.imageFileList.push({
+                                    fileName: flatData['image_2'],
+                                    id: this.randomId()
+                                });
+                            }
+                            if (flatData['image_3']) {
+                                this.imageFileList.push({
+                                    fileName: flatData['image_3'],
+                                    id: this.randomId()
+                                });
+                            }
+                            if (flatData['image_4']) {
+                                this.imageFileList.push({
+                                    fileName: flatData['image_4'],
+                                    id: this.randomId()
+                                });
+                            }
+                            if (flatData['image_5']) {
+                                this.imageFileList.push({
+                                    fileName: flatData['image_5'],
+                                    id: this.randomId()
+                                });
+                            }
+                            if (flatData['image_6']) {
+                                this.imageFileList.push({
+                                    fileName: flatData['image_6'],
+                                    id: this.randomId()
+                                });
+                            }
+                            if (flatData['image_7']) {
+                                this.imageFileList.push({
+                                    fileName: flatData['image_7'],
+                                    id: this.randomId()
+                                });
+                            } else {
+                                this.imageFileList.push({
+                                    fileName: '',
+                                    id: this.randomId()
+                                });
+                            }
+
+                        })
+                        .catch((err) => {
+                            if (isDev) {
+                                console.log(err);
+                            }
+                        })
+                    } else {
+                        this.imageFileList.push({
+                            fileName: '',
+                            id: this.randomId()
+                        });
+                    }
+                })
+                .catch((err) => {
+                    if (isDev) {
+                        console.log(err);
+                    }
+                });
+
                 fetch('./../js/json/plz-ort-min.json',
                 {
                     headers:
@@ -1277,6 +1624,30 @@ const helperFunctions = {
                 });
             },
             methods: {
+                deleteFromFileList: function(file_id) {
+                    this.imageFileList.splice(file_id, 1);
+                },
+                handleFocusOut: function(imgFile, index) {
+                    this.addImageIsVisible = true;
+                    // hier vllt noch mal ansetzen
+                    // this.imageFileList[index] = imgFile.name;
+                    this.addImage();
+                },
+                addImage: function() {
+                    this.addImageIsVisible = false;
+                    if (this.imageFileList.length < this.maxFiles) {
+                        this.imageFileList.push({
+                            fileName: '',
+                            id: this.randomId()
+                        });
+                        if(this.imageFileList.length == this.maxFiles) {
+                            this.addImageIsVisible = false;
+                        } 
+                    }
+                },
+                deleteWholeInput: function(event) {
+                    event.target.value = '';
+                },
                 generateAddress: function (search) {
 
                     // reset array on new Search
@@ -1334,9 +1705,9 @@ const helperFunctions = {
                     } else if (this.placeList.length === 0) {
                         if (this.lastValidObj) {
                             if(this.lastValidObj.std) {
-                                this.objAddress = `${this.lastValidObj.plz} ${this.lastValidObj.std} -  ${this.lastValidObj.ort}`;
+                                this.objAddress = `${this.lastValidObj.plz} ${this.lastValidObj.std} - ${this.lastValidObj.ort}`;
                             } else {
-                                this.objAddress = `${this.lastValidObj.plz} -  ${this.lastValidObj.ort}`;
+                                this.objAddress = `${this.lastValidObj.plz} - ${this.lastValidObj.ort}`;
                             }
                         } else {
                             this.objAddress = '';
@@ -1369,9 +1740,6 @@ const helperFunctions = {
                     } else {
                         $event.target.submit();
                     }
-                },
-                showFileDetails: function ($event) {
-                    this.fileList = $event.target.files;
                 },
             },
         });

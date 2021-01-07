@@ -22,12 +22,19 @@
     transition: .3s;
     display: inline-block;
     &:hover {
+        cursor: pointer;
         background: darken($medium, 5%);
     }
     &.secondary {
         background: $secondary;
         &:hover {
             background: darken($secondary, 5%);
+        }
+    }
+    &.alert {
+        background: $alert;
+        &:hover {
+            background: darken($alert, 5%);
         }
     }
     &.disabled {
@@ -68,6 +75,14 @@
     text-align: left;
 }
 
+.align-center {
+    text-align: center;
+}
+
+.align-right {
+    text-align: center;
+}
+
 .error, .success, .info {
     padding: 1.5rem; 
     background: $lightalert;
@@ -75,6 +90,7 @@
     color: $light;
     display: block;
     width: 100%;
+    margin-bottom: 1.5rem;
     &:before {
         content: 'Ups: ';
         font-weight: 700;

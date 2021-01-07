@@ -25,7 +25,7 @@
 						<template v-for="fil in filterList">
 							<filter-box :title="fil.name" :ele="fil"></filter-box>
 						</template>
-						<button class="btn" @click="filterIt"><i class="fa fa-filter"></i> Filter anwenden</button>
+						<button class="btn" @click="handleFilterClick"><i class="fa fa-filter"></i> Filter anwenden</button>
 					</aside>
 				</div>
 

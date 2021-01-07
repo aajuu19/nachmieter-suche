@@ -5265,7 +5265,7 @@ form.default input {
     padding-left: 50px; }
     form.default input[type=text]:focus, form.default input[type=password]:focus, form.default input[type=mail]:focus, form.default input[type=number]:focus, form.default input[type=date]:focus, form.default input[type=file]:focus {
       box-shadow: 0 0 5px rgba(0, 0, 0, 0.15); }
-  form.default input[name=obj-einzugsdatum] {
+  form.default input[name=obj-einzug] {
     padding-right: 5rem; }
   form.default input[type=file] {
     color: #78c4ef; }
@@ -5460,11 +5460,16 @@ textarea {
     .btn {
       padding: .8rem 2.3rem; } }
   .btn:hover {
+    cursor: pointer;
     background: #0067c8; }
   .btn.secondary {
     background: #f79e02; }
     .btn.secondary:hover {
       background: #de8e02; }
+  .btn.alert {
+    background: #ff4d4d; }
+    .btn.alert:hover {
+      background: #ff3434; }
   .btn.disabled {
     pointer-events: none;
     background: #fece7b; }
@@ -5496,13 +5501,20 @@ textarea {
 .align-left {
   text-align: left; }
 
+.align-center {
+  text-align: center; }
+
+.align-right {
+  text-align: center; }
+
 .error, .success, .info {
   padding: 1.5rem;
   background: #ff9797;
   border-radius: 15px;
   color: #fff;
   display: block;
-  width: 100%; }
+  width: 100%;
+  margin-bottom: 1.5rem; }
   .error:before, .success:before, .info:before {
     content: 'Ups: ';
     font-weight: 700;
@@ -6318,7 +6330,7 @@ main {
             main .obj-ctn form.default .image-ctn label .icon-ctn, main .edit-profile-app form.default .image-ctn label .icon-ctn {
               justify-content: flex-start;
               width: 10.625rem; } }
-        main .obj-ctn form.default .image-ctn label span.img-placeholder, main .edit-profile-app form.default .image-ctn label span.img-placeholder {
+        main .obj-ctn form.default .image-ctn label > span.img-placeholder, main .edit-profile-app form.default .image-ctn label > span.img-placeholder {
           border: none;
           border-radius: 25px;
           padding: .7rem;
@@ -6333,46 +6345,77 @@ main {
           padding-left: 50px;
           transition: .3s; }
           @media (min-width: 680px) {
-            main .obj-ctn form.default .image-ctn label span.img-placeholder, main .edit-profile-app form.default .image-ctn label span.img-placeholder {
+            main .obj-ctn form.default .image-ctn label > span.img-placeholder, main .edit-profile-app form.default .image-ctn label > span.img-placeholder {
               margin-left: 10.625rem;
               padding-left: 0.9375rem;
               width: calc(100% - 170px);
               border-top-left-radius: 0;
               border-bottom-left-radius: 0; } }
           @media (min-width: 1025px) {
-            main .obj-ctn form.default .image-ctn label span.img-placeholder, main .edit-profile-app form.default .image-ctn label span.img-placeholder {
+            main .obj-ctn form.default .image-ctn label > span.img-placeholder, main .edit-profile-app form.default .image-ctn label > span.img-placeholder {
               font-size: 0.9375rem; } }
-          main .obj-ctn form.default .image-ctn label span.img-placeholder .opt, main .edit-profile-app form.default .image-ctn label span.img-placeholder .opt {
+          main .obj-ctn form.default .image-ctn label > span.img-placeholder.optional:after, main .edit-profile-app form.default .image-ctn label > span.img-placeholder.optional:after {
+            right: 3.4375rem; }
+          main .obj-ctn form.default .image-ctn label > span.img-placeholder .opt, main .edit-profile-app form.default .image-ctn label > span.img-placeholder .opt {
             font-size: 0.875rem;
             padding-left: 0.375rem;
             color: #a5d8f5; }
             @media (min-width: 1025px) {
-              main .obj-ctn form.default .image-ctn label span.img-placeholder .opt, main .edit-profile-app form.default .image-ctn label span.img-placeholder .opt {
+              main .obj-ctn form.default .image-ctn label > span.img-placeholder .opt, main .edit-profile-app form.default .image-ctn label > span.img-placeholder .opt {
                 font-size: 0.9375rem; } }
-          main .obj-ctn form.default .image-ctn label span.img-placeholder .img-btn, main .edit-profile-app form.default .image-ctn label span.img-placeholder .img-btn {
+          main .obj-ctn form.default .image-ctn label > span.img-placeholder .img-btn, main .edit-profile-app form.default .image-ctn label > span.img-placeholder .img-btn {
             transition: .3s;
             background: #fed894;
             border-radius: 25px;
             display: inline-block;
             padding: .3rem 1rem;
             color: #fff; }
-          main .obj-ctn form.default .image-ctn label span.img-placeholder i, main .edit-profile-app form.default .image-ctn label span.img-placeholder i {
+          main .obj-ctn form.default .image-ctn label > span.img-placeholder i, main .edit-profile-app form.default .image-ctn label > span.img-placeholder i {
             color: #fff;
             font-size: 0.75rem; }
-          main .obj-ctn form.default .image-ctn label span.img-placeholder .file-item, main .edit-profile-app form.default .image-ctn label span.img-placeholder .file-item {
-            display: block;
-            color: #78c4ef; }
-            main .obj-ctn form.default .image-ctn label span.img-placeholder .file-item:nth-child(2), main .edit-profile-app form.default .image-ctn label span.img-placeholder .file-item:nth-child(2) {
+          main .obj-ctn form.default .image-ctn label > span.img-placeholder .file-item, main .edit-profile-app form.default .image-ctn label > span.img-placeholder .file-item {
+            display: flex;
+            align-items: center;
+            color: #78c4ef;
+            padding-right: 7.5rem; }
+            main .obj-ctn form.default .image-ctn label > span.img-placeholder .file-item:nth-child(2), main .edit-profile-app form.default .image-ctn label > span.img-placeholder .file-item:nth-child(2) {
               margin-top: .7rem; }
-            main .obj-ctn form.default .image-ctn label span.img-placeholder .file-item .fa-file-image, main .edit-profile-app form.default .image-ctn label span.img-placeholder .file-item .fa-file-image {
+            main .obj-ctn form.default .image-ctn label > span.img-placeholder .file-item .fa-file-image, main .edit-profile-app form.default .image-ctn label > span.img-placeholder .file-item .fa-file-image {
               color: #1c9ce5;
               padding-right: 5px; }
-        main .obj-ctn form.default .image-ctn label span:hover, main .edit-profile-app form.default .image-ctn label span:hover {
+            main .obj-ctn form.default .image-ctn label > span.img-placeholder .file-item .obj-image__preview, main .edit-profile-app form.default .image-ctn label > span.img-placeholder .file-item .obj-image__preview {
+              width: 6.25rem;
+              height: 6.25rem;
+              object-fit: cover;
+              margin-right: 1.25rem;
+              border-radius: 50%; }
+        main .obj-ctn form.default .image-ctn label > span:hover, main .edit-profile-app form.default .image-ctn label > span:hover {
           box-shadow: 0 0 5px rgba(0, 0, 0, 0.15); }
-          main .obj-ctn form.default .image-ctn label span:hover .img-btn, main .edit-profile-app form.default .image-ctn label span:hover .img-btn {
+          main .obj-ctn form.default .image-ctn label > span:hover .img-btn, main .edit-profile-app form.default .image-ctn label > span:hover .img-btn {
             background: #fec561; }
       main .obj-ctn form.default .image-ctn input[type="file"], main .edit-profile-app form.default .image-ctn input[type="file"] {
         display: none; }
+      main .obj-ctn form.default .image-ctn .removeBtn, main .edit-profile-app form.default .image-ctn .removeBtn {
+        background: #ff4d4d;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0.75rem;
+        border-top-right-radius: 25px;
+        border-bottom-right-radius: 25px;
+        cursor: pointer;
+        transition: .3s; }
+        main .obj-ctn form.default .image-ctn .removeBtn:hover, main .edit-profile-app form.default .image-ctn .removeBtn:hover {
+          background: #ff1a1a; }
+        main .obj-ctn form.default .image-ctn .removeBtn i, main .edit-profile-app form.default .image-ctn .removeBtn i {
+          color: #fff;
+          margin: 0;
+          padding: 0;
+          left: 0; }
       main .obj-ctn form.default .addressMenu, main .edit-profile-app form.default .addressMenu {
         position: absolute;
         border-radius: 1.5625rem;
@@ -6393,17 +6436,17 @@ main {
     transform: rotate(0); }
   to {
     transform: rotate(360deg); } }
-        main .obj-ctn form.default .addressMenu a, main .edit-profile-app form.default .addressMenu a {
+        main .obj-ctn form.default .addressMenu__address, main .edit-profile-app form.default .addressMenu__address {
           padding: .5rem .8rem;
           border-radius: 1.5625rem;
           display: block;
           text-decoration: none;
           color: #312f2c;
           cursor: pointer; }
-          main .obj-ctn form.default .addressMenu a:first-child, main .edit-profile-app form.default .addressMenu a:first-child {
+          main .obj-ctn form.default .addressMenu__address:nth-child(3), main .edit-profile-app form.default .addressMenu__address:nth-child(3) {
             background: #1c9ce5;
             color: #fff; }
-          main .obj-ctn form.default .addressMenu a:hover, main .edit-profile-app form.default .addressMenu a:hover {
+          main .obj-ctn form.default .addressMenu__address:hover, main .edit-profile-app form.default .addressMenu__address:hover {
             background: #1c9ce5;
             color: #fff; }
     main .obj-ctn button i, main .edit-profile-app button i {
@@ -6427,11 +6470,88 @@ main {
           background: #1c9ce5;
           color: #fff;
           cursor: pointer; }
+  main .object-container .edit-flat {
+    position: absolute;
+    top: 1.25rem;
+    left: 2.5rem;
+    z-index: 1;
+    display: flex; }
+    main .object-container .edit-flat__btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0.625rem;
+      color: #fff;
+      background: #1c9ce5;
+      border-radius: 50%;
+      width: 2.5rem;
+      height: 2.5rem;
+      transition: .3s;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.15); }
+      main .object-container .edit-flat__btn:last-child {
+        margin-left: 10px; }
+      main .object-container .edit-flat__btn:hover {
+        background: #188dd0; }
+      main .object-container .edit-flat__btn--delete {
+        background: #ff4d4d; }
+        main .object-container .edit-flat__btn--delete:hover {
+          background: #ff3434; }
+    main .object-container .edit-flat__icon {
+      font-size: 13px; }
+  main .object-container .info-up-window {
+    transition: .3s;
+    opacity: 0;
+    position: relative;
+    z-index: 9;
+    visibility: hidden; }
+    main .object-container .info-up-window.active {
+      visibility: visible;
+      opacity: 1; }
+    main .object-container .info-up-window__content {
+      background: #fff;
+      border-radius: 15px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 999;
+      width: 100%;
+      max-width: 50rem;
+      padding: 2.1875rem;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.15); }
+    main .object-container .info-up-window__close {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #fff;
+      opacity: .6;
+      z-index: 998; }
+    main .object-container .info-up-window__buttons {
+      margin-top: 1.5625rem; }
+      main .object-container .info-up-window__buttons button {
+        margin-right: 10px; }
+      main .object-container .info-up-window__buttons i {
+        margin-right: 3px; }
   main .object-container .obj-slider-app {
     position: relative; }
     main .object-container .obj-slider-app .obj-slider-main-img {
       height: 12.5rem;
-      margin-bottom: 0.625rem; }
+      margin-bottom: 0.625rem;
+      position: relative; }
+      main .object-container .obj-slider-app .obj-slider-main-img img {
+        border-radius: 15px; }
+      main .object-container .obj-slider-app .obj-slider-main-img .visitor-counter {
+        display: inline-block;
+        position: absolute;
+        bottom: 0.9375rem;
+        right: 0.9375rem;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 0.9375rem;
+        padding: 0.375rem 0.625rem;
+        font-size: 0.9375rem;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.15); }
       @media (min-width: 480px) {
         main .object-container .obj-slider-app .obj-slider-main-img {
           height: 18.75rem; } }
@@ -6471,8 +6591,10 @@ main {
         cursor: pointer;
         width: 9.375rem;
         overflow: hidden; }
-        main .object-container .obj-slider-app .obj-slider-thumblist .obj-slider-thumb .thumb-img::selection {
-          background: transparent; }
+        main .object-container .obj-slider-app .obj-slider-thumblist .obj-slider-thumb .thumb-img {
+          border-radius: 15px; }
+          main .object-container .obj-slider-app .obj-slider-thumblist .obj-slider-thumb .thumb-img::selection {
+            background: transparent; }
       main .object-container .obj-slider-app .obj-slider-thumblist .obj-slider-arrows {
         position: absolute;
         width: 100%;
@@ -6771,11 +6893,15 @@ main {
         position: static; }
         body.kontakt main .row .contact-form__fieldset__checkbox-label a {
           color: #1c9ce5; }
+        body.kontakt main .row .contact-form__fieldset__checkbox-label span {
+          flex-basis: calc(100% - 52px);
+          width: calc(100% - 52px); }
         body.kontakt main .row .contact-form__fieldset__checkbox-label:before {
           content: '';
           background: #f79e02;
           border-radius: 25px;
-          width: 3.75rem;
+          width: 3.25rem;
+          flex-basis: 3.25rem;
           height: 2.1875rem;
           display: inline-block;
           opacity: .8; }
@@ -6783,7 +6909,7 @@ main {
           content: '';
           position: absolute;
           left: 5px;
-          top: 6px;
+          top: 5px;
           background: rgba(255, 255, 255, 0.4);
           width: 27px;
           height: 27px;

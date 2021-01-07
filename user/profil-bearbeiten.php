@@ -61,7 +61,7 @@
                         <fieldset class="dropdown optional">
 							<label  class="opt-sec" for="pers-address"><i class="fa fa-map-marker-alt"></i> <span>Wunschort</span></label>
 							<input v-model="lfAddress" @focus="allowInput" @blur="setFirstAddress" name="pers-address" autocomplete="off" id="pers-address" type="text" placeholder="Bitte gib einen Ort oder Bezirk an">
-							<div class="address-list" v-show="objAddressMenu.visible">
+							<div v-cloak class="address-list" v-show="objAddressMenu.visible">
                                 <div v-show="noPlace">Bitte versuche es mit einem anderen Ort oder Bezirk</div>
                                 <address-list-item @handle-address-click="setAddress" :key="index" v-for="(place, index) in recentPlaceList" :place="place"></address-list-item>
 								<!-- <a @mousedown="setAddress(place)" tabindex="0" v-for="place in recentPlaceList">{{ placeContent }}</a> -->

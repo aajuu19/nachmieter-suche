@@ -2,11 +2,38 @@
     $obj = $db->get_this_one("SELECT * FROM `objekt` WHERE link='".$web->file_name."'");
     $this_is_user = $web->get_own_user();
     $user = $db->get_user($obj['p_id']);
+    $sql = 'UPDATE objekt SET visitors = visitors+1 WHERE objekt.o_id = ?';
+
+    $db->prep_exec($sql, [$obj['o_id']]);
+
 ?>
 <div class="object-container">
     <div class="row center">
+        <?php if(isset($this_is_user) && $user['p_id'] == $this_is_user['p_id']) { ?>
+            <div class="edit-flat">
+                <a href="<?php echo $web->root; ?>/user/neues-objekt.php?flat_id=<?php echo $obj['o_id']; ?>" class="edit-flat__btn edit-flat-btn"><i class="fa fa-edit edit-flat__icon"></i></a>
+                <a href="javascript:void(0)" class="edit-flat__btn edit-flat__btn--delete delete-flat-btn"><i class="fa fa-trash-alt edit-flat__icon"></i></a>
+            </div>
+            <div v-cloak class="info-up-window info-up-window__delete">
+                <div class="info-up-window__close"></div>
+                <div class="info-up-window__content align-center">
+                    <span class="h4">Objekt löschen</span>
+                    <span class="desc">Möchtest du das Objekt wirklich löschen?</span>
+                    <form action="<?php echo $web->root; ?>/actions/delete-flat.php" method="POST" class="info-up-window__buttons">
+                        <input type="hidden" name="flat_id" id="flat_id" value="<?php echo $obj['o_id']; ?>">
+                        <input type="hidden" name="flat_link" id="flat_link" value="<?php echo $web->full_link; ?>">
+                        <button type="submit" class="btn alert"><i class="fa fa-check-circle"></i> Ja</button>
+                        <span class="btn abort"><i class="fa fa-times-circle"></i> Nein</span>
+                    </form>
+                </div>
+            </div>
+        <?php } ?>
         <div class="col s-10 sm-6 obj-slider-app">
             <div class="obj-slider-main-img">
+                <?php 
+                    $sql = 'SELECT objekt FROM Counter WHERE id = 1'; 
+                ?>
+                <span class="visitor-counter"><i class="fa fa-eye"></i> Besucher: <?php echo $obj['visitors'] + 1; ?></span>
                 <img :src="mainImgSrc ||'<?php echo $web->root; ?>/uploads/<?php echo $obj['image_1']; ?>'" alt="<?php $obj['name'] ?>" class="cover main-img">
             </div>
             <div class="obj-slider-thumblist" v-if="sliderVisible">

@@ -59,6 +59,18 @@
             }
         }
 
+        public function get_flat($o_id) {
+            $flat = $this->prep_exec(
+                'SELECT * FROM objekt WHERE o_id = ?',
+                [
+                    $o_id,
+                ],
+                'one'
+            );
+
+            return $flat;
+        } 
+
         // close connection
         public function close_connect() {
             $this->pdo = null;

@@ -15,9 +15,6 @@
     $birthdate = !isset($_POST['pers-birthdate']) || empty($_POST['pers-birthdate']) ? null : $web->htmlchar($_POST['pers-birthdate']);
     $lf_adresse = !isset($_POST['pers-address']) || empty($_POST['pers-address']) ? null : $web->htmlchar($_POST['pers-address']);
 
-    var_dump($lookingfrom);
-    var_dump($birthdate);
-
     $profilepic = $_FILES['pers-profilepic']['name'][0] == "" ? null : $_FILES['pers-profilepic'];
     
     if($lf_adresse) {
@@ -50,7 +47,7 @@
         header('Location: '.$web->root.'/user/profil-bearbeiten.php?error='.$error_message);
         die;
     } else if ($profilepic) {
-        $info = getimagesize($profilepic['tmp_name']);
+        $info = getimagesize($profilepic['tmp_name'][0]);
 
         if ($info === FALSE) {
             $error_message = rawurlencode('Dein Profilbild ist nicht vom Typ jpg, jpeg, png oder gif.');
@@ -101,7 +98,8 @@
         // if copy worked
         if($img_link != "") {   
             // Upload file
-            copy($profilepic['tmp_name'][0], '../uploads/'.$img_link);
+            // copy($profilepic['tmp_name'][0], '../uploads/'.$img_link);
+            $web->compress_image(500, 500, $profilepic['tmp_name'][0], '../uploads/'.$img_link, 70);
         } else {
             $error_message = rawurlencode('Dein Profilbild konnte nicht hochgeladen werden. Bitte probieres es noch einmal mit einem anderen Bild.');
             header('Location: '.$web->root.'/user/profil-bearbeiten.php?error='.$error_message);
