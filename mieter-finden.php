@@ -17,7 +17,7 @@
 							</ul>
 						</div>
 						<user-item v-for="user in users" :key="user.o_id" :user="user"></user-item>
-						<span v-cloak class="error" v-if="errorMsg">Keine passenden Objekte gefunden, probier's mal mit anderen Filtereinstellungen.</span>
+						<span v-cloak class="error" v-if="errorMsg">Keine passenden Benutzer gefunden, probier's mal mit anderen Filtereinstellungen.</span>
 					</div>
 
 					<aside class="col s-4 filter-ctn">

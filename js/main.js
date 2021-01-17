@@ -986,9 +986,9 @@ const helperFunctions = {
             template: `
                 <div class="teaser">
                     <div class="teaser-box">
-                        <div class="teaser-img">
+                        <a :href="objLinkPath" class="teaser-img">
                             <img :src="imgLink" alt="Platzhalter">
-                        </div> 
+                        </a> 
                         <div class="teaser-content">
                             <span class="heading">{{ object.name }}</span>
                             <span class="time">{{ object.adresse }} </span>
@@ -1165,7 +1165,6 @@ const helperFunctions = {
                     
                     if (this.newPageAvailable && scrollBottom >= bodyHeight - 200) {
                        this.newPageAvailable = false;
-                       console.log(this.pageLimitation);
                        this.filterIt(this.nextPage, this.pageLimitation, true)
                     }
 
@@ -1244,7 +1243,7 @@ const helperFunctions = {
                         },
                     }).then((data) => data.json());
                     fetched.then((data) => {
-
+                        // Seitenanzahlrelevantes
                         if(data.length >= 1) {
                             this.errorMsg = false;
                             if(isAnotherPage) {
@@ -1626,16 +1625,17 @@ const helperFunctions = {
             methods: {
                 deleteFromFileList: function(file_id) {
                     this.imageFileList.splice(file_id, 1);
+                    this.addImage();
                 },
                 handleFocusOut: function(imgFile, index) {
                     this.addImageIsVisible = true;
-                    // hier vllt noch mal ansetzen
-                    // this.imageFileList[index] = imgFile.name;
+                    this.imageFileList[index].fileName = imgFile.name;
                     this.addImage();
                 },
                 addImage: function() {
+                    console.log(this.imageFileList[this.imageFileList.length - 1]);
                     this.addImageIsVisible = false;
-                    if (this.imageFileList.length < this.maxFiles) {
+                    if (this.imageFileList.length < this.maxFiles && this.imageFileList[this.imageFileList.length - 1].fileName !== '') {
                         this.imageFileList.push({
                             fileName: '',
                             id: this.randomId()

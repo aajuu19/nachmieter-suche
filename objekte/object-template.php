@@ -8,6 +8,17 @@
 
 ?>
 <div class="object-container">
+    <div class="row">
+        <div class="col">
+            <?php
+                if(isset($_GET['error'])) {
+                    echo '<span class="error gap-bottom-2">'.$_GET['error'].'</span>';
+                } else if(isset($_GET['bestaetigung'])) {
+                    echo '<span class="success gap-bottom-2">'.$_GET['bestaetigung'].'</span>';
+                }
+            ?>
+        </div>
+    </div>
     <div class="row center">
         <?php if(isset($this_is_user) && $user['p_id'] == $this_is_user['p_id']) { ?>
             <div class="edit-flat">

@@ -28,9 +28,10 @@
 						<?php 
 							if ($is_authorized) {
 						?>
-
-						<input type="hidden" id="flat_id" name="flat_id" value="<?php echo $_GET['flat_id']; ?>">
-						
+							<input type="hidden" id="flat_id" name="flat_id" value="<?php echo $_GET['flat_id']; ?>">
+							<template v-for="(file,index) in imageFileList">
+								<input type="hidden" :id="'act_image_' + (index + 1)" :name="'act_image_' + (index + 1)" :value="file.fileName">
+							</template>
 						<?php 
 							}
 						?>

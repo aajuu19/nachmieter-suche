@@ -37,16 +37,9 @@
 
      // if record was found
      if($addressIsValid) {
-
-        $image_files = [];
-
         
         $update_sql = 'UPDATE objekt SET ';
         $update_data = [];
-
-        var_dump($_POST['obj-quadratmeter']);
-        var_dump($flat_data['quadratmeter']);
-
 
         if ($_POST['obj-name'] != $flat_data['name']) {
             $update_sql .= ' name = ?, ';
@@ -98,47 +91,61 @@
         }
 
         // Looping all files
+        $image_files = [];
         for($i=1;$i<=7;$i++) {
             $image_file = $_FILES['obj-image-'.$i];
             if ($image_file && $image_file['size'] >= 1) {
                 $info = getimagesize($image_file['tmp_name']);
                 
                 if (($image_file['error'] == UPLOAD_ERR_OK) && ($info !== FALSE) && ($info[2] === IMAGETYPE_GIF) || ($info[2] === IMAGETYPE_JPEG) || ($info[2] === IMAGETYPE_PNG)) {
-                    $image_files[] = $image_file;
+                    
                     $filename = $web->format_link($image_file['name']);
                     $new_id = uniqid();
                     $img_link = $new_id.'-'.$filename;
                     ${"image_$i"} = $img_link;
+                    $image_file['name'] = $img_link;
+                    $image_files[] = $image_file;
                     
                     // add to sql query and data
                     $update_sql .= ' image_'.$i.' = ?, ';
                     $update_data[] = $web->htmlchar($img_link);
                 } else {
                     $error_message = rawurlencode('Beim hochladen einer Bilddatei ist ein Fehler aufgetreten. Bitte versuche es noch einmal.');
-                    header('Location: '.$web->root.'/user/neues-objekt.php?error='.$error_message);
+                    header('Location: '.$web->root.'/user/neues-objekt.php?flat_id='.$flat_data['o_id'].'&error='.$error_message);
                 }
             } else {
-                ${"image_$i"} = NULL;
+                $active_image = $_POST['act_image_'.$i];
+                if ($i == 1 && $active_image == '') {
+                    $update_sql .= ' image_1 = ?, ';
+                    $update_data[] = 'placeholder.png';        
+                } else if ($flat_data['image_'.$i] !== $active_image && $active_image !== '') {
+                    $update_sql .= ' image_'.$i.' = ?, ';
+                    $update_data[] = $active_image;
+                } else if (!is_null($flat_data['image_'.$i]) && $flat_data['image_'.$i] !== $active_image) {
+                    $update_sql .= ' image_'.$i.' = ?, ';
+                    $update_data[] = NULL;
+                }
             }
         }
-        
+
         $countfiles = count($image_files);
 
         if($countfiles >= 1) {   
             // Looping all files
             for($i=1;$i<=$countfiles;$i++) {
+                $current_image = $image_files[$i-1];
                 // Upload file
-                var_dump($image_files[$i-1]);
-                $web->compress_image(1200, 850, $image_files[$i-1]['tmp_name'], '../uploads/'.${"image_$i"}, 70);
+                $web->compress_image(1200, 850, $image_files[$i-1]['tmp_name'], '../uploads/'.$current_image['name'], 70);
             }
         }
-
-        die;
 
         // delete last comma from sql query for syntactic reasons
         $update_sql = rtrim($update_sql, ", ");
 
-        // hier case behandeln wenn updata_data bis hierher leer ist, einfach success weiterleiten
+        if(count($update_data) <= 1) {
+            $success_message = rawurlencode('Das Objekt wurde erfolgreich geändert.');
+            header('Location: '.$web->root.'/objekte/'.$flat_data['link'].'?bestaetigung='.$success_message);
+        } 
         
         $update_sql .= ' WHERE o_id = ?';
         $update_data[] = $flat_id;
@@ -151,12 +158,12 @@
             $update_data
         );
 
-        $success_message = rawurlencode('Das Objekt wurde erfolgreich eingefügt.');
-        header('Location: '.$web->root.'/user/neues-objekt.php?bestaetigung='.$success_message);
+        $success_message = rawurlencode('Das Objekt wurde erfolgreich geändert.');
+        header('Location: '.$web->root.'/objekte/'.$flat_data['link'].'?bestaetigung='.$success_message);
 
     } else {
         // if record was not found
         $error_message = rawurlencode('Bitte gib eine gültige Postleitzahl ein.');
-	    header('Location: '.$web->root.'/user/neues-objekt.php?error='.$error_message);
+	    header('Location: '.$web->root.'/user/neues-objekt.php?flat_id='.$flat_data['o_id'].'&error='.$error_message);
     }
         
