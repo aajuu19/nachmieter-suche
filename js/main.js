@@ -283,18 +283,22 @@ const helperFunctions = {
         });
 
         Vue.component('user-item', {
-            props: ['user'],
+            props: {
+                user: Object,
+                page: Number,
+                id: [String, Number]
+            },
             data: function (){
                 return {
                     maxWordLength: 150,
                 };
             },
             template: `
-                <div class="teaser">
+                <div class="teaser" :id="id">
                     <div class="teaser-box">
-                        <div class="teaser-img">
+                        <a :title="user.name" :href="objLinkPath" class="teaser-img" @click.prevent="savePageToStorage">
                             <img :src="imgLink">
-                        </div> 
+                        </a> 
                         <div class="teaser-content">
                             <span class="heading">{{ user.name }}</span>
                             <span class="time" v-show="user.lf_adresse">{{ user.lf_adresse }}</span>
@@ -304,11 +308,18 @@ const helperFunctions = {
                                 <span v-show="user.lf_zimmer"><small>Zimmer</small> <span>{{ user.lf_zimmer }}</span></span>
                                 <span v-show="user.lf_kalt"><small>Kaltmiete</small> <span>{{ user.lf_kalt }} €</span></span>
                             </div>
-                            <a :href="objLinkPath" class="btn secondary">Mehr erfahren</a>
+                            <a @click.prevent="savePageToStorage" :href="objLinkPath" class="btn secondary">Mehr erfahren</a>
                         </div>
                     </div> 
                 </div> 
             `,
+            methods: {
+                savePageToStorage: function () {
+                    sessionStorage.setItem('userSavedPage', this.page);
+                    sessionStorage.setItem('userSavedItemId', this.id);
+                    window.location = this.objLinkPath;
+                }
+            },
             computed: {
                 showUserInfos: function () {
                     if (this.user.lf_quadratmeter || this.user.lf_zimmer || this.user.lf_kaltmiete) {
@@ -333,9 +344,6 @@ const helperFunctions = {
                     return `${document.location.origin}/nachmieter-suche/uploads/${this.user.profilepic}`;
                 },
             },
-            mounted: function(){
-                console.log(this.user);
-            }
         });
         const vm = new Vue({
             el: '.all-users',
@@ -440,14 +448,33 @@ const helperFunctions = {
                 .catch((err) => {
                     console.log(err);
                 });
+            },
+            mounted: function () {
+
+                // handle if came from flat page
+                let savedPage = null;
+                const savedPageVal = this.getSessionStorage('userSavedPage');
+                if(savedPageVal) {
+                    savedPage = parseInt(savedPageVal) * this.pageLimitation;
+                    this.nextPage = parseInt(savedPageVal) + 1;
+                }
 
                 let requestStr = '';
                 const createdAddress = this.getUrlParameters('lf_address');
+
                 if(createdAddress) {
-                    requestStr = `users&address=${createdAddress}&page=1&limit=${this.pageLimitation}`
+                    if(savedPage) {
+                        requestStr = `users&address=${createdAddress}&limit=${this.pageLimitation}&savedPage=${savedPage}`
+                    } else {
+                        requestStr = `users&address=${createdAddress}&page=1&limit=${this.pageLimitation}`
+                    }
                     this.lfAddress = createdAddress;
                 } else {
-                    requestStr = `users&page=1&limit=${this.pageLimitation}`;
+                    if(savedPage) {
+                        requestStr = `users&limit=${this.pageLimitation}&savedPage=${savedPage}`;
+                    } else {
+                        requestStr = `users&page=1&limit=${this.pageLimitation}`;
+                    }
                 }
 
                 const fetched = fetch('./essentials/dbs_json.php',
@@ -461,15 +488,25 @@ const helperFunctions = {
                 }).then((data) => data.json());
                 fetched.then((data) => {
                     this.users = data;
+                    window.addEventListener('scroll', this.getNewPage);
+
+                    if(savedPage) {
+                        this.$nextTick(function () {
+                            const header = document.querySelector('header');
+                            const lastVisitedFlat = document.getElementById(this.getSessionStorage('userSavedItemId'));
+                            const scrollAmount = lastVisitedFlat.offsetTop + header.offsetHeight - 16;
+                            window.scrollTo(0, scrollAmount);
+                        });
+                    }
                 })
                 .catch((err) => {
                     console.log(err);
                 });
             },
-            mounted: function() {
-                window.addEventListener('scroll', this.getNewPage);
-            },
             methods: {
+                getSessionStorage: function(item) {
+                    return window.sessionStorage[item];
+                },
                 getNewPage: function() {
                     
                     let bodyHeight = document.body.scrollHeight;
@@ -597,7 +634,6 @@ const helperFunctions = {
             },
             mounted: function () {
                 this.flatImages = Object.values(this.$refs);
-                
                 this.handleArrowVisibility();
             },
             watch: {
@@ -976,45 +1012,56 @@ const helperFunctions = {
             `,
         });
 
-        Vue.component('object-item', {
-            props: ['object'],
+        Vue.component('flat-item', {
+            props: {
+                flat: Object,
+                page: Number,
+                id: [String, Number]
+            },
             data: function (){
                 return {
                     maxWordLength: 150,
                 };
             },
             template: `
-                <div class="teaser">
+                <div class="teaser" :id="id">
                     <div class="teaser-box">
-                        <a :href="objLinkPath" class="teaser-img">
+                        <a :href="objLinkPath" class="teaser-img" @click.prevent="savePageToStorage">
                             <img :src="imgLink" alt="Platzhalter">
                         </a> 
                         <div class="teaser-content">
-                            <span class="heading">{{ object.name }}</span>
-                            <span class="time">{{ object.adresse }} </span>
+                            <span class="heading">{{ flat.name }}</span>
+                            <span class="time">{{ flat.adresse }} </span>
                             <span class="desc">{{ shortenedDesc }}</span>
                             <div class="infoBox">
-                                <span><small>Quadratmeter</small> <span>{{ object.quadratmeter }} m²</span></span>
-                                <span><small>Zimmer</small> <span>{{ object.zimmer }}</span></span>
-                                <span><small>Kaltmiete</small> <span>{{ object.kalt }} €</span></span>
+                                <span><small>Quadratmeter</small> <span>{{ flat.quadratmeter }} m²</span></span>
+                                <span><small>Zimmer</small> <span>{{ flat.zimmer }}</span></span>
+                                <span><small>Kaltmiete</small> <span>{{ flat.kalt }} €</span></span>
                             </div>
-                            <a :href="objLinkPath" class="btn secondary">Mehr erfahren</a>
+                            <a @click.prevent="savePageToStorage" :href="objLinkPath" class="btn secondary">Mehr erfahren</a>
                         </div>
                     </div> 
                 </div> 
             `,
+            methods: {
+                savePageToStorage: function () {
+                    sessionStorage.setItem('flatSavedPage', this.page);
+                    sessionStorage.setItem('flatSavedItemId', this.id);
+                    window.location = this.objLinkPath;
+                }
+            },
             computed: {
                 shortenedDesc: function () {
-                    if (this.object.beschreibung.length >= this.maxWordLength) {
-                        return `${this.object.beschreibung.slice(0, this.maxWordLength)}...`;
+                    if (this.flat.beschreibung.length >= this.maxWordLength) {
+                        return `${this.flat.beschreibung.slice(0, this.maxWordLength)}...`;
                     }
-                    return this.object.beschreibung;
+                    return this.flat.beschreibung;
                 },
                 objLinkPath: function () {
-                    return `${document.location.origin}/nachmieter-suche/objekte/${this.object.link}`;
+                    return `${document.location.origin}/nachmieter-suche/objekte/${this.flat.link}`;
                 },
                 imgLink: function () {
-                    return `${document.location.origin}/nachmieter-suche/uploads/${this.object.image_1}`;
+                    return `${document.location.origin}/nachmieter-suche/uploads/${this.flat.image_1}`;
                 },
             },
         });
@@ -1043,7 +1090,7 @@ const helperFunctions = {
         const vm = new Vue({
             el: '.all-objects',
             data: {
-                objects: [],
+                flatList: [],
                 filterList: {
                     quadratmeter: {
                         id: 1,
@@ -1109,7 +1156,7 @@ const helperFunctions = {
                     }
                 }
             },
-            created: function () {
+            created: function(){
                 fetch('./js/json/orte.json',
                 {
                     headers:
@@ -1125,14 +1172,31 @@ const helperFunctions = {
                 .catch((err) => {
                     console.log(err);
                 });
+            },
+            mounted: function () {
+                // handle if came from flat page
+                let savedPage = null;
+                const savedPageVal = this.getSessionStorage('flatSavedPage');
+                if(savedPageVal) {
+                    savedPage = parseInt(savedPageVal) * this.pageLimitation;
+                    this.nextPage = parseInt(savedPageVal) + 1;
+                }
 
                 let requestStr = '';
                 const createdAddress = this.getUrlParameters('lf_address');
                 if(createdAddress) {
-                    requestStr = `wohnungen&address=${createdAddress}&page=1&limit=${this.pageLimitation}`
+                    if(savedPage) {
+                        requestStr = `wohnungen&address=${createdAddress}&limit=${this.pageLimitation}&savedPage=${savedPage}`
+                    } else {
+                        requestStr = `wohnungen&address=${createdAddress}&page=1&limit=${this.pageLimitation}`
+                    }
                     this.lfAddress = createdAddress;
                 } else {
-                    requestStr = `wohnungen&page=1&limit=${this.pageLimitation}`;
+                    if(savedPage) {
+                        requestStr = `wohnungen&limit=${this.pageLimitation}&savedPage=${savedPage}`;
+                    } else {
+                        requestStr = `wohnungen&page=1&limit=${this.pageLimitation}`;
+                    }
                 }
 
                 const fetched = fetch('./essentials/dbs_json.php',
@@ -1145,19 +1209,26 @@ const helperFunctions = {
                     },
                 }).then((data) => data.json());
                 fetched.then((data) => {
-                    this.objects = data;
+                    this.flatList = data;
+                    window.addEventListener('scroll', this.getNewPage);
 
-                    // for debugging
-                    // vm.objects.forEach(e=>console.log(e));
+                    if(savedPage) {
+                        this.$nextTick(function () {
+                            const header = document.querySelector('header');
+                            const lastVisitedFlat = document.getElementById(this.getSessionStorage('flatSavedItemId'));
+                            const scrollAmount = lastVisitedFlat.offsetTop + header.offsetHeight - 16;
+                            window.scrollTo(0, scrollAmount);
+                        });
+                    }
                 })
                 .catch((err) => {
                     console.log(err);
                 });
             },
-            mounted: function() {
-                window.addEventListener('scroll', this.getNewPage);
-            },
             methods: {
+                getSessionStorage: function(item) {
+                    return window.sessionStorage[item];
+                },
                 getNewPage: function() {
                     
                     let bodyHeight = document.body.scrollHeight;
@@ -1248,18 +1319,18 @@ const helperFunctions = {
                             this.errorMsg = false;
                             if(isAnotherPage) {
                                 data.forEach(e=>{
-                                    this.objects.push(e);
+                                    this.flatList.push(e);
                                 });
                                 this.nextPage++;
                                 this.newPageAvailable = true;
                             } else {
                                 this.nextPage = 2;
-                                this.objects = data;
+                                this.flatList = data;
                             }
                         } else {
                             if(!isAnotherPage) {
                                 this.errorMsg = true;
-                                this.objects = [];
+                                this.flatList = [];
                             }
                         }
 
@@ -1746,423 +1817,437 @@ const helperFunctions = {
     }
 }());
 
-// Nachrichten Center App
-if (document.body.classList.contains('nachrichten-center')) {
-    Vue.component('user-thumb', {
-        props: ['user', 'activeuser'],
-        data: function () {
-            return {
-                hasUserImage: false,
-            };
-        },
-        template: `
-            <div v-on:click="handleUserClick" class="user-preview" :class="{ active : isActive }">
-                <img v-if="hasUserImage" :src="imageUrl" :alt="user.name">
-                <div v-if="!hasUserImage" :style="{backgroundColor: randDarkColor}" class="userInitial">
-                    <span>{{ acronym }}</span>
+(function (){
+    // Nachrichten Center App
+    if (document.body.classList.contains('nachrichten-center')) {
+        Vue.component('user-thumb', {
+            props: ['user', 'activeuser'],
+            data: function () {
+                return {
+                    hasUserImage: false,
+                };
+            },
+            template: `
+                <div v-on:click="handleUserClick" class="user-preview" :class="{ active : isActive }">
+                    <img v-if="hasUserImage" :src="imageUrl" :alt="user.name">
+                    <div v-if="!hasUserImage" :style="{backgroundColor: randDarkColor}" class="userInitial">
+                        <span>{{ acronym }}</span>
+                    </div>
+                    <span>{{ user.name }}</span>
                 </div>
-                <span>{{ user.name }}</span>
-            </div>
-        `,
-        computed: {
-            imageUrl: function () {
-                return `../uploads/${this.user.profilepic}`;
+            `,
+            computed: {
+                imageUrl: function () {
+                    return `../uploads/${this.user.profilepic}`;
+                },
+                isActive: function () {
+                    if (this.user.p_id == this.activeuser) {
+                        return true;
+                    }
+                },
+                acronym: function() {
+                    let userName = this.user.name.split(' ');
+                    if (userName.length >= 2) {
+                        return userName[0][0] + userName[1][0];
+                    } else {
+                        return userName[0][0];
+                    }
+                },
+                randDarkColor: function() {
+                    var lum = -0.25;
+                    var hex = String('#' + Math.random().toString(16).slice(2, 8).toUpperCase()).replace(/[^0-9a-f]/gi, '');
+                    if (hex.length < 6) {
+                        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+                    }
+                    var rgb = "#",
+                        c, i;
+                    for (i = 0; i < 3; i++) {
+                        c = parseInt(hex.substr(i * 2, 2), 16);
+                        c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+                        rgb += ("00" + c).substr(c.length);
+                    }
+                    return rgb;
+                },
             },
-            isActive: function () {
-                if (this.user.p_id == this.activeuser) {
-                    return true;
-                }
-            },
-            acronym: function() {
-                let userName = this.user.name.split(' ');
-                if (userName.length >= 2) {
-                    return userName[0][0] + userName[1][0];
+            created: function () {
+                if (this.user.profilepic) {
+                    this.hasUserImage = true;
                 } else {
-                    return userName[0][0];
+                    this.hasUserImage = false;
                 }
             },
-            randDarkColor: function() {
-                var lum = -0.25;
-                var hex = String('#' + Math.random().toString(16).slice(2, 8).toUpperCase()).replace(/[^0-9a-f]/gi, '');
-                if (hex.length < 6) {
-                    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+            methods: {
+                handleUserClick: function () {
+                    this.$emit('handle-user-click');
                 }
-                var rgb = "#",
-                    c, i;
-                for (i = 0; i < 3; i++) {
-                    c = parseInt(hex.substr(i * 2, 2), 16);
-                    c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
-                    rgb += ("00" + c).substr(c.length);
-                }
-                return rgb;
-            },
-        },
-        created: function () {
-            if (this.user.profilepic) {
-                this.hasUserImage = true;
-            } else {
-                this.hasUserImage = false;
             }
-        },
-        methods: {
-            handleUserClick: function () {
-                this.$emit('handle-user-click');
-            }
-        }
-    });
-    Vue.component('chat-bubble', {
-        props: ['chat', 'iamuser'],
-        data: function () {
-            return {
+        });
+        Vue.component('chat-bubble', {
+            props: ['chat', 'iamuser'],
+            data: function () {
+                return {
 
-            };
-        },
-        template: `
-            <div class="chat-bubble" :class="{send : isSender}">
-                <span class="message" v-html="chatMessage"></span>
-                <span class="time">{{ this.chatTime }} Uhr</span>
-            </div>
-        `,
-        computed: {
-            isSender: function () {
-                if (this.chat.send_p_id == this.iamuser) {
-                    return true;
-                }
+                };
             },
-            chatTime: function () {
-                const date = new Date(this.chat.timestamp.replace(/-/g, "/"));
-                const clockTime = date.toLocaleTimeString();
-                const dateTime = date.toLocaleDateString();
-                return `${dateTime} - ${clockTime}`;
-            },
-            chatMessage: function() {
-
-                let chatMsg = this.chat.message;
-                chatMsg = chatMsg.replaceAll("&lt;p&gt;", "");
-                chatMsg = chatMsg.replaceAll("&lt;/p&gt;", "<br>");
-
-                return chatMsg;
-            }
-        }
-    });
-    Vue.component('flat-details', {
-        props: ['flat'],
-        template: `
-            <a class="flat-details" :href="flatLink" title="zum Mietobjekt wechseln">
-                <div class="flat-preview-img primaryOverlay">
-                    <img :src="imgLink" class="cover">
+            template: `
+                <div class="chat-bubble" :class="{send : isSender}">
+                    <span class="message" v-html="chatMessage"></span>
+                    <span class="time">{{ this.chatTime }} Uhr</span>
                 </div>
-                <div class="description">
-                    <span class="headline">{{ flat.name }}</span>
-                    <span class="address">{{ flat.adresse }}</span>
-                </div>
-                <span class="price">{{ flat.kalt }} €</span>  
-            </a>
-        `,
-        computed: {
-            imgLink: function() {
-                return `${root}/uploads/${this.flat.image_1}`;
-            },
-            flatLink: function() {
-                return `${root}/objekte/${this.flat.link}`;
-            }
-        }
-    });
-    window.vm = new Vue({
-        el: '.message-ctn',
-        data: {
-            outputData: null,
-            errorMsg: {
-                isError: false,
-                message: 'Bitte logge dich zuerst ein.',
-            },
-            isUser: null,
-            chatList: [],
-            userList: [],
-            activeChatWithUser: null,
-            activeChatList: [],
-            messageContent: null,
-            activeFlat: null,
-            firstChat: true,
-            updateTimer: '',
-            sentFromFlat: null,
-            sentFromUser: null,
-            sentParamsValid: false,
-            sentIsAlreadyInChats: false,
-            activeUserIds: []
-        },
-        created: function () {
-            // check if valid session exists
-            fetch('./../essentials/get-session.php')
-            .then((json) => json.json())
-            .then((sessionId) => {
-                this.isUser = sessionId.person.p_id; 
-                this.updateChat(true);
-                // update chat every 2 seconds
-                this.updateTimer = setInterval(this.updateChat, 3000);
-            })
-            .catch((err) => {
-                if (isDev) {
-                    console.log(err);
-                } else {
-                    this.errorMsg.isError = true;
+            `,
+            computed: {
+                isSender: function () {
+                    if (this.chat.send_p_id == this.iamuser) {
+                        return true;
+                    }
+                },
+                chatTime: function () {
+                    const date = new Date(this.chat.timestamp.replace(/-/g, "/"));
+                    const clockTime = date.toLocaleTimeString();
+                    const dateTime = date.toLocaleDateString();
+                    return `${dateTime} - ${clockTime}`;
+                },
+                chatMessage: function() {
+
+                    let chatMsg = this.chat.message;
+                    chatMsg = chatMsg.replaceAll("&lt;p&gt;", "");
+                    chatMsg = chatMsg.replaceAll("&lt;/p&gt;", "<br>");
+
+                    return chatMsg;
                 }
-            });
-        },
-        watch: {
-            activeChatList: function () {
-                this.setScrollPos();
+            }
+        });
+        Vue.component('flat-details', {
+            props: ['flat'],
+            template: `
+                <a class="flat-details" :href="flatLink" title="zum Mietobjekt wechseln">
+                    <div class="flat-preview-img primaryOverlay">
+                        <img :src="imgLink" class="cover">
+                    </div>
+                    <div class="description">
+                        <span class="headline">{{ flat.name }}</span>
+                        <span class="address">{{ flat.adresse }}</span>
+                    </div>
+                    <span class="price">{{ flat.kalt }} €</span>  
+                </a>
+            `,
+            computed: {
+                imgLink: function() {
+                    return `${root}/uploads/${this.flat.image_1}`;
+                },
+                flatLink: function() {
+                    return `${root}/objekte/${this.flat.link}`;
+                }
+            }
+        });
+        window.vm = new Vue({
+            el: '.message-ctn',
+            data: {
+                outputData: null,
+                errorMsg: {
+                    isError: false,
+                    message: 'Bitte logge dich zuerst ein.',
+                },
+                isUser: null,
+                chatList: [],
+                userList: [],
+                activeChatWithUser: null,
+                activeChatList: [],
+                messageContent: null,
+                activeFlat: null,
+                firstChat: true,
+                updateTimer: '',
+                sentFromFlat: null,
+                sentFromUser: null,
+                sentParamsValid: false,
+                sentIsAlreadyInChats: false,
+                activeUserIds: []
             },
-        },
-        methods: {
-            formatMsg: function() {
-                return '<p>' + this.messageContent.replace(/\n/g, "</p>\n<p>") + '</p>';
-            },
-            getUrlParameters: function(getName) {
-                var url = new URL(window.location.href);
-                var param = url.searchParams.get(getName);
-                return param;
-            },
-            getChatsWithUserId: function (userId) {
-                const res = this.chatList.find((ele) => {
-                    return ele[0] == userId;
+            created: function () {
+                // check if valid session exists
+                fetch('./../essentials/get-session.php')
+                .then((json) => json.json())
+                .then((sessionId) => {
+                    this.isUser = sessionId.person.p_id; 
+                    this.updateChat(true);
+                    // update chat every 2 seconds
+                    this.updateTimer = setInterval(this.updateChat, 3000);
+                })
+                .catch((err) => {
+                    if (isDev) {
+                        console.log(err);
+                    } else {
+                        this.errorMsg.isError = true;
+                    }
                 });
-                if(res) {
-                    return res[1];
-                } else {
-                    return [];
-                }
             },
-            handleUserClick: function(userId) {
-                this.activeChatWithUser = userId;
-                this.updateChat(true);
+            watch: {
+                activeChatList: function () {
+                    this.setScrollPos();
+                },
             },
-            changeActiveChat: async function (userId, isFirstChat = false) {
-                this.activeChatWithUser = userId;
-                let newChatList = [];
-                if(this.sentParamsValid && isFirstChat) {
-                    if(this.sentIsAlreadyInChats) {
+            methods: {
+                formatMsg: function() {
+                    return '<p>' + this.messageContent.replace(/\n/g, "</p>\n<p>") + '</p>';
+                },
+                getUrlParameters: function(getName) {
+                    var url = new URL(window.location.href);
+                    var param = url.searchParams.get(getName);
+                    return param;
+                },
+                getChatsWithUserId: function (userId) {
+                    const res = this.chatList.find((ele) => {
+                        return ele[0] == userId;
+                    });
+                    if(res) {
+                        return res[1];
+                    } else {
+                        return [];
+                    }
+                },
+                handleUserClick: function(userId) {
+                    this.activeChatWithUser = userId;
+                    this.updateChat(true);
+                },
+                changeActiveChat: async function (userId, isFirstChat = false) {
+                    this.activeChatWithUser = userId;
+                    let newChatList = [];
+                    if(this.sentParamsValid && isFirstChat) {
+                        if(this.sentIsAlreadyInChats) {
+                            newChatList = this.getChatsWithUserId(this.activeChatWithUser);
+                        }
+                    } else {
                         newChatList = this.getChatsWithUserId(this.activeChatWithUser);
                     }
-                } else {
-                    newChatList = this.getChatsWithUserId(this.activeChatWithUser);
-                }
 
-                let isSameChatList = this.isSameArray(this.activeChatList, newChatList);
+                    let isSameChatList = this.isSameArray(this.activeChatList, newChatList);
 
-                if(!isFirstChat) {
-                    if (!isSameChatList) {
+                    if(!isFirstChat) {
+                        if (!isSameChatList) {
+                            this.activeChatList = [...newChatList];
+                        }
+                    } else {
                         this.activeChatList = [...newChatList];
                     }
-                } else {
-                    this.activeChatList = [...newChatList];
-                }
 
-                if(this.sentParamsValid && isFirstChat) {
-                    this.firstChat = false;
-                    this.activeFlat = this.sentFromFlat;
-                    this.setScrollPos();
-                } else if(this.sentParamsValid && this.activeChatWithUser == this.sentFromUser.p_id && !isFirstChat) {
-                    this.activeFlat = this.sentFromFlat;
-                } else {
-                    await fetch('./../essentials/dbs_json.php',
-                    {
-                        method: 'POST',
-                        body: `flat_by_id=${this.activeChatList[this.activeChatList.length - 1].o_id}`,
-                        headers:
+                    if(this.sentParamsValid && isFirstChat) {
+                        this.firstChat = false;
+                        this.activeFlat = this.sentFromFlat;
+                        this.setScrollPos();
+                    } else if(this.sentParamsValid && this.activeChatWithUser == this.sentFromUser.p_id && !isFirstChat) {
+                        this.activeFlat = this.sentFromFlat;
+                    } else {
+                        await fetch('./../essentials/dbs_json.php',
                         {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                    })
-                    .then((res) => res.json())
-                    .then((data) => {
-                        // console.log(data);
-                        this.activeFlat = data[0];
+                            method: 'POST',
+                            body: `flat_by_id=${this.activeChatList[this.activeChatList.length - 1].o_id}`,
+                            headers:
+                            {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                        })
+                        .then((res) => res.json())
+                        .then((data) => {
+                            // console.log(data);
+                            this.activeFlat = data[0];
 
-                        // if this is not the first chat
-                        if(isFirstChat) {
-                            this.setScrollPos();
-                            this.firstChat = false;
-                            // if new chats are not the same as active chat set scroll
-                        } else if (!isSameChatList) {
-                            this.setScrollPos();
-                        }
-                    });
-                }
-                
-            },
-            updateChat: async function (isFirst) {
-                if (this.getUrlParameters('user_by_id') && this.getUrlParameters('flat_by_id')) {
-                    await fetch('./../essentials/dbs_json.php',
-                    {
-                        method: 'POST',
-                        body: `user_by_id=${this.getUrlParameters('user_by_id')}&flat_by_id=${this.getUrlParameters('flat_by_id')}`,
-                        headers:
-                        {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                    })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        // data array index of flat and user
-                        // 0 = flat
-                        // 1 = user
-                        // if flat by id foreign key is user id 
-                        if(data[1].p_id === data[0].p_id && data[1].p_id != this.isUser) {
-                            // if user comes from wohnung-finden page, add to userList
-                            this.sentParamsValid = true;
-                            this.sentFromFlat = data[0];
-                            this.sentFromUser = data[1];
-                        }
-                        
-                    });
-                } else if (this.getUrlParameters('user_by_id')){
-                    await fetch('./../essentials/dbs_json.php',
-                    {
-                        method: 'POST',
-                        body: `user_by_id=${this.getUrlParameters('user_by_id')}`,
-                        headers:
-                        {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                    })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        // data array index of user
-                        // 0 = user
-                        if(data[0].p_id != this.isUser) {
-                            // if user comes from wohnung-finden page, add to userList
-                            this.sentParamsValid = true;
-                            this.sentFromUser = data[0];
-                        }
-                        
-                    });
-                }
-                // get relevant chats
-                await fetch('./../essentials/dbs_json.php',
-                {
-                    method: 'POST',
-                    body: `chats&user=${this.isUser}`,
-                    headers:
-                    {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                })
-                .then((response) => response.json())
-                .then(async (data) => {
-
-                    this.activeUserIds = [];
-
-                    //Comparing based on the property qty
-                    function compare_time(a, b){
-                        // a should come before b in the sorted order
-                        if (Date.parse(a[1][a[1].length - 1].timestamp) > Date.parse(b[1][b[1].length - 1].timestamp)){
-                            return -1;
-                        // a should come after b in the sorted order
-                        } else if (Date.parse(a[1][a[1].length - 1].timestamp) < Date.parse(b[1][b[1].length - 1].timestamp)){
-                            return 1;
-                        // a and b are the same
-                        } else{
-                            return 0;
-                        }
+                            // if this is not the first chat
+                            if(isFirstChat) {
+                                this.setScrollPos();
+                                this.firstChat = false;
+                                // if new chats are not the same as active chat set scroll
+                            } else if (!isSameChatList) {
+                                this.setScrollPos();
+                            }
+                        });
                     }
-
-                    this.chatList = Object.entries(data).sort(compare_time);
-
-                    this.chatList.forEach((user) => {
-                        this.activeUserIds.push(user[0]);
-                    });
-
+                    
+                },
+                updateChat: async function (isFirst) {
+                    if (this.getUrlParameters('user_by_id') && this.getUrlParameters('flat_by_id')) {
+                        await fetch('./../essentials/dbs_json.php',
+                        {
+                            method: 'POST',
+                            body: `user_by_id=${this.getUrlParameters('user_by_id')}&flat_by_id=${this.getUrlParameters('flat_by_id')}`,
+                            headers:
+                            {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                        })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            // data array index of flat and user
+                            // 0 = flat
+                            // 1 = user
+                            // if flat by id foreign key is user id 
+                            if(data[1].p_id === data[0].p_id && data[1].p_id != this.isUser) {
+                                // if user comes from wohnung-finden page, add to userList
+                                this.sentParamsValid = true;
+                                this.sentFromFlat = data[0];
+                                this.sentFromUser = data[1];
+                            }
+                            
+                        });
+                    } else if (this.getUrlParameters('user_by_id')){
+                        await fetch('./../essentials/dbs_json.php',
+                        {
+                            method: 'POST',
+                            body: `user_by_id=${this.getUrlParameters('user_by_id')}`,
+                            headers:
+                            {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                        })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            // data array index of user
+                            // 0 = user
+                            if(data[0].p_id != this.isUser) {
+                                // if user comes from wohnung-finden page, add to userList
+                                this.sentParamsValid = true;
+                                this.sentFromUser = data[0];
+                            }
+                            
+                        });
+                    }
+                    // get relevant chats
                     await fetch('./../essentials/dbs_json.php',
                     {
                         method: 'POST',
-                        body: `users_by_id=${this.activeUserIds.join('-')}`,
+                        body: `chats&user=${this.isUser}`,
                         headers:
                         {
                             'Content-Type': 'application/x-www-form-urlencoded',
                         },
                     })
                     .then((response) => response.json())
-                    .then((data) => {
-                        data.forEach((user) => {
-                            if (this.firstChat || !this.userList.some(e => e.p_id == user.p_id)) {
-                                this.userList.push(user);
+                    .then(async (data) => {
+
+                        this.activeUserIds = [];
+
+                        //Comparing based on the property qty
+                        function compare_time(a, b){
+                            // a should come before b in the sorted order
+                            if (Date.parse(a[1][a[1].length - 1].timestamp) > Date.parse(b[1][b[1].length - 1].timestamp)){
+                                return -1;
+                            // a should come after b in the sorted order
+                            } else if (Date.parse(a[1][a[1].length - 1].timestamp) < Date.parse(b[1][b[1].length - 1].timestamp)){
+                                return 1;
+                            // a and b are the same
+                            } else{
+                                return 0;
+                            }
+                        }
+
+                        this.chatList = Object.entries(data).sort(compare_time);
+
+                        this.chatList.forEach((user) => {
+                            this.activeUserIds.push(user[0]);
+                        });
+
+                        await fetch('./../essentials/dbs_json.php',
+                        {
+                            method: 'POST',
+                            body: `users_by_id=${this.activeUserIds.join('-')}`,
+                            headers:
+                            {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                        })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            data.forEach((user) => {
+                                if (this.firstChat || !this.userList.some(e => e.p_id == user.p_id)) {
+                                    this.userList.push(user);
+                                }
+                            });
+
+                            if (this.firstChat && this.sentParamsValid) {
+                                if (this.chatList.some(e => e[0] == this.sentFromUser.p_id)) {
+                                    this.sentIsAlreadyInChats = true;
+                                }
+                                if (!this.sentIsAlreadyInChats) {
+                                    this.userList.unshift(this.sentFromUser);
+                                }
+                            }
+                            
+                            
+                            if (this.firstChat && this.sentParamsValid && !this.sentIsAlreadyInChats) {
+                                this.chatList.unshift([this.sentFromUser.p_id.toString(), []]);
+                            }
+
+                            if (this.chatList.length > 0 && this.firstChat) {
+                                // set first chat as initial
+                                if(this.sentParamsValid) {
+                                    this.changeActiveChat(this.sentFromUser.p_id, this.firstChat);
+                                } else {   
+                                    this.changeActiveChat(this.chatList[0][0], this.firstChat);
+                                }
+                            } else if (!this.sentIsAlreadyInChats && this.sentFromUser && this.activeChatWithUser == this.sentFromUser.p_id) {
+                                this.changeActiveChat(this.sentFromUser.p_id);
+                            } else {
+                                this.changeActiveChat(this.activeChatWithUser);
                             }
                         });
 
-                        if (this.firstChat && this.sentParamsValid) {
-                            if (this.chatList.some(e => e[0] == this.sentFromUser.p_id)) {
-                                this.sentIsAlreadyInChats = true;
-                            }
-                            if (!this.sentIsAlreadyInChats) {
-                                this.userList.unshift(this.sentFromUser);
-                            }
-                        }
-                        
-                        
-                        if (this.firstChat && this.sentParamsValid && !this.sentIsAlreadyInChats) {
-                            this.chatList.unshift([this.sentFromUser.p_id.toString(), []]);
-                        }
-
-                        if (this.chatList.length > 0 && this.firstChat) {
-                            // set first chat as initial
-                            if(this.sentParamsValid) {
-                                this.changeActiveChat(this.sentFromUser.p_id, this.firstChat);
-                            } else {   
-                                this.changeActiveChat(this.chatList[0][0], this.firstChat);
-                            }
-                        } else if (!this.sentIsAlreadyInChats && this.sentFromUser && this.activeChatWithUser == this.sentFromUser.p_id) {
-                            this.changeActiveChat(this.sentFromUser.p_id);
-                        } else {
-                            this.changeActiveChat(this.activeChatWithUser);
-                        }
                     });
-
-                });
-                if(isFirst) {
-                    this.setScrollPos();
-                }
-
-            },
-            setScrollPos: function () {
-                this.$refs.chatCtn.scrollTop = 30000000;
-            },
-            onSubmit: async function () {
-                let fetchBody = '';
-
-                if(this.activeFlat) {
-                    fetchBody = `rec=${this.activeChatWithUser}&send=${this.isUser}&msg=${this.formatMsg()}&o_id=${this.activeFlat.o_id}`
-                } else {
-                    fetchBody = `rec=${this.activeChatWithUser}&send=${this.isUser}&msg=${this.formatMsg()}`
-                }
-
-                await fetch('./../actions/send-chat.php',
-                {
-                    method: 'POST',
-                    body: fetchBody,
-                    headers:
-                    {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                }).then(res=>res.text())
-                .then(data=>{
-                    // if data true
-                    if (data == 1) {
-                        this.updateChat();
-                        this.messageContent = '';
+                    if(isFirst) {
                         this.setScrollPos();
                     }
-                }).catch(err=> { 
-                    console.log(err);
-                });
-            },
-            isSameArray: function(arr1, arr2) {
-                if(arr1.length === arr2.length) {
-                    return true
-                } else {
-                    return false;
+
+                },
+                setScrollPos: function () {
+                    this.$refs.chatCtn.scrollTop = 30000000;
+                },
+                onSubmit: async function () {
+                    let fetchBody = '';
+
+                    if(this.activeFlat) {
+                        fetchBody = `rec=${this.activeChatWithUser}&send=${this.isUser}&msg=${this.formatMsg()}&o_id=${this.activeFlat.o_id}`
+                    } else {
+                        fetchBody = `rec=${this.activeChatWithUser}&send=${this.isUser}&msg=${this.formatMsg()}`
+                    }
+
+                    await fetch('./../actions/send-chat.php',
+                    {
+                        method: 'POST',
+                        body: fetchBody,
+                        headers:
+                        {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                    }).then(res=>res.text())
+                    .then(data=>{
+                        // if data true
+                        if (data == 1) {
+                            this.updateChat();
+                            this.messageContent = '';
+                            this.setScrollPos();
+                        }
+                    }).catch(err=> { 
+                        console.log(err);
+                    });
+                },
+                isSameArray: function(arr1, arr2) {
+                    if(arr1.length === arr2.length) {
+                        return true
+                    } else {
+                        return false;
+                    }
                 }
-            }
-        },
-    });
-}
+            },
+        });
+    }
+}());
+
+(function (){
+    // delete every storage when not on wohnung-finden or flat-page
+    if (!document.body.classList.contains('wohnung-finden') && !document.body.classList.contains('objekte')) {
+        window.sessionStorage.removeItem('flatSavedItemId');
+        window.sessionStorage.removeItem('flatSavedPage');
+    }
+    if (!document.body.classList.contains('mieter-finden') && !document.body.classList.contains('user-template')) {
+        window.sessionStorage.removeItem('userSavedItemId');
+        window.sessionStorage.removeItem('userSavedPage');
+    }
+}());

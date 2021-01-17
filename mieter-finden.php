@@ -1,10 +1,9 @@
 <?php require_once('essentials/header.php'); ?>
 
-	<div class="row">
+	<div class="row static">
 		<div class="col">
 			<div class="all-users">
-				<div class="user-teaser row">
-					
+				<div class="user-teaser row static">
 					<div class="col s-8">
 						<div class="address-container">
 							<span class="address-field-label">
@@ -16,7 +15,7 @@
 								<address-list-item @handle-address-click="handleAddressClick" :key="index" v-for="(place, index) in recentPlaceList" :place="place"></address-list-item>
 							</ul>
 						</div>
-						<user-item v-for="user in users" :key="user.o_id" :user="user"></user-item>
+						<user-item v-for="user in users" :key="user.p_id" :user="user" :page="nextPage" :id="user.p_id"></user-item>
 						<span v-cloak class="error" v-if="errorMsg">Keine passenden Benutzer gefunden, probier's mal mit anderen Filtereinstellungen.</span>
 					</div>
 

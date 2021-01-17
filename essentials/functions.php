@@ -27,7 +27,11 @@
         }
 
         public function build_body_class() {
-            return $this->current_dir . ' ' . basename($this->file_name, '.php');
+            if(basename($this->file_name, '.php') == 'user') {
+                return $this->current_dir . ' user-template ' . basename($this->file_name, '.php');
+            } else {
+                return $this->current_dir . ' ' . basename($this->file_name, '.php');
+            }
         }
 
         public function is_valid_email($email) {

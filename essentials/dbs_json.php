@@ -19,6 +19,12 @@
         $limit = $request_type['limit'];
 
         $page_limit = $request_type['page'] * $limit - $limit;
+        
+        if(isset($request_type['page'])) {
+            $limit_sql = ($request_type['page'] * $request_type['limit'] - $request_type['limit']).','.$request_type['limit'];
+        } else if (isset($request_type['savedPage'])) {
+            $limit_sql = $request_type['savedPage'];
+        }
 
         $filter_list = [
             'lf_quadratmeter',
@@ -46,11 +52,11 @@
         
         if($prep_sql) {
             $prep_sql = rtrim($prep_sql, " AND ");
-            $sql_stmt = 'SELECT person.p_id, person.name, person.email, person.beschreibung, person.job, person.lf_quadratmeter, person.lf_zimmer, person.lf_kaltmiete, person.lf_warmmiete, person.lf_adresse, person.lookingfor, person.profilepic, person.lookingfrom, person.gender FROM `person` WHERE '.$prep_sql.' ORDER BY registration_date DESC LIMIT '.$page_limit.','.$limit;
+            $sql_stmt = 'SELECT person.p_id, person.name, person.email, person.beschreibung, person.job, person.lf_quadratmeter, person.lf_zimmer, person.lf_kaltmiete, person.lf_warmmiete, person.lf_adresse, person.lookingfor, person.profilepic, person.lookingfrom, person.gender FROM `person` WHERE '.$prep_sql.' ORDER BY registration_date DESC LIMIT '.$limit_sql;
 
             $data = $db->prep_exec($sql_stmt, $filter_values, 'all');
         } else {
-            $sql_stmt = 'SELECT person.p_id, person.name, person.email, person.beschreibung, person.job, person.lf_quadratmeter, person.lf_zimmer, person.lf_kaltmiete, person.lf_warmmiete, person.lf_adresse, person.lookingfor, person.profilepic, person.lookingfrom, person.gender FROM `person` ORDER BY registration_date DESC LIMIT '.$page_limit.','.$limit;
+            $sql_stmt = 'SELECT person.p_id, person.name, person.email, person.beschreibung, person.job, person.lf_quadratmeter, person.lf_zimmer, person.lf_kaltmiete, person.lf_warmmiete, person.lf_adresse, person.lookingfor, person.profilepic, person.lookingfrom, person.gender FROM `person` ORDER BY registration_date DESC LIMIT '.$limit_sql;
             
             $data = $db->prep_exec($sql_stmt, $filter_values, 'all');
         }
@@ -86,20 +92,16 @@
                 case 'address':
                     $search_str = $val;
 
-                    // if($val >= 10115 || $val >= 14199) {
-                    //     $search_str = 'Berlin'
-                    // }
-
                     $sql_stmt .= " adresse LIKE '%".$search_str."%' AND ";
                     break;
                 // limit always on the end
                 case 'limit':
                     if(isset($request_type['page'])) {
-                        $sql_stmt .= 'ORDER BY einstellungsdatum DESC LIMIT '.($request_type['page'] * $request_type['limit'] - $request_type['limit']).','.$request_type['limit'];
-                    } else {
-                        // ?page-parameter has to be set
-                        die('Seitenanzahl muss angegeben werden.');
+                        $limit_sql = ($request_type['page'] * $request_type['limit'] - $request_type['limit']).','.$request_type['limit'];
+                    } else if (isset($request_type['savedPage'])) {
+                        $limit_sql = $request_type['savedPage'];
                     }
+                    $sql_stmt .= 'ORDER BY einstellungsdatum DESC LIMIT '.$limit_sql;
                     break;     
             }
         }

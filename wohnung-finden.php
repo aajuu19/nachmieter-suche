@@ -1,9 +1,9 @@
 <?php require_once('essentials/header.php'); ?>
 
-	<div class="row">
+	<div class="row static">
 		<div class="col">
 			<div class="all-objects">
-				<div class="object-teaser row">
+				<div class="object-teaser row static">
 					<div class="col s-8">
 						<div class="address-container">
 							<span class="address-field-label">
@@ -15,7 +15,7 @@
 								<address-list-item @handle-address-click="handleAddressClick" :key="index" v-for="(place, index) in recentPlaceList" :place="place"></address-list-item>
 							</ul>
 						</div>
-						<object-item v-for="object in objects" :key="object.o_id" :object="object"></object-item>
+						<flat-item v-for="flat in flatList" :key="flat.o_id" :flat="flat" :page="nextPage - 1" :id="flat.o_id"></flat-item>
 						<span class="error" v-if="errorMsg" v-cloak>Keine passenden Objekte gefunden, probier's mal mit anderen Filtereinstellungen.</span>
 					</div>
 

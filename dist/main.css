@@ -5615,6 +5615,9 @@ textarea {
 .gap-bottom-3 {
   margin-bottom: 3rem; }
 
+.static {
+  position: static; }
+
 header {
   height: 100vh;
   min-height: 31.25rem;
