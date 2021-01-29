@@ -82,6 +82,8 @@ const root = `${document.location.origin}/nachmieter-suche`;
         }
     }
 
+    footerFunc();
+
     const debounced = debounce(footerFunc, 100);
 
     window.addEventListener('scroll', debounced);
@@ -496,6 +498,8 @@ const helperFunctions = {
                             const lastVisitedFlat = document.getElementById(this.getSessionStorage('userSavedItemId'));
                             const scrollAmount = lastVisitedFlat.offsetTop + header.offsetHeight - 16;
                             window.scrollTo(0, scrollAmount);
+                            window.sessionStorage.removeItem('userSavedItemId');
+                            window.sessionStorage.removeItem('userSavedPage');
                         });
                     }
                 })
@@ -1218,6 +1222,8 @@ const helperFunctions = {
                             const lastVisitedFlat = document.getElementById(this.getSessionStorage('flatSavedItemId'));
                             const scrollAmount = lastVisitedFlat.offsetTop + header.offsetHeight - 16;
                             window.scrollTo(0, scrollAmount);
+                            window.sessionStorage.removeItem('flatSavedItemId');
+                            window.sessionStorage.removeItem('flatSavedPage');
                         });
                     }
                 })
@@ -1610,7 +1616,7 @@ const helperFunctions = {
                                 }
                             }
 
-                            if(flatData['image_1'] !== 'placeholder.png') {
+                            if(flatData['image_1'] !== 'placeholder.jpg') {
                                 this.imageFileList.push({
                                     fileName: flatData['image_1'],
                                     id: this.randomId()
@@ -2007,7 +2013,7 @@ const helperFunctions = {
                 },
                 handleUserClick: function(userId) {
                     this.activeChatWithUser = userId;
-                    this.updateChat(true);
+                    this.updateChat(true, false);
                 },
                 changeActiveChat: async function (userId, isFirstChat = false) {
                     this.activeChatWithUser = userId;
@@ -2025,9 +2031,15 @@ const helperFunctions = {
                     if(!isFirstChat) {
                         if (!isSameChatList) {
                             this.activeChatList = [...newChatList];
+                            this.$nextTick(function () {
+                                this.setScrollPos();
+                            });
                         }
                     } else {
                         this.activeChatList = [...newChatList];
+                        this.$nextTick(function () {
+                            this.setScrollPos();
+                        });
                     }
 
                     if(this.sentParamsValid && isFirstChat) {
@@ -2063,52 +2075,54 @@ const helperFunctions = {
                     }
                     
                 },
-                updateChat: async function (isFirst) {
-                    if (this.getUrlParameters('user_by_id') && this.getUrlParameters('flat_by_id')) {
-                        await fetch('./../essentials/dbs_json.php',
-                        {
-                            method: 'POST',
-                            body: `user_by_id=${this.getUrlParameters('user_by_id')}&flat_by_id=${this.getUrlParameters('flat_by_id')}`,
-                            headers:
+                updateChat: async function (isFirst, fetchURLParams = true) {
+                    if(fetchURLParams) {
+                        if (this.getUrlParameters('user_by_id') && this.getUrlParameters('flat_by_id')) {
+                            await fetch('./../essentials/dbs_json.php',
                             {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                        })
-                        .then((response) => response.json())
-                        .then((data) => {
-                            // data array index of flat and user
-                            // 0 = flat
-                            // 1 = user
-                            // if flat by id foreign key is user id 
-                            if(data[1].p_id === data[0].p_id && data[1].p_id != this.isUser) {
-                                // if user comes from wohnung-finden page, add to userList
-                                this.sentParamsValid = true;
-                                this.sentFromFlat = data[0];
-                                this.sentFromUser = data[1];
-                            }
-                            
-                        });
-                    } else if (this.getUrlParameters('user_by_id')){
-                        await fetch('./../essentials/dbs_json.php',
-                        {
-                            method: 'POST',
-                            body: `user_by_id=${this.getUrlParameters('user_by_id')}`,
-                            headers:
+                                method: 'POST',
+                                body: `user_by_id=${this.getUrlParameters('user_by_id')}&flat_by_id=${this.getUrlParameters('flat_by_id')}`,
+                                headers:
+                                {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                            })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                // data array index of flat and user
+                                // 0 = flat
+                                // 1 = user
+                                // if flat by id foreign key is user id 
+                                if(data[1].p_id === data[0].p_id && data[1].p_id != this.isUser) {
+                                    // if user comes from wohnung-finden page, add to userList
+                                    this.sentParamsValid = true;
+                                    this.sentFromFlat = data[0];
+                                    this.sentFromUser = data[1];
+                                }
+                                
+                            });
+                        } else if (this.getUrlParameters('user_by_id')){
+                            await fetch('./../essentials/dbs_json.php',
                             {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                        })
-                        .then((response) => response.json())
-                        .then((data) => {
-                            // data array index of user
-                            // 0 = user
-                            if(data[0].p_id != this.isUser) {
-                                // if user comes from wohnung-finden page, add to userList
-                                this.sentParamsValid = true;
-                                this.sentFromUser = data[0];
-                            }
-                            
-                        });
+                                method: 'POST',
+                                body: `user_by_id=${this.getUrlParameters('user_by_id')}`,
+                                headers:
+                                {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                            })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                // data array index of user
+                                // 0 = user
+                                if(data[0].p_id != this.isUser) {
+                                    // if user comes from wohnung-finden page, add to userList
+                                    this.sentParamsValid = true;
+                                    this.sentFromUser = data[0];
+                                }
+                                
+                            });
+                        }
                     }
                     // get relevant chats
                     await fetch('./../essentials/dbs_json.php',
@@ -2229,11 +2243,96 @@ const helperFunctions = {
                     });
                 },
                 isSameArray: function(arr1, arr2) {
-                    if(arr1.length === arr2.length) {
-                        return true
-                    } else {
-                        return false;
-                    }
+                    arr1 = JSON.stringify(arr1);
+                    arr2 = JSON.stringify(arr2);
+                    console.log(arr1 === arr2);
+                    return arr1 === arr2;
+                }
+            },
+        });
+    }
+}());
+
+
+(function (){
+    // Nachrichten Center App
+    if (document.body.classList.contains('settings')) {
+        Vue.component('account-tab', {
+            data: function () {
+                return {
+                    hasUserImage: false,
+                    headline: 'Accounteinstellungen',
+                    windowIsOpen: false
+                };
+            },
+            template: `
+                <div class="account-tab">
+                    <h4 class="align-left">{{ headline }}</h4>
+                    <div class="whiteBox morePad">
+                        <span class="account-tab__heading">Account löschen</span>
+                        <p>Du möchtest wirklich deinen Account löschen? Nimm dir noch einmal eine ruhige Minute und denke darüber nach für was du dich gerade entscheidest.
+                        Trotzdem noch? Kann man nichts machen.</p>
+                        <a href="javascript:void(0)" @click="openWindow" class="account-tab__button--delete btn alert"><i class="fa fa-trash-alt icon-space-right"></i> Account löschen</a>
+                        <div class="account-tab__delete-window" :class="{ active: windowIsOpen }">
+                            <div class="account-tab__delete-window__content">
+                                <span class="h4">Account löschen</span>
+                                <span>Wenn du deinen Account wirklich löschen möchtest, gebe dein Passwort ein und drücke den Bestätigen-Button</span>
+                                <form action="${root}/actions/delete-user.php" method="POST" class="account-tab__delete-window__buttons default">
+                                    <fieldset class="account-tab__fieldset">
+                                        <label class="account-tab__label--small" for="user_del_pw"><i class="fa fa-key icon-space-right"></i> Passwort</label>
+                                        <input type="password" name="user_del_pw" id="user_del_pw"/>
+                                    </fieldset>
+
+                                    <button type="submit" class="btn alert"><i class="fa fa-trash-alt icon-space-right"></i> Bestätigen</button>
+                                    <span class="btn secondary" @click="closeWindow"><i class="fa fa-times icon-space-right"></i> Abbrechen</span>
+                                </form>
+                            </div>
+                            <div class="account-tab__delete-window__close" @click="closeWindow"></div>
+                        </div>
+                    </div>
+                    <div class="whiteBox morePad">
+                        <span class="account-tab__heading">Passwort ändern</span>
+                        <p>Bitte achte zu deiner eigenen Sicherheit darauf, deine Daten nicht an Dritte weiterzugeben. Bei uns sind deine Daten in Sicherheit, da auch wir diese nicht
+                        an Dritte weitergeben. Solltest du hierzu fragen haben kannst du uns gerne jederzeit kontaktieren.</p>
+                        <form action="${root}/actions/change-password.php" method="POST" class="default">
+                            <fieldset class="account-tab__fieldset">
+                                <label class="account-tab__label" for="acc_pw_old"><i class="fa fa-key icon-space-right"></i> Altes Passwort</label>
+                                <input name="acc_pw_old" id="acc_pw_old" type="password" placeholder="Bitte altes Passwort eingeben"/>
+                            </fieldset>
+                            <fieldset class="account-tab__fieldset">
+                                <label class="account-tab__label" for="acc_pw_new"><i class="fa fa-key icon-space-right"></i> Neues Passwort</label>
+                                <input name="acc_pw_new" id="acc_pw_new" type="password" placeholder="Bitte neues Passwort eingeben"/>
+                            </fieldset>
+                            <fieldset class="account-tab__fieldset">
+                                <label class="account-tab__label" for="acc_pw_new_rep"><i class="fa fa-key icon-space-right"></i> Wiederholen</label>
+                                <input name="acc_pw_new_rep" id="acc_pw_new_rep" type="password" placeholder="Bitte neues Passwort wiederholen"/>
+                            </fieldset>
+                        </form>
+                        <a href="#" class="account-tab__button--delete btn secondary"><i class="fa fa-edit"></i> Passwort ändern</a>
+                    </div>
+
+                </div>
+            `,
+            methods: {
+                openWindow: function() {
+                    this.windowIsOpen = true;
+                },
+                closeWindow: function() {
+                    this.windowIsOpen = false;
+                }
+            }
+        });
+        const vm = new Vue({
+            el: '.user-settings',
+            data: {
+                activeUserSetting: 'account-tab',
+            },
+            created: function () {
+                console.log(`Hier entsteht eine neue Entwicklungsumgebung`)
+            },
+            methods: {
+                changeActiveUserComp: function(activeSetting) {
+                    this.activeUserSetting = activeSetting;
                 }
             },
         });

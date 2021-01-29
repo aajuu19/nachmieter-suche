@@ -35,7 +35,7 @@
                             <span class="heading">'.$val['name'].'</span>
                             <span class="time">'.$web->format_date($val['einstellungsdatum']).' Uhr</span>
                             <span class="desc">'.$web->shorten_str($val['beschreibung'], 80).'</span>
-                            <a href="'.$web->root.'/objekte/'.$val['link'].'" class="btn secondary">Mehr erfahren</a>
+                            <a title="'.$val['name'].'" href="'.$web->root.'/objekte/'.$val['link'].'" class="btn secondary">Mehr erfahren</a>
                         </div>
                     </div> 
                 </div>';

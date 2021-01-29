@@ -97,6 +97,7 @@
             'name' => 'Einstellungen',
             'title' => 'Dies sind die Einstellungen',
             'desc' => 'Dies ist die Beschreibung der Einstellungen',
+            'claim' => 'Einstellungen',
             'include_nav'=> false,
             'login_required' => true            
         ],

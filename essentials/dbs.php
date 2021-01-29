@@ -49,10 +49,12 @@
             } 
         }
 
-        public function get_user($user_id) {
+        public function get_user($user_id, $include_pw = false) {
             if ($user_id !== "") {
                 $user = $this->get_this_one('SELECT * FROM `person` WHERE p_id='.$user_id);
-                unset($user['password']);
+                if(!$include_pw) {
+                    unset($user['password']);
+                }
                 return $user;
             } else {
                 return false;

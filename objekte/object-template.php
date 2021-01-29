@@ -25,7 +25,7 @@
                 <a href="<?php echo $web->root; ?>/user/neues-objekt.php?flat_id=<?php echo $obj['o_id']; ?>" class="edit-flat__btn edit-flat-btn"><i class="fa fa-edit edit-flat__icon"></i></a>
                 <a href="javascript:void(0)" class="edit-flat__btn edit-flat__btn--delete delete-flat-btn"><i class="fa fa-trash-alt edit-flat__icon"></i></a>
             </div>
-            <div v-cloak class="info-up-window info-up-window__delete">
+            <div class="info-up-window info-up-window__delete">
                 <div class="info-up-window__close"></div>
                 <div class="info-up-window__content align-center">
                     <span class="h4">Objekt löschen</span>

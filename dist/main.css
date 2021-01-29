@@ -5618,6 +5618,9 @@ textarea {
 .static {
   position: static; }
 
+.icon-space-right {
+  margin-right: 8px; }
+
 header {
   height: 100vh;
   min-height: 31.25rem;
@@ -6285,25 +6288,6 @@ main {
         @media (min-width: 1025px) {
           main .form-area form.default input[type=submit] {
             margin-top: 2rem; } }
-    main .form-area .side-info {
-      margin-top: 2rem;
-      height: 100%;
-      padding: 2rem 0; }
-      main .form-area .side-info.bd-right {
-        border-bottom: 1px solid #a5d8f5; }
-      main .form-area .side-info.bd-left {
-        border-top: 1px solid #a5d8f5; }
-      @media (min-width: 850px) {
-        main .form-area .side-info {
-          padding: 2rem;
-          margin-top: 0;
-          padding-top: 0; }
-          main .form-area .side-info.bd-right {
-            border-right: 1px solid #a5d8f5;
-            border-bottom: 0; }
-          main .form-area .side-info.bd-left {
-            border-left: 1px solid #a5d8f5;
-            border-top: 0; } }
   main .obj-ctn, main .edit-profile-app {
     color: black; }
     main .obj-ctn form.default, main .edit-profile-app form.default {
@@ -6506,8 +6490,10 @@ main {
     opacity: 0;
     position: relative;
     z-index: 9;
-    visibility: hidden; }
+    visibility: hidden;
+    display: none; }
     main .object-container .info-up-window.active {
+      display: block;
       visibility: visible;
       opacity: 1; }
     main .object-container .info-up-window__content {
@@ -6950,6 +6936,77 @@ main {
         background: #f79e02; }
       main .form-legend__info--optional:before {
         background: #fec561; }
+  main aside.side-info {
+    margin-top: 2rem;
+    height: 100%;
+    padding: 2rem 0; }
+    main aside.side-info.bd-right {
+      border-bottom: 1px solid #a5d8f5; }
+    main aside.side-info.bd-left {
+      border-top: 1px solid #a5d8f5; }
+    @media (min-width: 850px) {
+      main aside.side-info {
+        padding: 2rem;
+        margin-top: 0;
+        padding-top: 0; }
+        main aside.side-info.bd-right {
+          border-right: 1px solid #a5d8f5;
+          border-bottom: 0; }
+        main aside.side-info.bd-left {
+          border-left: 1px solid #a5d8f5;
+          border-top: 0; } }
+  main .user-settings__menuitem {
+    list-style: none;
+    cursor: pointer;
+    transition: .3s; }
+    main .user-settings__menuitem:hover {
+      margin-left: 10px; }
+  main .user-settings .account-tab__heading {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 1.25rem;
+    font-size: 1.125rem; }
+  main .user-settings .account-tab__fieldset {
+    margin-bottom: 1rem; }
+  main .user-settings .account-tab__delete-window {
+    transition: .3s;
+    opacity: 0;
+    position: relative;
+    z-index: 9;
+    visibility: hidden;
+    display: none;
+    text-align: center; }
+    main .user-settings .account-tab__delete-window.active {
+      display: block;
+      visibility: visible;
+      opacity: 1; }
+    main .user-settings .account-tab__delete-window__content {
+      background: #fff;
+      border-radius: 15px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 999;
+      width: 100%;
+      max-width: 50rem;
+      padding: 2.1875rem;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.15); }
+    main .user-settings .account-tab__delete-window__close {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #fff;
+      opacity: .6;
+      z-index: 998; }
+    main .user-settings .account-tab__delete-window__buttons {
+      margin-top: 1.5625rem; }
+      main .user-settings .account-tab__delete-window__buttons button {
+        margin-right: 10px; }
+      main .user-settings .account-tab__delete-window__buttons i {
+        margin-right: 3px; }
 
 .footer-img {
   display: block;
@@ -7305,7 +7362,7 @@ footer {
       padding: 16px 0;
       background: #1c9ce5;
       color: #fff;
-      font-size: 22px;
+      font-size: 16px;
       display: flex;
       align-items: center;
       justify-content: center; }

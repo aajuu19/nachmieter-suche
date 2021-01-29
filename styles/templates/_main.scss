@@ -786,30 +786,6 @@ main {
                 }
             }
         }
-        .side-info {
-            margin-top: 2rem;
-            height: 100%;
-            padding: 2rem 0;
-            &.bd-right {
-                border-bottom: $lightborder;
-            }
-            &.bd-left {
-                border-top: $lightborder;
-            }
-            @include breakpoint(sm) {
-                padding: 2rem;
-                margin-top: 0;
-                padding-top: 0;
-                &.bd-right {
-                    border-right: $lightborder;
-                    border-bottom: 0;
-                }
-                &.bd-left {
-                    border-left: $lightborder;
-                    border-top: 0;
-                }
-            }
-        }
     }
     .obj-ctn, .edit-profile-app {
         color: black;
@@ -1072,7 +1048,9 @@ main {
             position: relative;
             z-index: 9;
             visibility: hidden;
+            display: none;
             &.active {
+                display: block;
                 visibility: visible;
                 opacity: 1;
             }
@@ -1642,6 +1620,107 @@ main {
             &--optional {
                 &:before {
                     background: lighten($secondary, 20%);
+                }
+            }
+        }
+    }
+    aside {
+        &.side-info {
+            margin-top: 2rem;
+            height: 100%;
+            padding: 2rem 0;
+            &.bd-right {
+                border-bottom: $lightborder;
+            }
+            &.bd-left {
+                border-top: $lightborder;
+            }
+            @include breakpoint(sm) {
+                padding: 2rem;
+                margin-top: 0;
+                padding-top: 0;
+                &.bd-right {
+                    border-right: $lightborder;
+                    border-bottom: 0;
+                }
+                &.bd-left {
+                    border-left: $lightborder;
+                    border-top: 0;
+                }
+            }
+        }
+    }
+    .user-settings {
+        &__menu {
+
+        }
+        &__menuitem {
+            list-style: none;
+            cursor: pointer;
+            transition: .3s;
+            &:hover {
+                margin-left: 10px;
+            }
+        }
+        .account-tab {
+            &__heading {
+                font-weight: 600;
+                display: block;
+                margin-bottom: rem(20px);
+                font-size: rem(18px);
+            }
+            &__fieldset {
+                margin-bottom: 1rem;
+            }
+            &__label {
+                
+            }
+            &__delete-window {
+                transition: .3s;
+                opacity: 0;
+                position: relative;
+                z-index: 9;
+                visibility: hidden;
+                display: none;
+                text-align: center;
+                &.active {
+                    display: block;
+                    visibility: visible;
+                    opacity: 1;
+                }
+                &__content {
+                    background: $light;
+                    border-radius: 15px;
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    z-index: 999;
+                    width: 100%;
+                    max-width: rem(800px);
+                    padding: rem(35px);
+                    box-shadow: 0 0 5px rgba(0, 0, 0 , 0.15);
+                }
+                &__close {
+                    position:fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: $light;
+                    opacity: .6;
+                    z-index: 998;
+                }
+                &__buttons {
+                    margin-top: rem(25px);
+                    
+                    button {
+                        margin-right: 10px;
+                    }
+
+                    i {
+                        margin-right: 3px;
+                    }
                 }
             }
         }

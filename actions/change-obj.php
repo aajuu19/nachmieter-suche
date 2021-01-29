@@ -117,7 +117,7 @@
                 $active_image = $_POST['act_image_'.$i];
                 if ($i == 1 && $active_image == '') {
                     $update_sql .= ' image_1 = ?, ';
-                    $update_data[] = 'placeholder.png';        
+                    $update_data[] = 'placeholder.jpg';        
                 } else if ($flat_data['image_'.$i] !== $active_image && $active_image !== '') {
                     $update_sql .= ' image_'.$i.' = ?, ';
                     $update_data[] = $active_image;
