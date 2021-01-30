@@ -2262,12 +2262,36 @@ const helperFunctions = {
                 return {
                     hasUserImage: false,
                     headline: 'Accounteinstellungen',
-                    windowIsOpen: false
+                    windowIsOpen: false,
+                    firstNewPassword: null,
+                    secondNewPassword: null,
+                    passwordsNotTheSame: false
                 };
             },
             template: `
                 <div class="account-tab">
                     <h4 class="align-left">{{ headline }}</h4>
+                    <div class="whiteBox morePad">
+                        <span class="account-tab__heading">Passwort ändern</span>
+                        <p>Bitte achte zu deiner eigenen Sicherheit darauf, deine Daten nicht an Dritte weiterzugeben. Bei uns sind deine Daten in Sicherheit, da auch wir diese nicht
+                        an Dritte weitergeben. Solltest du hierzu fragen haben kannst du uns gerne jederzeit kontaktieren.</p>
+                        <form @submit.prevent="checkForPasswords($event);" action="${root}/actions/change-password.php" method="POST" class="default">
+                            <fieldset class="account-tab__fieldset">
+                                <label class="account-tab__label" for="acc_pw_old"><i class="fa fa-key icon-space-right"></i> Altes Passwort</label>
+                                <input name="acc_pw_old" id="acc_pw_old" required oninvalid="this.setCustomValidity('Bitte gib dein altes Passwort ein')" oninput="setCustomValidity('')" type="password" placeholder="Bitte altes Passwort eingeben"/>
+                            </fieldset>
+                            <fieldset class="account-tab__fieldset">
+                                <label class="account-tab__label" for="acc_pw_new"><i class="fa fa-key icon-space-right"></i> Neues Passwort</label>
+                                <input v-model="firstNewPassword" name="acc_pw_new" minlength="6" id="acc_pw_new" type="password" placeholder="Bitte neues Passwort eingeben" required oninvalid="this.setCustomValidity('Bitte gib dein neues Passwort ein')" oninput="setCustomValidity('')"/>
+                            </fieldset>
+                            <fieldset class="account-tab__fieldset">
+                                <label :class="{alert : passwordsNotTheSame}" class="account-tab__label" for="acc_pw_new_rep"><i class="fa fa-key icon-space-right"></i> Wiederholen</label>
+                                <input v-model="secondNewPassword" name="acc_pw_new_rep" minlength="6" id="acc_pw_new_rep" type="password" placeholder="Bitte neues Passwort wiederholen" required oninvalid="this.setCustomValidity('Bitte gib dein neues Passwort erneut ein')" oninput="setCustomValidity('')"/>
+                            </fieldset>
+                            <span class="error" v-if="passwordsNotTheSame"">Deine Passwörter stimmen nicht überein.</span>
+                            <button type="submit" class="account-tab__button--delete btn secondary"><i class="fa fa-edit"></i> Passwort ändern</button>
+                        </form>
+                    </div>
                     <div class="whiteBox morePad">
                         <span class="account-tab__heading">Account löschen</span>
                         <p>Du möchtest wirklich deinen Account löschen? Nimm dir noch einmal eine ruhige Minute und denke darüber nach für was du dich gerade entscheidest.
@@ -2280,7 +2304,7 @@ const helperFunctions = {
                                 <form action="${root}/actions/delete-user.php" method="POST" class="account-tab__delete-window__buttons default">
                                     <fieldset class="account-tab__fieldset">
                                         <label class="account-tab__label--small" for="user_del_pw"><i class="fa fa-key icon-space-right"></i> Passwort</label>
-                                        <input type="password" name="user_del_pw" id="user_del_pw"/>
+                                        <input type="password" name="user_del_pw" id="user_del_pw" required oninvalid="this.setCustomValidity('Bitte gib dein Passwort ein')" oninput="setCustomValidity('')"/>
                                     </fieldset>
 
                                     <button type="submit" class="btn alert"><i class="fa fa-trash-alt icon-space-right"></i> Bestätigen</button>
@@ -2290,30 +2314,17 @@ const helperFunctions = {
                             <div class="account-tab__delete-window__close" @click="closeWindow"></div>
                         </div>
                     </div>
-                    <div class="whiteBox morePad">
-                        <span class="account-tab__heading">Passwort ändern</span>
-                        <p>Bitte achte zu deiner eigenen Sicherheit darauf, deine Daten nicht an Dritte weiterzugeben. Bei uns sind deine Daten in Sicherheit, da auch wir diese nicht
-                        an Dritte weitergeben. Solltest du hierzu fragen haben kannst du uns gerne jederzeit kontaktieren.</p>
-                        <form action="${root}/actions/change-password.php" method="POST" class="default">
-                            <fieldset class="account-tab__fieldset">
-                                <label class="account-tab__label" for="acc_pw_old"><i class="fa fa-key icon-space-right"></i> Altes Passwort</label>
-                                <input name="acc_pw_old" id="acc_pw_old" type="password" placeholder="Bitte altes Passwort eingeben"/>
-                            </fieldset>
-                            <fieldset class="account-tab__fieldset">
-                                <label class="account-tab__label" for="acc_pw_new"><i class="fa fa-key icon-space-right"></i> Neues Passwort</label>
-                                <input name="acc_pw_new" id="acc_pw_new" type="password" placeholder="Bitte neues Passwort eingeben"/>
-                            </fieldset>
-                            <fieldset class="account-tab__fieldset">
-                                <label class="account-tab__label" for="acc_pw_new_rep"><i class="fa fa-key icon-space-right"></i> Wiederholen</label>
-                                <input name="acc_pw_new_rep" id="acc_pw_new_rep" type="password" placeholder="Bitte neues Passwort wiederholen"/>
-                            </fieldset>
-                        </form>
-                        <a href="#" class="account-tab__button--delete btn secondary"><i class="fa fa-edit"></i> Passwort ändern</a>
-                    </div>
 
                 </div>
             `,
             methods: {
+                checkForPasswords: function($event) {
+                    if(this.firstNewPassword !== this.secondNewPassword) {
+                        this.passwordsNotTheSame = true;
+                    } else {
+                        $event.target.submit();
+                    }
+                },
                 openWindow: function() {
                     this.windowIsOpen = true;
                 },

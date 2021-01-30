@@ -1673,7 +1673,10 @@ main {
                 margin-bottom: 1rem;
             }
             &__label {
-                
+                transition: .3s;
+                &.alert {
+                    background: $alert;
+                }
             }
             &__delete-window {
                 transition: .3s;

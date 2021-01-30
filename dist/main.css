@@ -6968,6 +6968,10 @@ main {
     font-size: 1.125rem; }
   main .user-settings .account-tab__fieldset {
     margin-bottom: 1rem; }
+  main .user-settings .account-tab__label {
+    transition: .3s; }
+    main .user-settings .account-tab__label.alert {
+      background: #ff4d4d; }
   main .user-settings .account-tab__delete-window {
     transition: .3s;
     opacity: 0;
