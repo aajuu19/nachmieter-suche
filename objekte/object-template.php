@@ -31,6 +31,7 @@
                     <span class="h4">Objekt löschen</span>
                     <span class="desc">Möchtest du das Objekt wirklich löschen?</span>
                     <form action="<?php echo $web->root; ?>/actions/delete-flat.php" method="POST" class="info-up-window__buttons">
+                        <?php if ($web->get_csrf_token()) { echo '<input type="hidden" id="csrf-token" name="csrf-token" value="'.$web->get_csrf_token().'">'; } ?>
                         <input type="hidden" name="flat_id" id="flat_id" value="<?php echo $obj['o_id']; ?>">
                         <input type="hidden" name="flat_link" id="flat_link" value="<?php echo $web->full_link; ?>">
                         <button type="submit" class="btn alert"><i class="fa fa-check-circle"></i> Ja</button>

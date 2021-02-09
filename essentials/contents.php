@@ -113,5 +113,12 @@
             'title' => 'Dies ist die Datenschutzerklärung',
             'desc' => 'Dies ist die Beschreibung des Datenschutzerklärung',
             'include_nav'=> false,
+        ],
+        'boost.php' => [
+            'name' => 'Boost',
+            'title' => 'Dies ist die Preisliste',
+            'desc' => 'Dies ist die Beschreibung für die Preisseite',
+            'claim' => 'Boost',
+            'include_nav'=> false,
         ]
     ];

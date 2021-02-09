@@ -3,7 +3,7 @@
         <footer>
             <div class="row middle between">
                 <div class="col s-3">
-                    <a href="<?php echo $web->root; ?>/index.php"  class="branding" title="zur Nachmieter-Suche Startseite"><span class="highlight">nachmieter</span>-suche.de</a>
+                    <a href="<?php echo $web->root; ?>/index.php"  class="branding" title="zur Nachmieter-Suche Startseite"><span class="highlight">womi</span>su.de</a>
                 </div>
                 <div class="col s-4">
                     <ul class="footer-nav">

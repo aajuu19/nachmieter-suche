@@ -10,6 +10,7 @@
 	if (password_verify($password, $person['password'])) {
 		$_SESSION['person'] = $person;
 		unset($person['password']);
+		$_SESSION['CSRF-token'] = bin2hex(random_bytes(20));
 		header('Location: '.$web->root.'/user/user.php?id='.$person['p_id']);
 	} else {
 		$error_message = rawurlencode('Falsche E-Mail-Adresse oder falsches Passwort eingegeben.');

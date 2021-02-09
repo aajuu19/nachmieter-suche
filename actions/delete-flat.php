@@ -55,7 +55,14 @@
     }
 
     if(!isset($from_another_src)) {
-        deleteFlat($db, $user);
+        if(($_POST['csrf-token'] == $web->get_csrf_token())) {
+            deleteFlat($db, $user);
+        } else  {
+            $error_message = rawurlencode('Ein Fehler ist aufgetreten, bitte versuche es noch einmal.');
+            $o_link = $_POST['flat_link'];
+            header('Location: '.$o_link.'?error='.$error_message);
+            die;
+        }
     }
 ?>
 

@@ -11,10 +11,20 @@
     ?>
 
 	<link rel="stylesheet" href="<?php echo $web->root; ?>/dist/main.css">
-	<link href="https://fonts.googleapis.com/css?family=Barlow:400,700,900&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css?family=Barlow:400,700,900&display=swap" rel="stylesheet">
+    
+    
 </head>
 <body class="<?php echo $web->build_body_class(); ?>">
+    <?php
+        if($web->get_csrf_token()) {
+    ?>
+        <script>
+            window.csrfToken = '<?php echo $web->get_csrf_token(); ?>';
+        </script>
+    <?php    
+        }
+    ?>
     <div class="navi-ctn">
         <div class="row">
             <div class="col">
@@ -38,7 +48,14 @@
                                             <ul class="sub-navi">
                                                 <li><a href="<?php echo $web->root; ?>/user/user.php?id=<?php echo $_SESSION['person']['p_id']; ?>" title="<?php echo $meta['user.php']['title'] ?>">Mein Profil</a></li>
                                                 <li><a href="<?php echo $web->root; ?>/user/neues-objekt.php" title="<?php echo $meta['neues-objekt.php']['title'] ?>">Neues Objekt einfügen</a></li>
-                                                <li><a href="<?php echo $web->root; ?>/user/nachrichten-center.php" title="<?php echo $meta['nachrichten-center.php']['title'] ?>">Nachrichtencenter</a></li>
+                                                <li><a class="nachrichtencenter" href="<?php echo $web->root; ?>/user/nachrichten-center.php" title="<?php echo $meta['nachrichten-center.php']['title'] ?>">Nachrichtencenter <?php 
+                                                    if($web->build_body_class() !== 'user nachrichten-center') {
+                                                        $sql = "SELECT c_id, last_visited, send_p_id, rec_p_id, timestamp FROM chat AS c WHERE c_id=(SELECT MAX(c1.c_id) FROM chat AS c1 WHERE c.send_p_id = c1.send_p_id) AND rec_p_id = ".$_SESSION['person']['p_id']." AND last_visited IS NULL ORDER BY timestamp";
+                                                        $lastMessages = $db->get_this_all($sql);
+                                                        $lastMessagesAmount = count($lastMessages);
+                                                        echo '<span class="new-messages-amount">'.$lastMessagesAmount.'</span>';
+                                                    }
+                                                    ?></a></li>
                                                 <li><a class="friends" href="<?php echo $web->root; ?>/user/freundschaftsanfragen.php" title="<?php echo $meta['freundschaftsanfragen.php']['title'] ?>">Freundschaftsanfragen <?php 
                                                         $sql = "SELECT COUNT(*) FROM person, friendship_request WHERE friendship_request.rec_p_id = ".$_SESSION['person']['p_id']." AND person.p_id = friendship_request.send_p_id";
                                                         $friendship_request_amount = $db->get_this_one($sql);

@@ -1364,7 +1364,7 @@
 .fa-chart-pie:before {
   content: "\f200"; }
 
-.fa-check:before {
+.fa-check:before, .products__perk:before {
   content: "\f00c"; }
 
 .fa-check-circle:before {
@@ -5051,6 +5051,22 @@
         .navi-ctn .head-ctn .navigation .user-panel .user-list > li {
           display: inline-block;
           margin-top: .7rem; }
+        .navi-ctn .head-ctn .navigation .user-panel .sub-navi li a.friends, .navi-ctn .head-ctn .navigation .user-panel .sub-navi li a.nachrichtencenter {
+          display: inline-flex;
+          justify-content: flex-end; }
+          .navi-ctn .head-ctn .navigation .user-panel .sub-navi li a.friends span.friend-request-amount, .navi-ctn .head-ctn .navigation .user-panel .sub-navi li a.friends span.new-messages-amount, .navi-ctn .head-ctn .navigation .user-panel .sub-navi li a.nachrichtencenter span.friend-request-amount, .navi-ctn .head-ctn .navigation .user-panel .sub-navi li a.nachrichtencenter span.new-messages-amount {
+            margin-left: 10px;
+            border-radius: 50%;
+            background: #fff;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            font-size: 13px;
+            color: #1c9ce5;
+            margin-top: 4px; }
         .navi-ctn .head-ctn .navigation .user-panel .sub-navi li a.friends {
           display: flex; }
           .navi-ctn .head-ctn .navigation .user-panel .sub-navi li a.friends span.friend-request-amount {
@@ -6689,8 +6705,10 @@ main {
     border-radius: 0.9375rem;
     transition: .3s;
     cursor: pointer; }
-    main .message-ctn .user-preview.active, main .message-ctn .user-preview:hover {
+    main .message-ctn .user-preview.unseen {
       border-bottom: 4px solid #f79e02; }
+    main .message-ctn .user-preview.active, main .message-ctn .user-preview:hover {
+      border-bottom: 4px solid #1c9ce5; }
     main .message-ctn .user-preview img {
       width: 4.0625rem;
       height: 4.0625rem;
@@ -6720,70 +6738,124 @@ main {
     border-bottom: 4px solid #1c9ce5;
     padding-bottom: 0.9375rem;
     background: #fff; }
-    main .message-ctn .message-box .flat-details {
-      box-shadow: 0 8px 7px -6px rgba(128, 128, 128, 0.25);
-      margin-bottom: 0.9375rem;
+    main .message-ctn .message-box .flat-details-user-details {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: .3s;
+      box-shadow: 0 8px 7px -6px rgba(128, 128, 128, 0.25);
       border-top-left-radius: 15px;
-      border-top-right-radius: 15px; }
-      main .message-ctn .message-box .flat-details .flat-preview-img {
-        width: 30%;
-        flex-basis: 30%;
-        height: 6.25rem;
-        border-top-left-radius: 0.875rem;
-        overflow: hidden; }
-        main .message-ctn .message-box .flat-details .flat-preview-img:before {
-          opacity: 0;
-          transition: .3s; }
-        main .message-ctn .message-box .flat-details .flat-preview-img img {
-          height: 100%;
-          object-fit: cover;
-          width: 100%; }
-        @media (min-width: 1200px) {
-          main .message-ctn .message-box .flat-details .flat-preview-img {
-            width: 20%;
-            flex-basis: 20%; } }
-      main .message-ctn .message-box .flat-details .description {
-        width: 56%;
-        flex-basis: 56%; }
-        @media (min-width: 1200px) {
-          main .message-ctn .message-box .flat-details .description {
-            width: 66%;
-            flex-basis: 66%; } }
-        main .message-ctn .message-box .flat-details .description span {
-          transition: .3s;
-          display: block; }
-          main .message-ctn .message-box .flat-details .description span.headline {
-            color: #1c9ce5;
-            font-size: 1.375rem;
-            font-weight: 600; }
-          main .message-ctn .message-box .flat-details .description span.address {
-            color: #b2afaa; }
-      main .message-ctn .message-box .flat-details .price {
+      border-top-right-radius: 15px;
+      margin-bottom: 0.9375rem; }
+      main .message-ctn .message-box .flat-details-user-details__user {
+        flex-basis: 25%;
+        width: 25%;
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+        border-top-right-radius: 15px;
+        transition: .3s;
         color: #312f2c;
-        font-weight: 600;
-        font-size: 1.5rem;
-        width: 13%;
-        flex-basis: 13%;
-        transition: .3s; }
-        @media (min-width: 1200px) {
-          main .message-ctn .message-box .flat-details .price {
-            width: 8%;
-            flex-basis: 8%; } }
-      main .message-ctn .message-box .flat-details:hover {
-        background: #1c9ce5;
-        color: #fff; }
-        main .message-ctn .message-box .flat-details:hover .flat-preview-img:before {
-          opacity: .5; }
-        main .message-ctn .message-box .flat-details:hover .description span.headline {
+        border-left: 1px solid #1c9ce5; }
+        main .message-ctn .message-box .flat-details-user-details__user:hover {
+          color: #fff;
+          background: #1c9ce5; }
+        main .message-ctn .message-box .flat-details-user-details__user .userInitial {
+          padding: 1.25rem;
+          border-radius: 50%;
+          width: 3.75rem;
+          height: 3.75rem;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 26px;
+          color: white; }
+        main .message-ctn .message-box .flat-details-user-details__user img {
+          width: 3.75rem;
+          height: 3.75rem;
+          object-fit: cover;
+          border-radius: 50%; }
+        main .message-ctn .message-box .flat-details-user-details__user .name {
+          margin-left: 15px;
+          font-weight: 600; }
+          main .message-ctn .message-box .flat-details-user-details__user .name span {
+            display: block;
+            font-weight: 400;
+            font-size: 0.875rem; }
+        main .message-ctn .message-box .flat-details-user-details__user.isAlone {
+          padding: 0;
+          flex-basis: 100%;
+          width: 100%;
+          border-top-left-radius: 15px;
+          border-left: 0; }
+          main .message-ctn .message-box .flat-details-user-details__user.isAlone .userInitial, main .message-ctn .message-box .flat-details-user-details__user.isAlone img {
+            width: 8.125rem;
+            height: 5rem;
+            border-radius: 0;
+            border-top-left-radius: 15px; }
+          main .message-ctn .message-box .flat-details-user-details__user.isAlone .name {
+            margin-left: 1.875rem; }
+      main .message-ctn .message-box .flat-details-user-details .flat-details {
+        flex-basis: 75%;
+        width: 75%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: .3s;
+        border-top-left-radius: 15px; }
+        main .message-ctn .message-box .flat-details-user-details .flat-details .flat-preview-img {
+          width: 30%;
+          flex-basis: 30%;
+          height: 6.25rem;
+          border-top-left-radius: 0.875rem;
+          overflow: hidden; }
+          main .message-ctn .message-box .flat-details-user-details .flat-details .flat-preview-img:before {
+            opacity: 0;
+            transition: .3s; }
+          main .message-ctn .message-box .flat-details-user-details .flat-details .flat-preview-img img {
+            height: 100%;
+            object-fit: cover;
+            width: 100%; }
+          @media (min-width: 1200px) {
+            main .message-ctn .message-box .flat-details-user-details .flat-details .flat-preview-img {
+              width: 20%;
+              flex-basis: 20%; } }
+        main .message-ctn .message-box .flat-details-user-details .flat-details .description {
+          width: 56%;
+          flex-basis: 56%; }
+          @media (min-width: 1200px) {
+            main .message-ctn .message-box .flat-details-user-details .flat-details .description {
+              width: 76%;
+              flex-basis: 76%; } }
+          main .message-ctn .message-box .flat-details-user-details .flat-details .description span {
+            transition: .3s;
+            display: block; }
+            main .message-ctn .message-box .flat-details-user-details .flat-details .description span.headline {
+              color: #1c9ce5;
+              font-size: 1.375rem;
+              font-weight: 600; }
+            main .message-ctn .message-box .flat-details-user-details .flat-details .description span.address {
+              color: #b2afaa;
+              font-size: 14px; }
+        main .message-ctn .message-box .flat-details-user-details .flat-details .price {
+          color: #312f2c;
+          font-weight: 600;
+          font-size: 1.5rem;
+          width: 13%;
+          flex-basis: 13%;
+          transition: .3s; }
+          @media (min-width: 1200px) {
+            main .message-ctn .message-box .flat-details-user-details .flat-details .price {
+              width: 8%;
+              flex-basis: 8%; } }
+        main .message-ctn .message-box .flat-details-user-details .flat-details:hover {
+          background: #1c9ce5;
           color: #fff; }
-        main .message-ctn .message-box .flat-details:hover .description span.address {
-          color: #fff; }
-        main .message-ctn .message-box .flat-details:hover .price {
-          color: #fff; }
+          main .message-ctn .message-box .flat-details-user-details .flat-details:hover .flat-preview-img:before {
+            opacity: .5; }
+          main .message-ctn .message-box .flat-details-user-details .flat-details:hover .description span.headline {
+            color: #fff; }
+          main .message-ctn .message-box .flat-details-user-details .flat-details:hover .description span.address {
+            color: #fff; }
+          main .message-ctn .message-box .flat-details-user-details .flat-details:hover .price {
+            color: #fff; }
     main .message-ctn .message-box .inner-ctn {
       padding: 0 1rem;
       display: flex;
@@ -7199,6 +7271,8 @@ footer {
   @media (min-width: 1400px) {
     .user-datas .big-tab {
       padding: 1rem 1.5rem; } }
+  .user-datas .big-tab.add-as-friend {
+    width: 100%; }
   .user-datas .big-tab.friendship-already-sent {
     background: #a5d8f5;
     border: #a5d8f5;
@@ -7349,49 +7423,52 @@ footer {
         font-size: 1.625rem; }
       .user-datas .userInfoArea .whiteBox .friendArea .friendBox span.name {
         margin-top: 15px; }
-  .user-datas .userInfoArea .whiteBox .user-object-list .user-object {
-    border-radius: 30px;
-    border-bottom: 2px solid #1c9ce5;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-right: 1.25rem;
-    margin-top: 1.375rem; }
-    .user-datas .userInfoArea .whiteBox .user-object-list .user-object span.id {
-      width: 2.5rem;
-      flex-basis: 2.5rem;
-      font-weight: 700;
-      padding: 16px 0;
-      background: #1c9ce5;
-      color: #fff;
-      font-size: 16px;
+  .user-datas .userInfoArea .whiteBox .user-object-list {
+    max-height: 480px;
+    overflow-y: scroll; }
+    .user-datas .userInfoArea .whiteBox .user-object-list .user-object {
+      border-radius: 30px;
+      border-bottom: 2px solid #1c9ce5;
+      position: relative;
+      overflow: hidden;
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center; }
-    .user-datas .userInfoArea .whiteBox .user-object-list .user-object span.name {
-      width: 50%;
-      flex-basis: 50%;
-      font-weight: 700; }
-      @media (min-width: 1025px) {
-        .user-datas .userInfoArea .whiteBox .user-object-list .user-object span.name {
-          width: 30%;
-          flex-basis: 30%; } }
-    .user-datas .userInfoArea .whiteBox .user-object-list .user-object span.beschreibung {
-      display: none;
-      width: 40%;
-      flex-basis: 40%; }
-      @media (min-width: 1025px) {
-        .user-datas .userInfoArea .whiteBox .user-object-list .user-object span.beschreibung {
-          display: block; } }
-    .user-datas .userInfoArea .whiteBox .user-object-list .user-object a.object-link {
-      color: #1c9ce5;
-      transition: .3s;
-      width: 30px;
-      flex-basis: 30px; }
-      .user-datas .userInfoArea .whiteBox .user-object-list .user-object a.object-link:hover {
-        color: #a5d8f5; }
+      padding-right: 1.25rem;
+      margin-top: 1.375rem; }
+      .user-datas .userInfoArea .whiteBox .user-object-list .user-object span.id {
+        width: 2.5rem;
+        flex-basis: 2.5rem;
+        font-weight: 700;
+        padding: 16px 0;
+        background: #1c9ce5;
+        color: #fff;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center; }
+      .user-datas .userInfoArea .whiteBox .user-object-list .user-object span.name {
+        width: 50%;
+        flex-basis: 50%;
+        font-weight: 700; }
+        @media (min-width: 1025px) {
+          .user-datas .userInfoArea .whiteBox .user-object-list .user-object span.name {
+            width: 30%;
+            flex-basis: 30%; } }
+      .user-datas .userInfoArea .whiteBox .user-object-list .user-object span.beschreibung {
+        display: none;
+        width: 40%;
+        flex-basis: 40%; }
+        @media (min-width: 1025px) {
+          .user-datas .userInfoArea .whiteBox .user-object-list .user-object span.beschreibung {
+            display: block; } }
+      .user-datas .userInfoArea .whiteBox .user-object-list .user-object a.object-link {
+        color: #1c9ce5;
+        transition: .3s;
+        width: 30px;
+        flex-basis: 30px; }
+        .user-datas .userInfoArea .whiteBox .user-object-list .user-object a.object-link:hover {
+          color: #a5d8f5; }
 
 @media (min-width: 1025px) {
   .friend-request-box {
@@ -7478,4 +7555,49 @@ footer {
         margin-top: 0; } }
     .friend-request-box .friendBox .friend-request-decline:hover {
       background: #ff1a1a; }
+
+.products__product-box {
+  background: #fff;
+  padding: 1.25rem 2.5rem;
+  border-radius: 15px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  text-align: center; }
+  @media (min-width: 1200px) {
+    .products__product-box {
+      padding: 3.125rem 3.75rem; } }
+  .products__product-box--highlight {
+    border: 5px solid #1c9ce5; }
+
+.products__title {
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 1.375rem; }
+
+.products__icon--big {
+  margin-bottom: 1.25rem;
+  font-size: 5rem; }
+
+.products__price {
+  color: #1c9ce5;
+  font-size: 3.75rem;
+  margin: 1.25rem 0;
+  font-weight: 700;
+  letter-spacing: 3px; }
+
+.products__description {
+  margin: 1.25rem 0 2.1875rem 0; }
+
+.products__perk {
+  color: #746f68;
+  font-size: 0.9375rem;
+  margin-bottom: 0.125rem; }
+  .products__perk:before {
+    font-family: "Font Awesome 5 Free", sans-serif;
+    padding-right: 5px;
+    font-size: 13px; }
+
+.products__button {
+  margin-top: 30px; }
 

@@ -1,0 +1,52 @@
+.products {
+    &__product-box {
+        background: $light;
+        padding: rem(20px 40px);
+        @include breakpoint(l) {
+            padding: rem(50px 60px);
+        }
+        border-radius: 15px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        &--highlight {
+            border: 5px solid $primary;
+        }
+    }
+    &__title {
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: rem(22px);
+    }
+    &__icon {
+        &--big {
+            margin-bottom: rem(20px);
+            font-size: rem(80px);
+        }
+    }
+    &__price {
+        color: $primary;
+        font-size: rem(60px);
+        margin: rem(20px) 0;
+        font-weight: 700;
+        letter-spacing: 3px;
+    }
+    &__description {
+        margin: rem(20px) 0 rem(35px) 0;
+    }
+    &__perk {
+        &:before {
+            font-family: $icon-font;
+            @extend .fa-check;
+            padding-right: 5px;
+            font-size: 13px;
+        }
+        color: lighten($dark, 25%);
+        font-size: rem(15px);
+        margin-bottom: rem(2px);
+    }
+    &__button {
+        margin-top: 30px;
+    }
+}

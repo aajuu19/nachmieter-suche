@@ -1,5 +1,5 @@
 <?php require_once('../essentials/functions.php'); require_once('../essentials/secure_page.php');
-
+if(($_POST['csrf-token'] == $web->get_csrf_token())) {
     // Abfrage der Nutzer ID vom Login
     $user_id = $_SESSION['person'];
 
@@ -27,4 +27,7 @@
     } else {
         echo false;
     }
-        
+} else {
+    echo $_POST['csrf-token'];
+    echo $web->get_csrf_token();
+}

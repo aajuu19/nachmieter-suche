@@ -1294,8 +1294,11 @@ main {
             border-radius: rem(15px);
             transition: .3s;
             cursor: pointer;
-            &.active, &:hover {
+            &.unseen {
                 border-bottom: 4px solid $secondary;
+            }
+            &.active, &:hover {
+                border-bottom: 4px solid $primary;
             }
             img {
                 width: rem(65px);
@@ -1331,87 +1334,159 @@ main {
             border-bottom: 4px solid $primary;
             padding-bottom: rem(15px);
             background: $light;
-            .flat-details {
-                box-shadow: 0 8px 7px -6px rgba(128, 128, 128, 0.25);
-                margin-bottom: rem(15px);
+            .flat-details-user-details {
                 display: flex;
-                justify-content: space-between;
-                align-items: center;
-                transition: .3s;
+                box-shadow: 0 8px 7px -6px rgba(128, 128, 128, 0.25);
                 border-top-left-radius: 15px;
                 border-top-right-radius: 15px;
-                .flat-preview-img {
-                    width: 30%;
-                    flex-basis: 30%;
-                    height: rem(100px);
-                    border-top-left-radius: rem(14px);
-                    overflow: hidden;
-                    &:before {
-                        opacity: 0;
-                        transition: .3s;
+                margin-bottom: rem(15px);
+                &__user {
+                    flex-basis: 25%;
+                    width: 25%;
+                    display: flex;
+                    align-items: center;
+                    padding: 0 20px;
+                    border-top-right-radius: 15px;
+                    transition:.3s;
+                    color: $dark;
+                    &:hover {
+                        color: $light;
+                        background: $primary;
+                    }
+                    // &:before {
+                    //     content: '';
+                    //     display: block;
+                    //     width: 1px;
+                    //     height: rem(70px);
+                    //     background: $lightprimary;
+                    //     margin-right: 15px;
+                    // }
+                    border-left: 1px solid $primary;
+                    .userInitial {
+                        padding: rem(20px);
+                        border-radius: 50%;
+                        width: rem(60px);
+                        height: rem(60px);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        font-size: 26px;
+                        color: white;
                     }
                     img {
-                        height: 100%;
+                        width: rem(60px);
+                        height: rem(60px);
                         object-fit: cover;
+                        border-radius: 50%;
+                    }
+                    .name {
+                        margin-left: 15px;
+                        font-weight: 600;
+                        span {
+                            display: block;
+                            font-weight: 400;
+                            font-size: rem(14px);
+                        }
+                    }
+                    &.isAlone {
+                        padding: 0;
+                        flex-basis: 100%;
                         width: 100%;
-                    }
-                    @include breakpoint(l) {
-                        width: 20%;
-                        flex-basis: 20%;
-                    }
-                }
-                .description {
-                    width: 56%;
-                    flex-basis: 56%;
-                    @include breakpoint(l) {
-                        width: 66%;
-                        flex-basis: 66%;
-                    }
-                    span {
-                        transition: .3s;
-                        display: block;
-                        &.headline {
-                            color: $primary;
-                            font-size: rem(22px);
-                            font-weight: 600;
+                        border-top-left-radius: 15px;
+                        border-left: 0;
+                        .userInitial, img {
+                            width: rem(130px);
+                            height: rem(80px);
+                            border-radius: 0;
+                            border-top-left-radius: 15px;
                         }
-                        &.address {
-                            color: $grey;
+                        .name {
+                            margin-left: rem(30px);
                         }
                     }
                 }
-                .price {
-                    color: $dark;
-                    font-weight: 600;
-                    font-size: rem(24px);
-                    width: 13%;
-                    flex-basis: 13%;
+                .flat-details {
+                    flex-basis: 75%;
+                    width: 75%;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
                     transition: .3s;
-                    @include breakpoint(l) {
-                        width: 8%;
-                        flex-basis: 8%;
-                    } 
-                }
-                &:hover {
-                    background: $primary;
-                    color: $light;
+                    border-top-left-radius: 15px;
                     .flat-preview-img {
+                        width: 30%;
+                        flex-basis: 30%;
+                        height: rem(100px);
+                        border-top-left-radius: rem(14px);
+                        overflow: hidden;
                         &:before {
-                            opacity: .5;
+                            opacity: 0;
+                            transition: .3s;
+                        }
+                        img {
+                            height: 100%;
+                            object-fit: cover;
+                            width: 100%;
+                        }
+                        @include breakpoint(l) {
+                            width: 20%;
+                            flex-basis: 20%;
                         }
                     }
                     .description {
+                        width: 56%;
+                        flex-basis: 56%;
+                        @include breakpoint(l) {
+                            width: 76%;
+                            flex-basis: 76%;
+                        }
                         span {
+                            transition: .3s;
+                            display: block;
                             &.headline {
-                                color: $light;
+                                color: $primary;
+                                font-size: rem(22px);
+                                font-weight: 600;
                             }
                             &.address {
-                                color: $light;
+                                color: $grey;
+                                font-size: 14px;
                             }
                         }
                     }
                     .price {
+                        color: $dark;
+                        font-weight: 600;
+                        font-size: rem(24px);
+                        width: 13%;
+                        flex-basis: 13%;
+                        transition: .3s;
+                        @include breakpoint(l) {
+                            width: 8%;
+                            flex-basis: 8%;
+                        } 
+                    }
+                    &:hover {
+                        background: $primary;
                         color: $light;
+                        .flat-preview-img {
+                            &:before {
+                                opacity: .5;
+                            }
+                        }
+                        .description {
+                            span {
+                                &.headline {
+                                    color: $light;
+                                }
+                                &.address {
+                                    color: $light;
+                                }
+                            }
+                        }
+                        .price {
+                            color: $light;
+                        }
                     }
                 }
             }

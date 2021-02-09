@@ -1,5 +1,5 @@
 <?php require_once('../essentials/functions.php'); require_once('../essentials/secure_page.php');
-
+if(($_POST['csrf-token'] == $web->get_csrf_token())) {
     // Abfrage der Nutzer ID vom Login
     $user_id = $_SESSION['person'];
 
@@ -121,4 +121,8 @@
         $error_message = rawurlencode('Bitte gib eine gültige Postleitzahl ein.');
 	    header('Location: '.$web->root.'/user/neues-objekt.php?error='.$error_message);
     }
-        
+} else  {
+    $error_message = rawurlencode('Ein Fehler ist aufgetreten, bitte versuche es noch einmal.');
+    header('Location: '.$web->root.'/user/neues-objekt.php?error='.$error_message);
+    die;
+}

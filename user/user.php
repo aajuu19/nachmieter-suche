@@ -11,6 +11,7 @@
     }
 ?>
 <div class="row user-datas">
+    
     <?php if($user) { ?>
         <div class="col sm-4">
             <aside class="whiteBox morePad">
@@ -105,20 +106,30 @@
                         ], true);
                         
                         if(!$is_befriended && !$request_already_sent_rec && !$request_already_sent_sender){
-                    ?>
-                        <a href="<?php echo $web->root; ?>/actions/add-as-friend.php?i_am_user=<?php echo $own_user['p_id']; ?>&send_to_user=<?php echo $user['p_id']; ?>" title="<?php echo $meta['dashboard.php']['title']; ?>" class="new-object big-tab add-as-friend">
-                            <span class="heading"><i class="fa fa-user-friends"></i> Als Freund anfragen</span>
-                        </a>
+                    ?>  
+                        <form action="<?php echo $web->root ?>/actions/add-as-friend.php" method="POST">
+                            <?php if ($web->get_csrf_token()) { echo '<input type="hidden" id="csrf-token" name="csrf-token" value="'.$web->get_csrf_token().'">'; } ?>
+                            <input type="hidden" name="i_am_user" id="i_am_user" value="<?php echo $own_user['p_id']; ?>">
+                            <input type="hidden" name="send_to_user" id="send_to_user" value="<?php echo $user['p_id']; ?>">
+                            <button type="submit" title="<?php echo $meta['dashboard.php']['title']; ?>" class="new-object big-tab add-as-friend">
+                                <span class="heading"><i class="fa fa-user-friends"></i> Als Freund anfragen</span>
+                            </button>
+                        </form>
                     <?php 
                         } else if ($request_already_sent_rec) {
-                    ?>
-                        <a href="<?php echo $web->root ?>/actions/confirm-friendship.php?i_am_user=<?php echo $own_user['p_id']; ?>&confirm_user=<?php echo $user['p_id']; ?>" class="new-object big-tab add-as-friend">
-                            <span class="heading"><i class="fa fa-user-friends"></i> Freunschaftsanfrage bestätigen</span>
-                        </a>
+                    ?>  
+                        <form action="<?php echo $web->root ?>/actions/confirm-friendship.php" method="POST">
+                            <?php if ($web->get_csrf_token()) { echo '<input type="hidden" id="csrf-token" name="csrf-token" value="'.$web->get_csrf_token().'">'; } ?>
+                            <input type="hidden" name="i_am_user" id="i_am_user" value="<?php echo $own_user['p_id']; ?>">
+                            <input type="hidden" name="confirm_user" id="confirm_user" value="<?php echo $user['p_id']; ?>">
+                            <button class="new-object big-tab add-as-friend">
+                                <span class="heading"><i class="fa fa-user-friends"></i> Freunschaftsanfrage bestätigen</span>
+                            </button>
+                        </form>
                     <?php                            
                         } else if ($request_already_sent_sender) {
                     ?>
-                        <span href="<?php echo $web->root ?>/actions/confirm-friendship.php?i_am_user=<?php echo $own_user['p_id']; ?>&confirm_user=<?php echo $user['p_id']; ?>" class="big-tab friendship-already-sent">
+                        <span class="big-tab friendship-already-sent">
                             <span class="heading">Freundschaftsanfrage bereits versendet</span>
                         </span>
                     <?php

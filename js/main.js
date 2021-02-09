@@ -84,9 +84,9 @@ const root = `${document.location.origin}/nachmieter-suche`;
 
     footerFunc();
 
-    const debounced = debounce(footerFunc, 100);
+    // const debounced = debounce(footerFunc, 100);
 
-    window.addEventListener('scroll', debounced);
+    window.addEventListener('scroll', footerFunc);
 
     if (document.body.classList.contains('objekte')) {
         const editBtn = document.querySelector('.edit-flat-btn');
@@ -517,8 +517,8 @@ const helperFunctions = {
                     let scrollBottom = window.scrollY + window.innerHeight;
                     
                     if (this.newPageAvailable && scrollBottom >= bodyHeight - 200) {
-                       this.newPageAvailable = false;
-                       this.filterIt(this.nextPage, this.pageLimitation, true)
+                    this.newPageAvailable = false;
+                    this.filterIt(this.nextPage, this.pageLimitation, true)
                     }
 
                 },
@@ -684,7 +684,7 @@ const helperFunctions = {
                         this.showLeftArrow = false;
                         this.showRightArrow = false;
                     }
-    
+
                     if (this.scrolledThisTimes === 0) {
                         this.showLeftArrow = false;
                     }
@@ -809,7 +809,7 @@ const helperFunctions = {
                 fetch('./../essentials/get-session.php')
                 .then((json) => json.json())
                 .then((sessionId) => {
-                    let isUser = sessionId.person.p_id; 
+                    let isUser = sessionId.p_id; 
                     
                     fetch('./../essentials/dbs_json.php',
                     {
@@ -1241,8 +1241,8 @@ const helperFunctions = {
                     let scrollBottom = window.scrollY + window.innerHeight;
                     
                     if (this.newPageAvailable && scrollBottom >= bodyHeight - 200) {
-                       this.newPageAvailable = false;
-                       this.filterIt(this.nextPage, this.pageLimitation, true)
+                    this.newPageAvailable = false;
+                    this.filterIt(this.nextPage, this.pageLimitation, true)
                     }
 
                 },
@@ -1502,7 +1502,7 @@ const helperFunctions = {
                 }
             },
         });
-        window.vm = new Vue({
+        const vm = new Vue({
             el: '.obj-ctn',
             data: {
                 objIsSet: false,
@@ -1547,7 +1547,7 @@ const helperFunctions = {
                 fetch('./../essentials/get-session.php')
                 .then((json) => json.json())
                 .then((sessionId) => {
-                    let isUser = sessionId.person.p_id; 
+                    let isUser = sessionId.p_id; 
                     let lfFlat = this.getUrlParameters('flat_id');
                     
                     if(lfFlat){
@@ -1710,7 +1710,6 @@ const helperFunctions = {
                     this.addImage();
                 },
                 addImage: function() {
-                    console.log(this.imageFileList[this.imageFileList.length - 1]);
                     this.addImageIsVisible = false;
                     if (this.imageFileList.length < this.maxFiles && this.imageFileList[this.imageFileList.length - 1].fileName !== '') {
                         this.imageFileList.push({
@@ -1826,15 +1825,61 @@ const helperFunctions = {
 (function (){
     // Nachrichten Center App
     if (document.body.classList.contains('nachrichten-center')) {
+        const chatMixin = {
+            methods: {
+                saveChatVisit: function(user, c_id) {
+                    let fetchBody = `user_id=${user}&c_id=${c_id}&csrf-token=${window.csrfToken}`;
+                    
+                    fetch('./../actions/set-last-chat-visit.php',
+                    {
+                        method: 'POST',
+                        body: fetchBody,
+                        headers:
+                        {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                    })
+                    .catch(err=> {
+                        console.log(err);
+                    });
+                }
+            }
+        }
         Vue.component('user-thumb', {
-            props: ['user', 'activeuser'],
+            props: {
+                user: {
+                    type: Object,
+                    required: true
+                },
+                activeuser: {
+                    type: [Number, String],
+                    required: true
+                },
+                chatList: {
+                    type: Array,
+                    required: false
+                },
+                isUser: {
+                    type: Number,
+                    required: true
+                },
+                index: {
+                    type: Number,
+                    required: true
+                },
+                newMessage: {
+                    type: Array,
+                    required: false,
+                }
+            },
             data: function () {
                 return {
                     hasUserImage: false,
+                    seenAll: true
                 };
             },
             template: `
-                <div v-on:click="handleUserClick" class="user-preview" :class="{ active : isActive }">
+                <div v-on:click="handleUserClick" class="user-preview" :class="{ active : isActive, unseen : !seenAll }">
                     <img v-if="hasUserImage" :src="imageUrl" :alt="user.name">
                     <div v-if="!hasUserImage" :style="{backgroundColor: randDarkColor}" class="userInitial">
                         <span>{{ acronym }}</span>
@@ -1842,6 +1887,23 @@ const helperFunctions = {
                     <span>{{ user.name }}</span>
                 </div>
             `,
+            mixins: [chatMixin],
+            watch: {
+                newMessage: function() {
+                    for(let i = 0; i < this.newMessage.length; i++) {
+                        const msgData = this.newMessage[i];
+                        if(msgData.send_p_id == this.user.p_id) {
+                            if(msgData.send_p_id != this.activeuser) {
+                                this.seenAll = false;
+                            } else {
+                                this.saveChatVisit(msgData.rec_p_id, msgData.c_id);
+                            }
+                            break;
+                        }
+
+                    }
+                }
+            },
             computed: {
                 imageUrl: function () {
                     return `../uploads/${this.user.profilepic}`;
@@ -1882,8 +1944,23 @@ const helperFunctions = {
                     this.hasUserImage = false;
                 }
             },
+            mounted: function(){
+                let chatList = this.chatList[1];
+                if(chatList.length >= 1 && this.index !== 0) {
+                    for (let i = chatList.length - 1; i >= 0; i--) {
+                        let msg = chatList[i];
+                        if(msg.rec_p_id == this.isUser) {
+                            if (!msg.last_visited) {
+                                this.seenAll = false;
+                            }
+                            break;
+                        }
+                    }
+                }
+            },
             methods: {
                 handleUserClick: function () {
+                    this.seenAll = true;
                     this.$emit('handle-user-click');
                 }
             }
@@ -1924,20 +2001,92 @@ const helperFunctions = {
             }
         });
         Vue.component('flat-details', {
-            props: ['flat'],
+            props: ['flat', 'userList', 'activeChatWithUser'],
+            data: function(){
+                return {
+                    user: {},
+                }
+            },
             template: `
-                <a class="flat-details" :href="flatLink" title="zum Mietobjekt wechseln">
-                    <div class="flat-preview-img primaryOverlay">
-                        <img :src="imgLink" class="cover">
-                    </div>
-                    <div class="description">
-                        <span class="headline">{{ flat.name }}</span>
-                        <span class="address">{{ flat.adresse }}</span>
-                    </div>
-                    <span class="price">{{ flat.kalt }} €</span>  
-                </a>
+                <div class="flat-details-user-details">
+                    <a v-if="flat" class="flat-details" :href="flatLink" title="zum Mietobjekt wechseln">
+                        <div class="flat-preview-img primaryOverlay">
+                            <img :src="imgLink" class="cover">
+                        </div>
+                        <div class="description">
+                            <span class="headline">{{ flat.name }}</span>
+                            <span class="address">{{ flat.adresse }}</span>
+                        </div>
+                    </a>
+                    <a :href="userUrl" :class="{ isAlone : !flat }" class="flat-details-user-details__user">
+                        <img v-if="hasUserImage" :src="imageUrl" :alt="user.name">
+                        <div v-if="!hasUserImage" :style="{backgroundColor: randDarkColor}" class="userInitial">
+                            <span>{{ acronym }}</span>
+                        </div>
+                        <span class="name">
+                            {{ user.name }}
+                            <span>
+                                Profil&nbsp;ansehen
+                            </span>
+                        </span>
+                    </a>
+                            
+                </div>
             `,
+            created: function() {
+                this.changeUser();
+            },
+            watch: {
+                activeChatWithUser: function() {
+                    this.changeUser();
+                },
+            },
+            methods: {
+                changeUser() {
+                    for (let i = 0; i < this.userList.length; i++) {
+                        if (this.userList[i].p_id == this.activeChatWithUser) {
+                            this.user = this.userList[i];
+                            break;
+                        }
+                    }
+                    
+                    if (this.user.profilepic) {
+                        this.hasUserImage = true;
+                    } else {
+                        this.hasUserImage = false;
+                    }
+                }
+            },
             computed: {
+                userUrl: function() {
+                    return `${root}/user/user.php?id=${this.user.p_id}`;
+                },
+                imageUrl: function () {
+                    return `../uploads/${this.user.profilepic}`;
+                },
+                acronym: function() {
+                    let userName = this.user.name.split(' ');
+                    if (userName.length >= 2) {
+                        return userName[0][0] + userName[1][0];
+                    } else {
+                        return userName[0][0];
+                    }
+                },
+                randDarkColor: function() {
+                    var lum = -0.25;
+                    var hex = String('#' + Math.random().toString(16).slice(2, 8).toUpperCase()).replace(/[^0-9a-f]/gi, '');
+                    if (hex.length < 6) {
+                        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+                    }
+                    var rgb = "#",
+                        c, i;
+                    for (i = 0; i < 3; i++) {
+                        c = parseInt(hex.substr(i * 2, 2), 16);
+                        c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+                        rgb += ("00" + c).substr(c.length);
+                    }
+                    return rgb;
+                },
                 imgLink: function() {
                     return `${root}/uploads/${this.flat.image_1}`;
                 },
@@ -1946,7 +2095,7 @@ const helperFunctions = {
                 }
             }
         });
-        window.vm = new Vue({
+        const vm = new Vue({
             el: '.message-ctn',
             data: {
                 outputData: null,
@@ -1967,17 +2116,19 @@ const helperFunctions = {
                 sentFromUser: null,
                 sentParamsValid: false,
                 sentIsAlreadyInChats: false,
-                activeUserIds: []
+                activeUserIds: [],
+                updateChatTime: 3000,
+                newMessageData: null,
+                refreshAmount: 0
             },
+            mixins: [chatMixin],
             created: function () {
                 // check if valid session exists
                 fetch('./../essentials/get-session.php')
                 .then((json) => json.json())
                 .then((sessionId) => {
-                    this.isUser = sessionId.person.p_id; 
+                    this.isUser = sessionId.p_id; 
                     this.updateChat(true);
-                    // update chat every 2 seconds
-                    this.updateTimer = setInterval(this.updateChat, 3000);
                 })
                 .catch((err) => {
                     if (isDev) {
@@ -1986,11 +2137,6 @@ const helperFunctions = {
                         this.errorMsg.isError = true;
                     }
                 });
-            },
-            watch: {
-                activeChatList: function () {
-                    this.setScrollPos();
-                },
             },
             methods: {
                 formatMsg: function() {
@@ -2011,12 +2157,47 @@ const helperFunctions = {
                         return [];
                     }
                 },
+                userChatFrom: function(userId) {
+                    let relevantChat = this.chatList.find(e=>{
+                        return e[0] == userId;
+                    });
+                    return relevantChat;
+                },
+                saveLastChatVisit: function(foreignUserId) {
+                    
+                    let relevantChat = this.userChatFrom(foreignUserId);
+
+                    let lastRelevantChatId, lastVisited;
+
+                    for (let i = relevantChat[1].length - 1; i >= 0; i--) {
+                        let msg = relevantChat[1][i];
+                        if(msg.rec_p_id == this.isUser) {
+                            lastVisited = msg.last_visited;
+                            lastRelevantChatId = msg.c_id;
+                            break;
+                        }
+                    }
+
+                    if(!lastVisited) {
+                        this.saveChatVisit(this.isUser, lastRelevantChatId);
+                    }
+                    
+                },
+
                 handleUserClick: function(userId) {
                     this.activeChatWithUser = userId;
+                    
+                    this.saveLastChatVisit(this.activeChatWithUser);
+
                     this.updateChat(true, false);
                 },
                 changeActiveChat: async function (userId, isFirstChat = false) {
                     this.activeChatWithUser = userId;
+
+                    if(isFirstChat) {
+                        this.saveLastChatVisit(this.activeChatWithUser);
+                    }
+
                     let newChatList = [];
                     if(this.sentParamsValid && isFirstChat) {
                         if(this.sentIsAlreadyInChats) {
@@ -2024,7 +2205,7 @@ const helperFunctions = {
                         }
                     } else {
                         newChatList = this.getChatsWithUserId(this.activeChatWithUser);
-                    }
+                    }   
 
                     let isSameChatList = this.isSameArray(this.activeChatList, newChatList);
 
@@ -2037,6 +2218,8 @@ const helperFunctions = {
                         }
                     } else {
                         this.activeChatList = [...newChatList];
+                        // update chat every 2 seconds
+                        this.updateTimer = setInterval(this.updateChat, this.updateChatTime);
                         this.$nextTick(function () {
                             this.setScrollPos();
                         });
@@ -2045,7 +2228,6 @@ const helperFunctions = {
                     if(this.sentParamsValid && isFirstChat) {
                         this.firstChat = false;
                         this.activeFlat = this.sentFromFlat;
-                        this.setScrollPos();
                     } else if(this.sentParamsValid && this.activeChatWithUser == this.sentFromUser.p_id && !isFirstChat) {
                         this.activeFlat = this.sentFromFlat;
                     } else {
@@ -2065,17 +2247,17 @@ const helperFunctions = {
 
                             // if this is not the first chat
                             if(isFirstChat) {
-                                this.setScrollPos();
                                 this.firstChat = false;
                                 // if new chats are not the same as active chat set scroll
                             } else if (!isSameChatList) {
-                                this.setScrollPos();
                             }
                         });
                     }
+
                     
                 },
-                updateChat: async function (isFirst, fetchURLParams = true) {
+                updateChat: async function (isFirst = false, fetchURLParams = true) {
+                    this.refreshAmount++;
                     if(fetchURLParams) {
                         if (this.getUrlParameters('user_by_id') && this.getUrlParameters('flat_by_id')) {
                             await fetch('./../essentials/dbs_json.php',
@@ -2124,6 +2306,7 @@ const helperFunctions = {
                             });
                         }
                     }
+                    
                     // get relevant chats
                     await fetch('./../essentials/dbs_json.php',
                     {
@@ -2153,7 +2336,34 @@ const helperFunctions = {
                             }
                         }
 
-                        this.chatList = Object.entries(data).sort(compare_time);
+                        const newChats = Object.entries(data).sort(compare_time);
+
+                        if(!isFirst) {
+                            if (!this.isSameArray(this.chatList, newChats)) {
+                                let fetchBody = `csrf-token=${window.csrfToken}`;
+                    
+                                fetch('./../actions/get-latest-chats.php',
+                                {
+                                    method: 'POST',
+                                    body: fetchBody,
+                                    headers:
+                                    {
+                                        'Content-Type': 'application/x-www-form-urlencoded',
+                                    },
+                                })
+                                .then(data=>data.json())
+                                .then(data=>{
+                                    if(data.length >= 1){
+                                        this.newMessageData = data;
+                                    }
+                                })
+                                .catch(err=> {
+                                    console.log(err);
+                                });
+                            }
+                        }
+
+                        this.chatList = newChats;
 
                         this.chatList.forEach((user) => {
                             this.activeUserIds.push(user[0]);
@@ -2205,9 +2415,6 @@ const helperFunctions = {
                         });
 
                     });
-                    if(isFirst) {
-                        this.setScrollPos();
-                    }
 
                 },
                 setScrollPos: function () {
@@ -2217,9 +2424,9 @@ const helperFunctions = {
                     let fetchBody = '';
 
                     if(this.activeFlat) {
-                        fetchBody = `rec=${this.activeChatWithUser}&send=${this.isUser}&msg=${this.formatMsg()}&o_id=${this.activeFlat.o_id}`
+                        fetchBody = `rec=${this.activeChatWithUser}&send=${this.isUser}&msg=${this.formatMsg()}&o_id=${this.activeFlat.o_id}&csrf-token=${window.csrfToken}`
                     } else {
-                        fetchBody = `rec=${this.activeChatWithUser}&send=${this.isUser}&msg=${this.formatMsg()}`
+                        fetchBody = `rec=${this.activeChatWithUser}&send=${this.isUser}&msg=${this.formatMsg()}&csrf-token=${window.csrfToken}`
                     }
 
                     await fetch('./../actions/send-chat.php',
@@ -2245,7 +2452,7 @@ const helperFunctions = {
                 isSameArray: function(arr1, arr2) {
                     arr1 = JSON.stringify(arr1);
                     arr2 = JSON.stringify(arr2);
-                    console.log(arr1 === arr2);
+
                     return arr1 === arr2;
                 }
             },
@@ -2276,6 +2483,7 @@ const helperFunctions = {
                         <p>Bitte achte zu deiner eigenen Sicherheit darauf, deine Daten nicht an Dritte weiterzugeben. Bei uns sind deine Daten in Sicherheit, da auch wir diese nicht
                         an Dritte weitergeben. Solltest du hierzu fragen haben kannst du uns gerne jederzeit kontaktieren.</p>
                         <form @submit.prevent="checkForPasswords($event);" action="${root}/actions/change-password.php" method="POST" class="default">
+                            <input type="hidden" id="csrf-token" name="csrf-token" value="${window.csrfToken}">
                             <fieldset class="account-tab__fieldset">
                                 <label class="account-tab__label" for="acc_pw_old"><i class="fa fa-key icon-space-right"></i> Altes Passwort</label>
                                 <input name="acc_pw_old" id="acc_pw_old" required oninvalid="this.setCustomValidity('Bitte gib dein altes Passwort ein')" oninput="setCustomValidity('')" type="password" placeholder="Bitte altes Passwort eingeben"/>
@@ -2302,6 +2510,7 @@ const helperFunctions = {
                                 <span class="h4">Account löschen</span>
                                 <span>Wenn du deinen Account wirklich löschen möchtest, gebe dein Passwort ein und drücke den Bestätigen-Button</span>
                                 <form action="${root}/actions/delete-user.php" method="POST" class="account-tab__delete-window__buttons default">
+                                    <input type="hidden" id="csrf-token" name="csrf-token" value="${window.csrfToken}">
                                     <fieldset class="account-tab__fieldset">
                                         <label class="account-tab__label--small" for="user_del_pw"><i class="fa fa-key icon-space-right"></i> Passwort</label>
                                         <input type="password" name="user_del_pw" id="user_del_pw" required oninvalid="this.setCustomValidity('Bitte gib dein Passwort ein')" oninput="setCustomValidity('')"/>

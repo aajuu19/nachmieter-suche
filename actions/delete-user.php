@@ -1,4 +1,5 @@
 <?php require_once('../essentials/functions.php'); require_once('../essentials/secure_page.php');
+if(($_POST['csrf-token'] == $web->get_csrf_token())) {
     $user_sess = $web->get_own_user();
     $user = $db->get_user($user_sess['p_id'], true);
     $p_id = $user_sess['p_id'];
@@ -56,3 +57,8 @@
         header('Location: '.$web->root.'/user/settings.php?error='.$error_message);
         die;
     }
+} else  {
+    $error_message = rawurlencode('Ein Fehler ist aufgetreten, bitte versuche es noch einmal.');
+    header('Location: '.$web->root.'/user/settings.php?error='.$error_message);
+    die;
+}

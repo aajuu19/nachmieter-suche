@@ -12,7 +12,7 @@
 
 					$is_authorized = false;
 
-					if(isset($_GET['flat_id'])) {
+					if(isset($_GET['flat_id']) && $web->get_csrf_token()) {
 
 						$edit_flat_id = $_GET['flat_id'];
 						
@@ -28,10 +28,15 @@
 						<?php 
 							if ($is_authorized) {
 						?>
+							<input type="hidden" id="csrf-token" name="csrf-token" value="<?php echo $web->get_csrf_token(); ?>">
 							<input type="hidden" id="flat_id" name="flat_id" value="<?php echo $_GET['flat_id']; ?>">
 							<template v-for="(file,index) in imageFileList">
 								<input type="hidden" :id="'act_image_' + (index + 1)" :name="'act_image_' + (index + 1)" :value="file.fileName">
 							</template>
+						<?php 
+							} else if ($web->get_csrf_token()) {
+						?>
+							<input type="hidden" id="csrf-token" name="csrf-token" value="<?php echo $web->get_csrf_token(); ?>">
 						<?php 
 							}
 						?>

@@ -12,6 +12,7 @@
 				?>
 				<div class="edit-profile-app">
                     <form class="default" action="<?php echo $web->root; ?>/actions/change-profile.php" enctype="multipart/form-data" method="POST">
+                        <?php if ($web->get_csrf_token()) { echo '<input type="hidden" id="csrf-token" name="csrf-token" value="'.$web->get_csrf_token().'">'; } ?>
                     
                         <fieldset class="dropdown">
                             <label for="pers-lookingfor"><i class="fa fa-home"></i> <span>Ich suche nach</span></label>

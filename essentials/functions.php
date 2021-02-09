@@ -121,6 +121,14 @@
                 return false;
             }
         }
+
+        public function get_csrf_token() {
+            if(isset($_SESSION['CSRF-token'])) {
+                return $_SESSION['CSRF-token'];
+            } else {
+                return false;
+            }
+        }
         
         public function get_from_url($url):string {
             $ch = curl_init();

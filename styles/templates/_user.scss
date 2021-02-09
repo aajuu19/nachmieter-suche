@@ -184,6 +184,9 @@
         @include breakpoint(xl) {
             padding: 1rem 1.5rem;
         }
+        &.add-as-friend {
+            width: 100%;
+        }
         &.friendship-already-sent {
             background: $lightprimary;
             border: $lightprimary;
@@ -370,6 +373,8 @@
                 }
             }
             .user-object-list {
+                max-height: 480px;
+                overflow-y: scroll;
                 .user-object {
                     border-radius: 30px;
                     border-bottom: 2px solid $primary;

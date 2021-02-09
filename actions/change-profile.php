@@ -1,6 +1,8 @@
 <?php require_once('../essentials/functions.php'); require_once('../essentials/secure_page.php');
 
 
+
+if(($_POST['csrf-token'] == $web->get_csrf_token())) {
     // required entries
     
     $lookingfor = $web->htmlchar($_POST['pers-lookingfor']);
@@ -136,4 +138,10 @@
         $success_message = rawurlencode('Dein Profil wurde erfolgreich bearbeitet.');
         header('Location: '.$web->root.'/user/user.php?id='.$user['p_id'].'&bestaetigung='.$success_message);
         die;
-    }
+    } 
+
+} else {
+    $error_message = rawurlencode('Ein Fehler ist aufgetreten, bitte versuche es noch einmal.');
+    header('Location: '.$web->root.'/user/profil-bearbeiten.php?error='.$error_message);
+    die;
+}
