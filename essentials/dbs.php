@@ -1,8 +1,8 @@
 <?php
     class Database {
-        protected $dsn = 'mysql:host=localhost;dbname=nachmieter_gesucht';
-        protected $user = 'root';
-        protected $pw = 'root';
+        protected $dsn = 'mysql:host=localhost;dbname=dbs1446707';
+        protected $user = 'dbu1097131';
+        protected $pw = 'vH*yrxA&KvQ9U3';
 
         public function __construct() {
             try {

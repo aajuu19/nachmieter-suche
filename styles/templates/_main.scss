@@ -2,7 +2,6 @@ header {
     height: 100vh;
     min-height: rem(500px);
     body:not(.index) & {
-        height: 35vh;
         min-height: rem(150px);
         @include breakpoint(m) {
             min-height: rem(300px);
@@ -88,15 +87,18 @@ header {
                 &:hover, &.active {
                     padding: rem(15px) 0;
                     margin-top: -10px;
+                    background-position: 100% 0;
                 }
 
                 &--primary {
                     background-color: $primary;
+                    background-image: $primaryGradient;
                     border-top-right-radius: 15px;
                     border-top-left-radius: 15px;
                     margin-right: 5px;
+                    background-size: 150% 100%;
                     &:hover {
-                        background-color: darken($primary, 3%);
+                        background-position: 100% 0;
                     }
                 }
                 &--secondary {
@@ -104,8 +106,11 @@ header {
                     border-top-left-radius: 15px;
                     border-top-right-radius: 15px;
                     background-color: $secondary;
+                    background-image: $secondaryGradient;
+                    background-size: 150% 100%;
                     &:hover {
                         background-color: darken($secondary, 3%);
+                        background-position: 100% 0;
                     }
                 }
             }
@@ -134,7 +139,8 @@ header {
                     padding: .4rem 1rem;
                     border-radius: 25px;
                     &:hover {
-                        background: $primary;
+                        background-color: $primary;
+                        background-image: $primaryGradient;
                         color: $light;
                         cursor: pointer;
                     }
@@ -182,9 +188,11 @@ header {
                     right: 0;
                     bottom: 0;
                     &.primary {
-                        background: $primary;
+                        background-color: $primary;
+                        background-image: $primaryGradient;
+                        background-size: 150% 100%;
                         &:hover {
-                            background: darken($primary, 3%);
+                            background-position: 100% 0;
                         }
                     }
                     @include breakpoint(m) {
@@ -350,7 +358,8 @@ main {
                 @include breakpoint(l) {
                     padding: 0 4rem;
                 }
-                background: $primary;
+                background-color: $primary;
+                background-image: $primaryGradient;
                 color: $light;
                 display: flex;
                 align-items: center;
@@ -540,7 +549,8 @@ main {
                 margin-bottom: rem(25px);
                 .address-field-label {
                     position: absolute;
-                    background: $medium;
+                    background-color: $primary;
+                    background-image: $primaryGradient;
                     top: 0;
                     left: 0;
                     padding: rem(12px) rem(10px);
@@ -595,7 +605,8 @@ main {
                         padding: .4rem 1rem;
                         border-radius: 25px;
                         &:hover {
-                            background: $primary;
+                            background-color: $primary;
+                            background-image: $primaryGradient;
                             color: $light;
                             cursor: pointer;
                         }
@@ -726,18 +737,18 @@ main {
             @include breakpoint(s) {
                 margin-top: 0;
             }
-            background: $secondary;
-            border: 2px solid $secondary;
-            &:hover, &.active {
-                span {
-                    color: $secondary;
-                }
+            background-size: 150% 100%;
+            background-color: $secondary;
+            background-image: $secondaryGradient;
+            &:hover {
+                background-position: 100% 0;
             }
         }
         cursor: pointer;
-        background: $primary;
+        background-color: $primary;
+        background-image: $primaryGradient;
+        background-size: 150% 100%;
         transition: .3s;
-        border: 2px solid $primary;
         padding: 1rem 1.5rem;
         &.register-tab {
             margin-bottom: 1rem;
@@ -761,11 +772,8 @@ main {
                 font-weight: 700;
             }
         }
-        &:hover, &.active {
-            background: $light;
-            span {
-                color: $primary;
-            }
+        &:hover {
+            background-position: 100% 0;
         }
     }
     .form-area {
@@ -963,11 +971,13 @@ main {
                     color: $dark;
                     cursor: pointer;
                     &:nth-child(3) {
-                        background: $primary;
+                        background-color: $primary;
+                        background-image: $primaryGradient;
                         color: $light;
                     }
                     &:hover {
-                        background: $primary;
+                        background-color: $primary;
+                        background-image: $primaryGradient;
                         color: $light;
                     }
                 }
@@ -994,7 +1004,8 @@ main {
                 padding: .4rem 1rem;
                 border-radius: 25px;
                 &:hover {
-                    background: $primary;
+                    background-color: $primary;
+                    background-image: $primaryGradient;
                     color: $light;
                     cursor: pointer;
                 }
@@ -1016,19 +1027,20 @@ main {
                 align-items: center;
                 padding: rem(10px);
                 color: $light;
-                background: $primary;
+                background-color: $primary;
+                background-image: $primaryGradient;
                 border-radius: 50%;
                 width: rem(40px);
                 height: rem(40px);
                 transition: .3s;
                 box-shadow: 0 0 5px rgba(0, 0, 0 , 0.15);
-
+                background-size: 200% 100%;
                 &:last-child {
                     margin-left: 10px;
                 }
 
                 &:hover {
-                    background: darken($primary, 5%)
+                    background-position: 100% 0;
                 }
 
                 &--delete {
@@ -1174,7 +1186,8 @@ main {
                         justify-content: center;
                         align-items: center;
                         color: $light;
-                        background: $primary;
+                        background-color: $primary;
+                        background-image: $primaryGradient;
                         &.obj-slider-left-arrow {
                             left: rem(-45px);
                         }
@@ -1226,7 +1239,8 @@ main {
                     .important-icon {
                         width: rem(65px);
                         height: rem(65px);
-                        background: $primary;
+                        background-color: $primary;
+                        background-image: $primaryGradient;
                         color: $light;
                         font-size: rem(25px);
                         border-radius: 50%;
@@ -1307,7 +1321,8 @@ main {
                 object-fit: cover;
             }
             .userInitial {
-                background: $primary;
+                background-color: $primary;
+                background-image: $primaryGradient;
                 width: rem(65px);
                 height: rem(65px);
                 border-radius: 50%;
@@ -1351,7 +1366,8 @@ main {
                     color: $dark;
                     &:hover {
                         color: $light;
-                        background: $primary;
+                        background-color: $primary;
+                        background-image: $primaryGradient;
                     }
                     // &:before {
                     //     content: '';
@@ -1372,6 +1388,9 @@ main {
                         align-items: center;
                         font-size: 26px;
                         color: white;
+                        background: $primary;
+                        background-color: $primary;
+                        background-image: $primaryGradient;
                     }
                     img {
                         width: rem(60px);
@@ -1467,7 +1486,8 @@ main {
                         } 
                     }
                     &:hover {
-                        background: $primary;
+                        background-color: $primary;
+                        background-image: $primaryGradient;
                         color: $light;
                         .flat-preview-img {
                             &:before {
@@ -1508,7 +1528,8 @@ main {
                 margin-bottom: .7rem;
                 width: auto;
                 max-width: 70%;
-                background: $primary;
+                background-color: $primary;
+                background-image: $primaryGradient;
                 color: $light;
                 align-self: flex-start;
                 p {
@@ -1558,10 +1579,12 @@ main {
                 border-top-left-radius: 0;
                 border-bottom-left-radius: 0;
                 color: $light;
-                background: $primary;
+                background-color: $primary;
+                background-image: $primaryGradient;
                 transition: .3s;
+                background-size: 200% 100%;
                 &:hover {
-                    background: $primary;
+                    background-position: 100% 0;
                 }
             }
         }
@@ -1590,7 +1613,8 @@ main {
                     display: block;
                     height: rem(4px);
                     width: rem(160px);
-                    background: $secondary;
+                    background-color: $secondary;
+                    background-image: $secondaryGradient;
                     position: absolute;
                     bottom: 0;
                 }
@@ -1623,7 +1647,8 @@ main {
                     }
                     &:before {
                         content: '';
-                        background: $secondary;
+                        background-color: $secondary;
+                        background-image: $secondaryGradient;
                         border-radius: 25px;
                         width: rem(52px);
                         flex-basis: rem(52px);
@@ -1689,7 +1714,8 @@ main {
             }
             &--required {
                 &:before {
-                    background: $secondary;
+                    background-color: $secondary;
+                    background-image: $secondaryGradient;
                 }
             }
             &--optional {
@@ -1726,9 +1752,6 @@ main {
         }
     }
     .user-settings {
-        &__menu {
-
-        }
         &__menuitem {
             list-style: none;
             cursor: pointer;
@@ -1829,7 +1852,8 @@ main {
 }
 
 footer {
-    background: $medium;
+    background-color: $primary;
+    background-image: $primaryGradient;
     padding: 3rem 0;
     position: relative;
     .branding {

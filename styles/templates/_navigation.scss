@@ -3,7 +3,8 @@
     top: 3%;
     right: 3%;
     z-index: 9999;
-    background: $primary;
+    background-color: $primary;
+    background-image: $primaryGradient;
     display: flex;
     border-radius: 50%;
     justify-content: center;
@@ -95,7 +96,8 @@
             @include breakpoint(m, max) {
                 position: fixed;
                 transform: translateX(-100%);
-                background: $primary;
+                background-color: $primary;
+                background-image: $primaryGradient;
                 color: $light;
                 height: 100vh;
                 width: rem(300px);

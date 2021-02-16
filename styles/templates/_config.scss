@@ -1,6 +1,8 @@
 $primary: #1c9ce5;
+$primaryGradient: linear-gradient(17deg, rgba(0,116,225,1) 0%, rgba(0,201,225,1) 100%);
 $lightprimary: lighten($primary, 30%);
 $secondary: #f79e02;
+$secondaryGradient: linear-gradient(17deg, rgba(247,158,2,1) 25%, rgba(247,126,2,1) 80%, rgba(247,158,2,1) 100%);
 $light: #fff;
 $dark: #312f2c;
 $medium: #0074e1;

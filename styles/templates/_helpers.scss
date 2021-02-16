@@ -18,17 +18,22 @@
     }
     border-radius: 25px;
     text-decoration: none;
-    background: $medium;
-    transition: .3s;
+    transition: .4s;
+    background-color: $primary;
+    background-image: $primaryGradient;
     display: inline-block;
+    background-size: 200% 100%;
+
     &:hover {
         cursor: pointer;
-        background: darken($medium, 5%);
+        background-position: 100% 0;
     }
     &.secondary {
-        background: $secondary;
+        background-color: $secondary;
+        background-image: $secondaryGradient;
+        
         &:hover {
-            background: darken($secondary, 5%);
+            background-position: 100% 0;
         }
     }
     &.alert {
@@ -80,7 +85,7 @@
 }
 
 .align-right {
-    text-align: center;
+    text-align: right;
 }
 
 .error, .success, .info {
@@ -136,7 +141,7 @@
 .primaryOverlay {
     position: relative;
     &:before {
-        background: $primary;
+        background-image: $primaryGradient;
         position: absolute;
         top: 0;
         left: 0;

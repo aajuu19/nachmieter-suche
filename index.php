@@ -69,7 +69,6 @@
         </div>
     </div>
 </div>
-
 <div class="row space-top">
     <div class="col">
         <h2>Dies ist die zweite Überschrift</h2>

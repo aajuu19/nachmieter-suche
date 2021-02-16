@@ -12,7 +12,7 @@
                         <li><a href="<?php echo $web->root; ?>/impressum.php" title="zum Impressum wechseln">Impressum</a></li>
                     </ul>
                 </div>
-                <div class="col s-3">
+                <div class="col s-3 align-right">
                     <span class="copyright">All rights reserved to Aaron Jung</span>
                 </div>
             </div>

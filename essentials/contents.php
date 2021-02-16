@@ -1,6 +1,8 @@
 <?php
-
     $config = [];
+    
+    require_once('config_data.php');
+    
     $config['mail'] = 'aaronjung19@gmail.com';
     $config['phone'] = '0162 / 634 81 75';
 
