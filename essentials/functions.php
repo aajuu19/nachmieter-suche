@@ -8,11 +8,11 @@
             // GET META DATAS
             $this->meta = $metaDatas;
 
-            $this->webname = 'nachmieter-suche.de';
+            $this->webname = 'womisu.de';
             $this->current_dir = basename(dirname($_SERVER['PHP_SELF']));
 
             // GET SITE ROOT DIRECTORY
-            $this->root = (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/nachmieter-suche';
+            $this->root = (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
 
             // GET CURRENT FULL LINK
             $this->full_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
