@@ -4,7 +4,7 @@
 
         protected $debug = false;
 
-        public function __construct($metaDatas, $db) {
+        public function __construct($metaDatas, $db, $config) {
             // GET META DATAS
             $this->meta = $metaDatas;
 
@@ -12,7 +12,7 @@
             $this->current_dir = basename(dirname($_SERVER['PHP_SELF']));
 
             // GET SITE ROOT DIRECTORY
-            $this->root = (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
+            $this->root = (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $config['rootPath'];
 
             // GET CURRENT FULL LINK
             $this->full_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -226,7 +226,7 @@
         }
     }
 
-    $web = new Website($meta, $db);
+    $web = new Website($meta, $db, $config);
 
     session_start();
     

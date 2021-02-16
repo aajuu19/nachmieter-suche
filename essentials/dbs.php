@@ -1,12 +1,13 @@
-<?php
-    class Database {
-        protected $dsn = 'mysql:host=localhost;dbname=dbs1446707';
-        protected $user = 'dbu1097131';
-        protected $pw = 'vH*yrxA&KvQ9U3';
+<?php require_once('config_data.php');
+    $dsn = "mysql:host=localhost;dbname=".$config['dbName'];
+    $user = $config['dbUser'];
+    $pw = $config['dbPw'];
 
-        public function __construct() {
+    class Database {
+
+        public function __construct($dsn, $user, $pw) {
             try {
-                $this->pdo = new PDO($this->dsn, $this->user, $this->pw);
+                $this->pdo = new PDO($dsn, $user, $pw);
                 $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
                 $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             } catch (PDOException $error) {
@@ -79,4 +80,4 @@
         }
     }
 
-    $db = new Database();
+    $db = new Database($dsn, $user, $pw);
