@@ -1,3 +1,8 @@
+AuthType Basic
+AuthName "Passwortgeschützter Bereich"
+AuthUserFile /Applications/MAMP/htdocs/nachmieter-suche/.htpasswd 
+Require valid-user
+
 RewriteEngine On 
 
 RewriteCond %{QUERY_STRING}    "post_type=" [NC]
@@ -5,3 +10,6 @@ RewriteRule (.*)  /$1? [R=301,L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+ErrorDocument 401 /[path_to_file]/error.html
+ErrorDocument 403 /[path_to_file]/error.html

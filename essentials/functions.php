@@ -1,5 +1,5 @@
 <?php require_once('contents.php'); require_once('dbs.php');
-
+echo $_SERVER['DOCUMENT_ROOT'];
     class Website {
 
         protected $debug = false;
