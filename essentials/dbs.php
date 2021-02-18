@@ -1,5 +1,5 @@
 <?php require_once('config_data.php');
-    $dsn = "mysql:host=localhost;dbname=".$config['dbName'];
+    $dsn = "mysql:host=".$config['dbServer'].";dbname=".$config['dbName'];
     $user = $config['dbUser'];
     $pw = $config['dbPw'];
 
