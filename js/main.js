@@ -487,22 +487,21 @@ const helperFunctions = {
                     {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                }).then((data) => data.text());
+                }).then((data) => data.json());
                 fetched.then((data) => {
-                    console.log(data);
-                    // this.users = data;
-                    // window.addEventListener('scroll', this.getNewPage);
+                    this.users = data;
+                    window.addEventListener('scroll', this.getNewPage);
 
-                    // if(savedPage) {
-                    //     this.$nextTick(function () {
-                    //         const header = document.querySelector('header');
-                    //         const lastVisitedFlat = document.getElementById(this.getSessionStorage('userSavedItemId'));
-                    //         const scrollAmount = lastVisitedFlat.offsetTop + header.offsetHeight - 16;
-                    //         window.scrollTo(0, scrollAmount);
-                    //         window.sessionStorage.removeItem('userSavedItemId');
-                    //         window.sessionStorage.removeItem('userSavedPage');
-                    //     });
-                    // }
+                    if(savedPage) {
+                        this.$nextTick(function () {
+                            const header = document.querySelector('header');
+                            const lastVisitedFlat = document.getElementById(this.getSessionStorage('userSavedItemId'));
+                            const scrollAmount = lastVisitedFlat.offsetTop + header.offsetHeight - 16;
+                            window.scrollTo(0, scrollAmount);
+                            window.sessionStorage.removeItem('userSavedItemId');
+                            window.sessionStorage.removeItem('userSavedPage');
+                        });
+                    }
                 })
                 .catch((err) => {
                     console.log(err);

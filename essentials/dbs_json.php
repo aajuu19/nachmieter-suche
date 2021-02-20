@@ -1,7 +1,6 @@
 <?php require_once('dbs.php');
-    session_start();
     // $data content depends on $request_type / $_GET
-    $isDev = false;
+    $isDev = true;
 
     if($isDev) {
         $request_type = $_GET;
