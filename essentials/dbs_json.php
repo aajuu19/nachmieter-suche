@@ -61,7 +61,6 @@
         }
 
         var_dump($data);
-        die;
         
         
     }
@@ -222,6 +221,8 @@
 
     $db->close_connect();
 
+    var_dump($data);
+    die;
     // create JSON from $data variable
     header('Content-Type: application/json;charset=utf-8');
     echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
