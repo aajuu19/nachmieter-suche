@@ -3,7 +3,7 @@ import "regenerator-runtime/runtime";
 import Vue from './vue.js';
 
 const isDev = true;
-const root = `${document.location.origin}/nachmieter-suche`;
+const root = window.root;
 
 // general page js
 (function() {
@@ -337,13 +337,13 @@ const helperFunctions = {
                     return this.user.beschreibung;
                 },
                 objLinkPath: function () {
-                    return `${document.location.origin}/nachmieter-suche/user/user.php?id=${this.user.p_id}`;
+                    return `${root}/user/user.php?id=${this.user.p_id}`;
                 },
                 imgLink: function () {
                     if(!this.user.profilepic) {
-                        return `${document.location.origin}/nachmieter-suche/uploads/placeholder.jpg`;
+                        return `${root}/uploads/placeholder.jpg`;
                     }
-                    return `${document.location.origin}/nachmieter-suche/uploads/${this.user.profilepic}`;
+                    return `${root}/uploads/${this.user.profilepic}`;
                 },
             },
         });
@@ -1062,10 +1062,10 @@ const helperFunctions = {
                     return this.flat.beschreibung;
                 },
                 objLinkPath: function () {
-                    return `${document.location.origin}/nachmieter-suche/objekte/${this.flat.link}`;
+                    return `${root}/objekte/${this.flat.link}`;
                 },
                 imgLink: function () {
-                    return `${document.location.origin}/nachmieter-suche/uploads/${this.flat.image_1}`;
+                    return `${root}/uploads/${this.flat.image_1}`;
                 },
             },
         });

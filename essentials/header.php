@@ -25,6 +25,9 @@
     <?php    
         }
     ?>
+    <script>
+        window.root = '<?php echo $web->root; ?>';
+    </script>
     <div class="navi-ctn">
         <div class="row">
             <div class="col">

@@ -3,3 +3,5 @@ node_modules
 /essentials/config_data.php
 /uploads
 /objekte
+.htaccess
+.htpasswd
