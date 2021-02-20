@@ -218,8 +218,8 @@
 
     // create JSON from $data variable
     $debug = ob_get_clean();
-$response['debug'] = $debug; //comment this when live in production
+$data['debug'] = $debug; //comment this when live in production
 
 header('Content-type: application/json');
 
-echo json_encode($response);
+echo json_encode($data);
