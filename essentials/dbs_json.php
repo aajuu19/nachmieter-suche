@@ -1,7 +1,7 @@
 <?php require_once('dbs.php');
     // $data content depends on $request_type / $_GET
     $isDev = true;
-    ob_start();
+
     if($isDev) {
         $request_type = $_GET;
     } else {
@@ -214,12 +214,6 @@
         }
     }
 
-    $db->close_connect();
-
     // create JSON from $data variable
-    $debug = ob_get_clean();
-$data['debug'] = $debug; //comment this when live in production
-
-header('Content-type: application/json');
-
-echo json_encode($data);
+    header('Content-Type: application/json;charset=utf-8');
+    echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
