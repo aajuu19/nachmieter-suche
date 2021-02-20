@@ -1,7 +1,7 @@
 <?php require_once('dbs.php');
     session_start();
     // $data content depends on $request_type / $_GET
-    $isDev = false;
+    $isDev = true;
 
     if($isDev) {
         $request_type = $_GET;
@@ -46,8 +46,8 @@
             }
         }
 
-        if(isset($_POST['address'])) {
-            $prep_sql .= " lf_adresse LIKE '%".$_POST['address']."%' AND ";
+        if(isset($request_type['address'])) {
+            $prep_sql .= " lf_adresse LIKE '%".$request_type['address']."%' AND ";
         }
         
         if($prep_sql) {
