@@ -1,6 +1,6 @@
 <?php require_once('dbs.php');
     // $data content depends on $request_type / $_GET
-    $isDev = false;
+    $isDev = true;
 
     if($isDev) {
         $request_type = $_GET;
@@ -122,7 +122,7 @@
     if(isset($request_type['chats'])) {
         $user_id = $request_type['user'];
         $user_id_int = (is_numeric($user_id) ? (int)$user_id : 0);
-
+        session_start();
         if($user_id_int == $_SESSION['person']['p_id']) {
             // build sql statement - be sure no sql injection can be made
             // fetch all user based chats
