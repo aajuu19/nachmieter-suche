@@ -59,6 +59,8 @@
             var_dump($sql_stmt);
             $data = $db->prep_exec($sql_stmt, $filter_values, 'all');
         }
+
+        var_dump($data);
         die;
         
         
