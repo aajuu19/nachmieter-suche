@@ -52,17 +52,12 @@
         if($prep_sql) {
             $prep_sql = rtrim($prep_sql, " AND ");
             $sql_stmt = 'SELECT person.p_id, person.name, person.email, person.beschreibung, person.job, person.lf_quadratmeter, person.lf_zimmer, person.lf_kaltmiete, person.lf_warmmiete, person.lf_adresse, person.lookingfor, person.profilepic, person.lookingfrom, person.gender FROM `person` WHERE '.$prep_sql.' ORDER BY registration_date DESC LIMIT '.$limit_sql;
-            var_dump($sql_stmt);
             $data = $db->prep_exec($sql_stmt, $filter_values, 'all');
         } else {
             $sql_stmt = 'SELECT person.p_id, person.name, person.email, person.beschreibung, person.job, person.lf_quadratmeter, person.lf_zimmer, person.lf_kaltmiete, person.lf_warmmiete, person.lf_adresse, person.lookingfor, person.profilepic, person.lookingfrom, person.gender FROM `person` ORDER BY registration_date DESC LIMIT '.$limit_sql;
-            var_dump($sql_stmt);
             $data = $db->prep_exec($sql_stmt, $filter_values, 'all');
         }
 
-        var_dump($data);
-        
-        
     }
 
     if(isset($request_type['wohnungen'])) {
@@ -221,7 +216,7 @@
 
     $db->close_connect();
 
-    var_dump($data);
     // create JSON from $data variable
     header('Content-Type: application/json;charset=utf-8');
     echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
+    die;
