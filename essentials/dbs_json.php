@@ -214,7 +214,39 @@
         }
     }
 
-    // create JSON from $data variable
-    header('Content-Type: text/html;charset=utf-8');
-    echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
-    echo json_last_error_msg();
+
+    class Converts {
+        /**
+         * Encode array from latin1 to utf8 recursively
+         * @param $dat
+         * @return array|string
+         */
+        public function __construct(){
+
+        }
+        public function convert_from_latin1_to_utf8_recursively($dat)
+        {
+            if (is_string($dat)) {
+                return utf8_encode($dat);
+            } elseif (is_array($dat)) {
+                $ret = [];
+                foreach ($dat as $i => $d) $ret[ $i ] = self::convert_from_latin1_to_utf8_recursively($d);
+
+                return $ret;
+            } elseif (is_object($dat)) {
+                foreach ($dat as $i => $d) $dat->$i = self::convert_from_latin1_to_utf8_recursively($d);
+
+                return $dat;
+            } else {
+                return $dat;
+            }
+        }
+    }
+    
+   $conv = new Converts(); 
+   // Just pass your array or string and the UTF8 encode will be fixed
+   $data = $conv::convert_from_latin1_to_utf8_recursively($data);
+   
+   // create JSON from $data variable
+   header('Content-Type: application/json;charset=utf-8');
+   echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE);
