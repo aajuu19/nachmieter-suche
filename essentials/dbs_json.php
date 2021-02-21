@@ -217,3 +217,4 @@
     // create JSON from $data variable
     header('Content-Type: text/html;charset=utf-8');
     echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
+    echo json_last_error_msg();
