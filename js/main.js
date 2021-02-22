@@ -1914,11 +1914,13 @@ const helperFunctions = {
                     }
                 },
                 acronym: function() {
-                    let userName = this.user.name.split(' ');
-                    if (userName.length >= 2) {
-                        return userName[0][0] + userName[1][0];
-                    } else {
-                        return userName[0][0];
+                    if(this.isUser) {
+                        let userName = this.user.name.split(' ');
+                        if (userName.length >= 2) {
+                            return userName[0][0] + userName[1][0];
+                        } else {
+                            return userName[0][0];
+                        }
                     }
                 }
             },
