@@ -2052,12 +2052,14 @@ const helperFunctions = {
                     return `../uploads/${this.user.profilepic}`;
                 },
                 acronym: function() {
-                    let userName = this.user.name.split(' ');
-                    if (userName.length >= 2) {
-                        return userName[0][0] + userName[1][0];
-                    } else {
-                        return userName[0][0];
-                    }
+                    if(this.user) {
+                        let userName = this.user.name.split(' ');
+                        if (userName.length >= 2) {
+                            return userName[0][0] + userName[1][0];
+                        } else {
+                            return userName[0][0];
+                        }
+                    } 
                 },
                 imgLink: function() {
                     return `${root}/uploads/${this.flat.image_1}`;
