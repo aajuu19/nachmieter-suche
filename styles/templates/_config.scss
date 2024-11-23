@@ -1,17 +1,21 @@
 $primary: #1c9ce5;
-$lightprimary: lighten($primary, 35%);
+$primaryGradient: linear-gradient(17deg, rgba(0,116,225,1) 0%, rgba(0,201,225,1) 100%);
+$lightprimary: lighten($primary, 30%);
 $secondary: #f79e02;
+$secondaryGradient: linear-gradient(17deg, rgba(247,158,2,1) 25%, rgba(247,126,2,1) 80%, rgba(247,158,2,1) 100%);
 $light: #fff;
 $dark: #312f2c;
 $medium: #0074e1;
 $success: #6de481;
 $alert: #ff4d4d;
+$grey: #b2afaa;
 $lightalert: #ff9797;
+$bodybg: #fcfcff;
 
 $lightborder: 1px solid $lightprimary;
 
 $base-gap: 16px;
-$row-max-width: 1400px;
+$row-max-width: 1600px;
 $main-font: "Barlow", sans-serif;
 $icon-font: "Font Awesome 5 Free", sans-serif;
 
@@ -37,4 +41,6 @@ $breakpoints: (
   'l':   1200px,
   'xl':  1400px,
   'xxl':  1600px,
+  'xxxl':  2000px,
+  'xxxxl':  2750px,
 );

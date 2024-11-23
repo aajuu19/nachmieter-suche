@@ -93,6 +93,7 @@ $separator: rem-separator($values);
 }
 
 .row {
+	position: relative;
 	display: flex;
 	flex-wrap: wrap;
 	flex-direction: row;
@@ -100,13 +101,23 @@ $separator: rem-separator($values);
 	width: 100%;
 	max-width: $row-max-width;
 	margin: 0 auto;
+	&.center {
+		justify-content: center;
+	}
 	&.middle {
 		align-items: center;
+	}
+	&.between {
+		justify-content: space-between;
 	}
 	.col {
 		padding: 0 rem($base-gap);
 		width: 100%;
 		flex-basis: 100%;
+		.row {
+			margin: 0 -1rem;
+			width: calc(100% + 2rem);
+		}
 		@each $break, $value in $breakpoints {
 			@for $i from 1 through 12 {
 				@include breakpoint($break) {

@@ -14,13 +14,13 @@
     </div>
 </div>
 
-<div class="object-teaser">
+<div class="object-teaser primaryOverlay">
     <div class="row space-both">
         <div class="col">
             <span class="h1 light">Unsere Top-Wohnungen</span>
         </div>
         <?php 
-            $top_objects = $db->get_this_all('SELECT * FROM `objekt` ORDER BY `einstellungsdatum` DESC LIMIT 4');
+            $top_objects = $db->get_this_all('SELECT * FROM `objekt` ORDER BY `einstellungsdatum` DESC LIMIT 6');
 
             foreach($top_objects as $key => $val) {
 
@@ -29,13 +29,13 @@
                 echo '<div class="col s-6 teaser">
                     <div class="teaser-box">
                         <div class="teaser-img">
-                            <img src="'.$web->root.'/images/layout/placeholder.png" alt="Platzhalter">
+                            <img class="lazyImg" src="//:0" data-src="'.$web->root.'/uploads/'.$val['image_1'].'" alt="Mietwohnung | Wohnung | Haus | Immobilie">
                         </div> 
                         <div class="teaser-content">
                             <span class="heading">'.$val['name'].'</span>
                             <span class="time">'.$web->format_date($val['einstellungsdatum']).' Uhr</span>
                             <span class="desc">'.$web->shorten_str($val['beschreibung'], 80).'</span>
-                            <a href="'.$web->root.'/'.$link.'" class="btn secondary">Mehr erfahren</a>
+                            <a title="'.$val['name'].'" href="'.$web->root.'/objekte/'.$val['link'].'" class="btn secondary">Mehr erfahren</a>
                         </div>
                     </div> 
                 </div>';
@@ -69,7 +69,6 @@
         </div>
     </div>
 </div>
-
 <div class="row space-top">
     <div class="col">
         <h2>Dies ist die zweite Überschrift</h2>

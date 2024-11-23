@@ -3,10 +3,15 @@
     top: 3%;
     right: 3%;
     z-index: 9999;
-    background: $primary;
-    display: inline-block;
-    padding: 1rem;
-    border-radius: 15px;
+    background-color: $primary;
+    background-image: $primaryGradient;
+    display: flex;
+    border-radius: 50%;
+    justify-content: center;
+    align-items: center;
+    width: rem(60px);
+    height: rem(60px);
+    box-shadow: 0 0 10px rgba(0,0,0,0.15);
     @include breakpoint(m) {
     	display: none;
     }
@@ -15,8 +20,8 @@
     &:before, &:after, .middle {
     	display: block;
 		content: '';
-		width: rem(35px);
-		height: rem(4px);
+		width: rem(30px);
+		height: rem(2px);
 		background-color: $light;
 		transition: 0.4s;
     }
@@ -35,10 +40,10 @@
     }
     ~ .menuLabel label[for="menuToggle"], ~ * .menuLabel label[for="menuToggle"] {
       &:before {
-        transform: rotate(-45deg) translate(-8px, 7px);
+        transform: rotate(-45deg) translate(-8px, 6px);
       }
       &:after {
-        transform: rotate(45deg) translate(-6px, -7px);
+        transform: rotate(45deg) translate(-5px, -4px);
       }
       .middle {
       	opacity: 0;
@@ -91,13 +96,15 @@
             @include breakpoint(m, max) {
                 position: fixed;
                 transform: translateX(-100%);
-                background: $primary;
+                background-color: $primary;
+                background-image: $primaryGradient;
                 color: $light;
                 height: 100vh;
                 width: rem(300px);
                 top: 0;
                 left: 0;
                 padding: 1rem 0;
+                overflow-y: scroll;
             }
             @include breakpoint(m) {
                 display: flex;
@@ -149,6 +156,45 @@
                         margin-top: .7rem;
                     }
                 }
+                .sub-navi {
+                    li a {
+                        &.friends, &.nachrichtencenter {
+                            display: inline-flex;
+                            justify-content: flex-end;
+                            span.friend-request-amount, span.new-messages-amount {
+                                margin-left: 10px;
+                                border-radius: 50%;
+                                background: $light;
+                                width: 16px;
+                                height: 16px;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                padding: 10px;
+                                font-size: 13px;
+                                color: $primary;
+                                margin-top: 4px;
+                            }   
+                        }
+                    }
+                    li a.friends {
+                        display: flex;
+                        span.friend-request-amount {
+                            margin-left: 10px;
+                            border-radius: 50%;
+                            background: $light;
+                            width: 16px;
+                            height: 16px;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            padding: 10px;
+                            font-size: 13px;
+                            color: $primary;
+                            margin-top: 4px;
+                        }
+                    }
+                }
                 @include breakpoint(m) {
                     display: flex;
                     padding-top: 1.3rem;
@@ -173,11 +219,13 @@
                             padding-top: rem(10px);
                             top: 100%;
                             position: absolute;
-                            left: 0;
+                            right: 0;
+                            text-align: right;
                             z-index: 1;
                             max-height: 0;
                             transition: .3s;
                             overflow: hidden;
+                        
                         }
                     }
                 }
@@ -236,6 +284,36 @@
                             margin-right: 4rem;
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+.footer-nav {
+    display: flex;
+    justify-content: space-around;
+    li {
+        list-style: none;
+        a {
+            text-decoration: none;
+            color: $light;
+            position: relative;
+            &:after {
+                content: '';
+                display: inline-block;
+                position: absolute;
+                height: 1px;
+                background: $light;
+                width: 0;
+                left: 0;
+                transition: .3s;
+                bottom: -4px;
+            }
+            &:hover {
+                background: transparent;
+                &:after {
+                    width: 100%;
                 }
             }
         }

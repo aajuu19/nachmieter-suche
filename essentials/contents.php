@@ -1,7 +1,9 @@
 <?php
-
     $config = [];
-    $config['mail'] = 'info@aaron-jung.com';
+    
+    require_once('config_data.php');
+    
+    $config['mail'] = 'aaronjung19@gmail.com';
     $config['phone'] = '0162 / 634 81 75';
 
     $meta = [
@@ -11,10 +13,11 @@
             'desc' => 'Dies ist die Beschreibung der Startseite',
             'include_nav'=> true
         ],
-        'nachmieter-finden.php' => [
-            'name' => 'Nachmieter finden',
+        'mieter-finden.php' => [
+            'name' => 'Mieter finden',
             'title' => 'Dies ist der Titel der Zweite',
             'desc' => 'Dies ist die Beschreibung der Zweite',
+            'claim' => 'Finde deinen neuen Nachmieter',
             'include_nav'=> true
         ],
         'wohnung-finden.php' => [
@@ -28,7 +31,22 @@
             'name' => 'FAQ',
             'title' => 'Dies ist die FAQ Seite',
             'desc' => 'Dies ist die Beschreibung der Zweite',
+            'claim' => 'FAQ',
             'include_nav'=> true
+        ],
+        'kontakt.php' => [
+            'name' => 'Kontakt',
+            'title' => 'Dies ist die Kontakt Seite',
+            'desc' => 'Dies ist die Beschreibung der Kontaktseite',
+            'claim' => 'Kontakt',
+            'include_nav'=> false
+        ],
+        'user.php' => [
+            'name' => 'User',
+            'title' => 'Dies ist die User Seite',
+            'desc' => 'Dies ist die Beschreibung der Seite User',
+            'claim' => 'Profil',
+            'include_nav'=> false
         ],
         'registrierung-login.php' => [
             'name' => 'Registrierung - Login',
@@ -45,10 +63,43 @@
             'include_nav'=> false,
             'login_required' => true
         ],
+        'freundschaftsanfragen.php' => [
+            'name' => 'Freundschaftsanfragen',
+            'title' => 'Dies ist das Freundschaftsanfragen-Seite',
+            'desc' => 'Dies ist die Beschreibung der Freundschaftsanfragenseite',
+            'claim' => 'Freundschaftsanfragen',
+            'include_nav'=> false,
+            'login_required' => true
+        ],
+        'nachrichten-center.php' => [
+            'name' => 'Nachrichtencenter',
+            'title' => 'Dies ist das Nachrichtencenter',
+            'desc' => 'Dies ist die Beschreibung des Nachrichtencenters',
+            'claim' => 'Nachrichtencenter',
+            'include_nav'=> false,
+            'login_required' => true
+        ],
+        'neues-objekt.php' => [
+            'name' => 'Neues Objekt',
+            'title' => 'Dies ist die Maske für das Einfügen eines neuen Objektes',
+            'desc' => 'Dies ist die Beschreibung für die Maske für das Einfügen eines neuen Objektes',
+            'claim' => 'Neue Wohnung einfügen',
+            'include_nav'=> false,
+            'login_required' => true
+        ],
+        'profil-bearbeiten.php' => [
+            'name' => 'Profil bearbeiten',
+            'title' => 'nachmieter-suche.de - Profil bearbeiten',
+            'desc' => 'Dies ist die Beschreibung der Profil bearbeiten Seite',
+            'claim' => 'Profil bearbeiten',
+            'include_nav'=> false,
+            'login_required' => true
+        ],
         'settings.php' => [
             'name' => 'Einstellungen',
             'title' => 'Dies sind die Einstellungen',
             'desc' => 'Dies ist die Beschreibung der Einstellungen',
+            'claim' => 'Einstellungen',
             'include_nav'=> false,
             'login_required' => true            
         ],
@@ -58,5 +109,18 @@
             'desc' => 'Dies ist die Beschreibung des Abmeldebereiches',
             'include_nav'=> false,
             'login_required' => true
+        ],
+        'datenschutzerklaerung.php' => [
+            'name' => 'Datenschutzerklärung',
+            'title' => 'Dies ist die Datenschutzerklärung',
+            'desc' => 'Dies ist die Beschreibung des Datenschutzerklärung',
+            'include_nav'=> false,
+        ],
+        'boost.php' => [
+            'name' => 'Boost',
+            'title' => 'Dies ist die Preisliste',
+            'desc' => 'Dies ist die Beschreibung für die Preisseite',
+            'claim' => 'Boost',
+            'include_nav'=> false,
         ]
     ];

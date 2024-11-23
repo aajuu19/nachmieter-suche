@@ -1,5 +1,13 @@
+[v-cloak] { 
+    display:none !important; 
+}
+
 .light {
     color: $light;
+}
+
+.secondary {
+    color: $secondary;
 }
 
 .btn {
@@ -10,17 +18,33 @@
     }
     border-radius: 25px;
     text-decoration: none;
-    background: $medium;
-    transition: .3s;
+    transition: .4s;
+    background-color: $primary;
+    background-image: $primaryGradient;
     display: inline-block;
+    background-size: 200% 100%;
+
     &:hover {
-        background: darken($medium, 5%);
+        cursor: pointer;
+        background-position: 100% 0;
     }
     &.secondary {
-        background: $secondary;
+        background-color: $secondary;
+        background-image: $secondaryGradient;
+        
         &:hover {
-            background: darken($secondary, 5%);
+            background-position: 100% 0;
         }
+    }
+    &.alert {
+        background: $alert;
+        &:hover {
+            background: darken($alert, 5%);
+        }
+    }
+    &.disabled {
+        pointer-events: none;
+        background: lighten($secondary, 25%);
     }
 }
 
@@ -56,14 +80,24 @@
     text-align: left;
 }
 
-.error, .success {
+.align-center {
+    text-align: center;
+}
+
+.align-right {
+    text-align: right;
+}
+
+.error, .success, .info {
     padding: 1.5rem; 
     background: $lightalert;
     border-radius: 15px;
     color: $light;
     display: block;
+    width: 100%;
+    margin-bottom: 1.5rem;
     &:before {
-        content: 'Fehler: ';
+        content: 'Ups: ';
         font-weight: 700;
         color: $alert;
     }
@@ -77,6 +111,14 @@
     }
 }
 
+.info {
+    background: $lightprimary;
+    &:before {
+        content: 'Info: ';
+        color: darken($lightprimary, 30%);
+    }
+}
+
 .heading {
     font-weight: 700;
     font-size: rem(22px);
@@ -86,4 +128,104 @@
 
 .primary {
     color: $primary;
+}
+
+.noPad {
+    padding: 0 !important;
+}
+
+.noMarg {
+    margin: 0 !important;
+}
+
+.primaryOverlay {
+    position: relative;
+    &:before {
+        background-image: $primaryGradient;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        content: '';
+        opacity: .5;
+        z-index: 0;
+    }
+}
+
+.cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.round-border-box {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+    background: $light;
+    border-radius: 15px;
+    border-bottom: 4px solid $primary;
+}
+
+.wide {
+    width: 100%;
+}
+
+.whiteBox {
+    padding: rem(15px) !important;
+    background: $light !important;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.05) !important;
+    border-radius: rem(15px) !important;
+    margin-bottom: 1rem;
+    @include breakpoint(m) {
+        margin-bottom: 2rem;
+    }
+    &.morePad {
+        padding: rem(15px) !important;
+        @include breakpoint(m) {
+            padding: rem(25px) !important;
+        }
+    }
+}
+
+.hr {
+    &:after {
+        content: '';
+        display: block;
+        width: 100%;
+        background: $lightprimary;
+        height: 1px;
+        margin: rem(40px) 0;
+    }
+}
+
+.gap-top-1 {
+    margin-top: 1rem;
+}
+
+.gap-top-2 {
+    margin-top: 2rem;
+}
+
+.gap-top-3 {
+    margin-top: 3rem;
+}
+
+.gap-bottom-1 {
+    margin-bottom: 1rem;
+}
+
+.gap-bottom-2 {
+    margin-bottom: 2rem;
+}
+
+.gap-bottom-3 {
+    margin-bottom: 3rem;
+}
+
+.static {
+    position: static;
+}
+
+.icon-space-right {
+    margin-right: 8px;
 }
